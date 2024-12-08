@@ -13,9 +13,9 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-4">
-          <button className="flex items-center justify-center">
+          {/* <button className="flex items-center justify-center">
             <img src="/svg/notification.svg" alt="알림" className="w-[30px] h-[30px]" />
-          </button>
+          </button> */}
           <button className="flex items-center justify-center">
             <img src="/svg/profile.svg" alt="프로필" className="w-[30px] h-[30px]" />
           </button>
