@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { MENU_ITEMS } from "~/shared/constants/navigation";
 import { SidebarHeader } from "./components/SidebarHeader";
+import { SidebarFooter } from "./components/SidebarFooter";
 import { SidebarItem } from "./components/SidebarItem";
 
 export function Sidebar() {
@@ -14,14 +15,24 @@ export function Sidebar() {
         className={`
           md:hidden fixed top-4 z-[60]
           transition-[left] duration-300 ease-in-out
-          ${isMobileOpen ? "left-[200px]" : "left-4"}
+          ${isMobileOpen ? "left-[260px]" : "left-4"}
+        `}
+      >
+        <img src="/svg/bounding_box.svg" alt="menu" className="w-6 h-6" />
+      </button>
+      <button
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        className={`
+          hidden md:flex fixed top-4 z-[60]
+          transition-[left] duration-300 ease-in-out
+          ${isCollapsed ? "left-[84px]" : "left-[260px]"}
         `}
       >
         <img src="/svg/bounding_box.svg" alt="menu" className="w-6 h-6" />
       </button>
 
       <aside
-        className={`
+        className={` flex flex-col
           fixed md:relative
           h-svh bg-white shadow-lg md:shadow-none
           transition-[transform,width] duration-300 ease-in-out
@@ -40,7 +51,7 @@ export function Sidebar() {
         />
 
         <div className="flex h-full w-full flex-col">
-          <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-auto pt-[54px]">
+          <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-auto">
             <div className="relative flex w-full min-w-0 flex-col p-2">
               <nav className="w-full">
                 <ul className="flex w-full min-w-0 flex-col">
@@ -57,6 +68,12 @@ export function Sidebar() {
             </div>
           </div>
         </div>
+        <SidebarFooter
+          isCollapsed={isCollapsed}
+          setIsCollapsed={setIsCollapsed}
+          isMobileOpen={isMobileOpen}
+          setIsMobileOpen={setIsMobileOpen}
+        />
       </aside>
 
       {isMobileOpen && (

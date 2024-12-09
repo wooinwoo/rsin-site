@@ -8,7 +8,7 @@ export function EventItem({ event }: EventItemProps) {
   return (
     <div
       className={`
-        px-2 py-1 rounded text-sm mb-1 truncate
+        px-2 py-1 rounded-[6px] text-sm
         ${
           event.color
             ? `bg-${event.color}-100 text-${event.color}-800`

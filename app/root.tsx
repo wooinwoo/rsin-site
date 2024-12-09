@@ -1,11 +1,4 @@
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "@remix-run/react";
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 
 import "./tailwind.css";
@@ -39,7 +32,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <Sidebar /> {/* 사이드바 */}
           <div className="flex-1 flex flex-col">
             <Header /> {/* 헤더 */}
-            <main className="flex-1 p-6">
+            <main className="flex-1 p-4 sm:p-6">
               <Outlet /> {/* 페이지 컨텐츠 */}
             </main>
           </div>
@@ -53,5 +46,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />; {/* 페이지 컨텐츠 */}
+  return <Outlet />;
+  {
+    /* 페이지 컨텐츠 */
+  }
 }

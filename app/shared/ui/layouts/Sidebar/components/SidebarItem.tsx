@@ -24,7 +24,7 @@ export function SidebarItem({ icon, label, path, isCollapsed, isFirst }: Sidebar
         </div>
         <div
           className={`
-            ml-2 transition-[width,opacity] duration-300 ease-in-out text-base
+            ml-2 transition-[width,opacity] duration-300 ease-in-out text-sm
             ${isCollapsed ? "w-0 opacity-0" : "w-auto opacity-100"}
             overflow-hidden whitespace-nowrap
           `}

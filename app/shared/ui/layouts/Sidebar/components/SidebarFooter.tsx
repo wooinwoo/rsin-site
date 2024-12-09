@@ -1,16 +1,16 @@
-interface SidebarHeaderProps {
+interface SidebarFooterProps {
   isCollapsed: boolean;
   setIsCollapsed: (value: boolean) => void;
   isMobileOpen: boolean;
   setIsMobileOpen: (value: boolean) => void;
 }
 
-export function SidebarHeader({
+export function SidebarFooter({
   isCollapsed,
   setIsCollapsed,
   isMobileOpen,
   setIsMobileOpen,
-}: SidebarHeaderProps) {
+}: SidebarFooterProps) {
   return (
     <button
       data-sidebar="menu-button"
@@ -27,13 +27,32 @@ export function SidebarHeader({
       }}
     >
       <div className={`p-2 flex w-full items-center gap-2`}>
-        <div className=" flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground ">
-          <img src="/public/svg/logo.svg" className="w-[30px] h-[30px]" alt="로고" />
+        <span className="relative flex shrink-0 overflow-hidden h-8 w-8 rounded-lg">
+          <img
+            className="aspect-square h-full w-full"
+            alt="shadcn"
+            src="/public/images/profile.jpg"
+          />
+        </span>
+        <div className="grid flex-1 text-left text-sm leading-tight">
+          <span className="truncate font-semibold">김태완</span>
+          <span className="truncate text-xs">srpn@rs-team.com</span>
         </div>
-        <div className="grid flex-1 text-left text-lg leading-tight">
-          <span className="truncate font-semibold">RS-TEAM</span>
-          <span className="truncate text-xs">연차관리시스템</span>
-        </div>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          className="lucide lucide-chevrons-up-down ml-auto size-4"
+        >
+          <path d="m7 15 5 5 5-5"></path>
+          <path d="m7 9 5-5 5 5"></path>
+        </svg>
       </div>
     </button>
   );

@@ -6,20 +6,42 @@ export function Header() {
   const currentPageTitle = MENU_ITEMS.find((item) => item.path === location.pathname)?.label || "";
 
   return (
-    <header className="border-gray-400 h-[54px] bg-gray-900">
-      <div className="h-full px-6 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <h1 className="text-white text-base font-bold">{currentPageTitle}</h1>
-        </div>
-
-        <div className="flex items-center gap-4">
-          {/* <button className="flex items-center justify-center">
-            <img src="/svg/notification.svg" alt="알림" className="w-[30px] h-[30px]" />
-          </button> */}
-          <button className="flex items-center justify-center">
-            <img src="/svg/profile.svg" alt="프로필" className="w-[30px] h-[30px]" />
-          </button>
-        </div>
+    <header className="flex pl-10 h-14 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+      <div className="flex items-center gap-2 px-4">
+        <div
+          data-orientation="vertical"
+          role="none"
+          className="shrink-0 bg-border w-[1px] mr-2 h-4"
+        ></div>
+        <nav aria-label="breadcrumb">
+          <ol className="flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5">
+            <li className="items-center gap-1.5 hidden md:block">
+              <a className="transition-colors hover:text-foreground" href="#">
+                {currentPageTitle}
+              </a>
+            </li>
+            {/* <li
+              role="presentation"
+              aria-hidden="true"
+              className="[&amp;>svg]:w-3.5 [&amp;>svg]:h-3.5 hidden md:block"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                className="lucide lucide-chevron-right "
+              >
+                <path d="m9 18 6-6-6-6"></path>
+              </svg>
+            </li> */}
+          </ol>
+        </nav>
       </div>
     </header>
   );
