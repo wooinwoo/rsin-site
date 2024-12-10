@@ -15,7 +15,7 @@ export function Sidebar() {
         className={`
           md:hidden fixed top-4 z-[60]
           transition-[left] duration-300 ease-in-out
-          ${isMobileOpen ? "left-[260px]" : "left-4"}
+          ${isMobileOpen ? "left-[200px]" : "left-4"}
         `}
       >
         <img src="/svg/bounding_box.svg" alt="menu" className="w-6 h-6" />
