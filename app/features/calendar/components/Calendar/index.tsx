@@ -11,7 +11,7 @@ export function Calendar({ events = [] }: CalendarProps) {
   const { currentDate, calendarDays, goToNextMonth, goToPrevMonth } = useCalendar();
 
   return (
-    <div className="p-4">
+    <div className="sm:p-4">
       <CalendarHeader
         currentDate={currentDate}
         onPrevMonth={goToPrevMonth}

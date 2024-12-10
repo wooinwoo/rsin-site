@@ -11,7 +11,7 @@ export function Sidebar() {
   return (
     <>
       <button
-        onClick={() => setIsMobileOpen(true)}
+        onClick={() => setIsMobileOpen(!isMobileOpen)}
         className={`
           md:hidden fixed top-4 z-[60]
           transition-[left] duration-300 ease-in-out
@@ -23,7 +23,7 @@ export function Sidebar() {
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
         className={`
-          hidden md:flex fixed top-4 z-[60]
+          hidden md:flex absolute top-4 z-[60]
           transition-[left] duration-300 ease-in-out
           ${isCollapsed ? "left-[84px]" : "left-[260px]"}
         `}
@@ -31,9 +31,14 @@ export function Sidebar() {
         <img src="/svg/bounding_box.svg" alt="menu" className="w-6 h-6" />
       </button>
 
+      <div
+        className={`transition-[transform,width] duration-300 ease-in-out
+          ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
+          ${isCollapsed ? "md:w-16" : "md:w-[240px]"}`}
+      ></div>
       <aside
         className={` flex flex-col
-          fixed md:relative
+          fixed
           h-svh bg-white shadow-lg md:shadow-none
           transition-[transform,width] duration-300 ease-in-out
           ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}

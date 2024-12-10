@@ -3,13 +3,13 @@ import type { CalendarDate } from "../../types/calendar";
 import type { CalendarEvent } from "../../types/event";
 
 const WEEKDAYS = [
-  { day: "Sunday", isWeekend: true },
-  { day: "Monday", isWeekend: false },
-  { day: "Tuesday", isWeekend: false },
-  { day: "Wednesday", isWeekend: false },
-  { day: "Thursday", isWeekend: false },
-  { day: "Friday", isWeekend: false },
-  { day: "Saturday", isWeekend: true },
+  { day: "Sun", isWeekend: true },
+  { day: "Mon", isWeekend: false },
+  { day: "Tue", isWeekend: false },
+  { day: "Wed", isWeekend: false },
+  { day: "Thu", isWeekend: false },
+  { day: "Fri", isWeekend: false },
+  { day: "Sat", isWeekend: true },
 ];
 
 interface CalendarGridProps {
@@ -27,13 +27,7 @@ export function CalendarGrid({ days, events = [] }: CalendarGridProps) {
             key={day}
             className={`
               py-2 text-center font-normal text-sm
-              ${
-                day === "Sunday"
-                  ? "text-red-500"
-                  : day === "Saturday"
-                  ? "text-gray-700"
-                  : "text-gray-400"
-              }
+              ${day === "Sun" ? "text-red-500" : day === "Sat" ? "text-gray-700" : "text-gray-400"}
             `}
           >
             {day}
