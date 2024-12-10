@@ -18,7 +18,7 @@ export const links: LinksFunction = () => [
   },
 ];
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export default function App() {
   return (
     <html lang="ko">
       <head>
@@ -29,25 +29,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body className="bg-gray-200">
         <div className="min-h-screen flex">
-          <Sidebar /> {/* 사이드바 */}
+          <Sidebar />
           <div className="flex-1 flex flex-col">
-            <Header /> {/* 헤더 */}
+            <Header />
             <main className="flex-1 p-4 sm:p-6">
-              <Outlet /> {/* 페이지 컨텐츠 */}
+              <Outlet />
             </main>
           </div>
         </div>
-        <ScrollRestoration /> {/* 스크롤 위치 자동 관리 */}
-        <Scripts /> {/* 스크립트 */}
-        <LiveReload /> {/* 라이브 리로드 */}
+        <ScrollRestoration />
+        <Scripts />
+        <LiveReload />
       </body>
     </html>
   );
-}
-
-export default function App() {
-  return <Outlet />;
-  {
-    /* 페이지 컨텐츠 */
-  }
 }

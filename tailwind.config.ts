@@ -20,7 +20,7 @@ export default {
         white: "#FFFFFF",
         // 빨간 계열
         red: {
-          300: "#FFA1A1",
+          300: "#F8D9D9",
           400: "#FD9595",
           500: "#FF8C8C",
         },
@@ -32,7 +32,7 @@ export default {
         },
         // 청록 계열
         teal: {
-          300: "#7CDFDC", // 중복된 값은 하나로 통일
+          300: "#d8f5f5",
           400: "#7CDFDC",
           500: "#1FCEC8",
         },
@@ -48,6 +48,20 @@ export default {
           "Segoe UI Symbol",
           "Noto Color Emoji",
         ],
+      },
+      keyframes: {
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        "scale-in": {
+          "0%": { transform: "translate(-50%, -50%) scale(0.95)" },
+          "100%": { transform: "translate(-50%, -50%) scale(1)" },
+        },
+      },
+      animation: {
+        "fade-in": "fade-in 150ms ease-out",
+        "scale-in": "scale-in 150ms ease-out",
       },
     },
   },

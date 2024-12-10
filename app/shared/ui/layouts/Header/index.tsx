@@ -30,7 +30,7 @@ export function Header() {
   };
 
   return (
-    <header className="flex pl-10 pr-4 sm:p-6 h-14 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+    <header className="bg-gray-200 bg-opacity-50 sticky top-0 z-49 flex pl-10 pr-4 sm:p-6 h-14 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
       <div className="flex items-center gap-2 px-4">
         <div
           data-orientation="vertical"

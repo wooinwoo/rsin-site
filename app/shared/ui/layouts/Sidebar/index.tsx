@@ -23,7 +23,7 @@ export function Sidebar() {
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
         className={`
-          hidden md:flex absolute top-4 z-[60]
+          hidden md:flex fixed top-4 z-[60]
           transition-[left] duration-300 ease-in-out
           ${isCollapsed ? "left-[84px]" : "left-[260px]"}
         `}
