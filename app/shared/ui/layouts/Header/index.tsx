@@ -30,7 +30,7 @@ export function Header() {
   };
 
   return (
-    <header className="bg-gray-200 bg-opacity-50 sticky top-0 z-49 flex pl-10 pr-4 sm:p-6 h-14 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+    <header className="bg-gray-200 bg-opacity-50 sticky top-0 z-49 flex pl-6 pr-4  h-14 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
       <div className="flex items-center gap-2 px-4">
         <div
           data-orientation="vertical"
@@ -54,6 +54,9 @@ export function Header() {
           className="flex items-center justify-center bg-white w-8 h-8 border border-[#eaeaea] rounded-[6px] transition-colors hover:bg-gray-100"
         >
           <img src="/svg/replay.svg" alt="새로고침" className="w-5 h-5" />
+        </button>
+        <button className="bg-blue-400 mx-2 my-2 text-white  inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2">
+          휴가신청
         </button>
       </div>
     </header>

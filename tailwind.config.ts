@@ -4,6 +4,15 @@ export default {
   content: ["./app/**/{**,.client,.server}/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      screens: {
+        "2xs": "360px", // 작은 모바일 (iPhone SE 등)
+        xs: "475px", // 일반 모바일
+        sm: "640px", // 기본 태블릿
+        md: "768px", // 큰 태블릿
+        lg: "1024px", // 작은 데스크탑
+        xl: "1280px", // 일반 데스크탑
+        "2xl": "1536px", // 큰 데스크탑
+      },
       colors: {
         gray: {
           950: "#111111",
