@@ -3,7 +3,7 @@ import { isSameDay } from "date-fns";
 import type { CalendarDate } from "../../types/calendar";
 import type { CalendarEvent } from "../../types/event";
 import { EventItem } from "./EventItem";
-import { Modal } from "~/shared/ui/Modal";
+import { Modal } from "~/shared/ui/components/Modal";
 
 interface CalendarCellProps {
   day: CalendarDate;

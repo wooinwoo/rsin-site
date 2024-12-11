@@ -1,13 +1,15 @@
 import { useLocation } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import { MENU_ITEMS } from "~/shared/constants/navigation";
-
+import { LeaveRequestModal } from "~/features/leave/components/LeaveRequestModal";
 export function Header() {
   const location = useLocation();
   const currentPageTitle = MENU_ITEMS.find((item) => item.path === location.pathname)?.label || "";
 
   // 데이터 로드 시점 기록
   const [loadTime, setLoadTime] = useState<string>("");
+  // 휴가신청 모달
+  const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
 
   useEffect(() => {
     const now = new Date();
@@ -55,10 +57,14 @@ export function Header() {
         >
           <img src="/svg/replay.svg" alt="새로고침" className="w-5 h-5" />
         </button>
-        <button className="bg-blue-400 mx-2 my-2 text-white  inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2">
+        <button
+          className="bg-blue-400 mx-2 my-2 text-white  inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2"
+          onClick={() => setIsLeaveModalOpen(true)}
+        >
           휴가신청
         </button>
       </div>
+      <LeaveRequestModal isOpen={isLeaveModalOpen} onClose={() => setIsLeaveModalOpen(false)} />
     </header>
   );
 }
