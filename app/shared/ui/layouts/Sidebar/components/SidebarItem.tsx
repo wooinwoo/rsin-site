@@ -1,49 +1,45 @@
-import { NavLink } from "@remix-run/react";
-interface SidebarItemProps {
+import { NavLink, useLocation } from "@remix-run/react";
+// types/sidebar.ts
+export interface SidebarItemProps {
   icon: string;
   label: string;
   path: string;
-  isCollapsed: boolean;
+  isCollapsed?: boolean;
   isFirst?: boolean;
 }
 
+// components/Sidebar/SidebarItem.tsx
 export function SidebarItem({ icon, label, path, isCollapsed, isFirst }: SidebarItemProps) {
+  const location = useLocation();
+
+  // 홈(/)일 경우 정확히 일치할 때만, 나머지는 startsWith로 체크
+  const isActive = path === "/" ? location.pathname === "/" : location.pathname.startsWith(path);
+
   return (
-    <li className="relative">
+    <li data-sidebar="menu-item" className="group/menu-item relative">
       <NavLink
         to={path}
-        className={({ isActive }) => `
-          relative flex items-center p-2 text-left
-          transition-colors duration-200 outline-none h-12 text-base
-          hover:bg-gray-300 hover:text-gray-900 rounded-md
-          ${isActive ? "bg-gray-300 font-medium text-gray-900" : "text-gray-600"}
-        `}
+        data-sidebar="menu-button"
+        className={`
+    flex w-full items-center gap-2 rounded-md p-2 
+    text-left outline-none
+    transition-colors
+    disabled:opacity-50 
+    hover:bg-gray-600/10
+    ${isActive ? "font-medium text-gray-950" : ""}
+    h-8 text-sm
+  `}
       >
-        <div className="relative w-[30px] flex items-center flex-shrink-0">
-          <img src={icon} alt={label} className="w-[30px] h-[30px]" />
-        </div>
-        <div
+        <img
+          src={icon}
+          alt={label}
           className={`
-            ml-2 transition-[width,opacity] duration-300 ease-in-out text-sm
-            ${isCollapsed ? "w-0 opacity-0" : "w-auto opacity-100"}
-            overflow-hidden whitespace-nowrap
-          `}
-        >
-          {label}
-        </div>
+      w-6 h-6 shrink-0
+      ${isActive ? "brightness-0" : ""}
+    `}
+        />
+        <span className="truncate">{label}</span>
       </NavLink>
-
-      {isFirst && <div className="my-2 border-t border-gray-400" />}
-
-      {isCollapsed && (
-        <div
-          className="absolute left-full top-0 ml-2 hidden rounded-md 
-                    bg-gray-900 px-2 py-1 text-base text-white 
-                    group-hover:block"
-        >
-          {label}
-        </div>
-      )}
     </li>
   );
 }

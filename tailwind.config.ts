@@ -4,6 +4,9 @@ export default {
   content: ["./app/**/{**,.client,.server}/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["Noto Sans KR", "sans-serif"],
+      },
       screens: {
         "2xs": "360px", // 작은 모바일 (iPhone SE 등)
         xs: "475px", // 일반 모바일
@@ -46,18 +49,7 @@ export default {
           500: "#1FCEC8",
         },
       },
-      fontFamily: {
-        sans: [
-          "Inter",
-          "ui-sans-serif",
-          "system-ui",
-          "sans-serif",
-          "Apple Color Emoji",
-          "Segoe UI Emoji",
-          "Segoe UI Symbol",
-          "Noto Color Emoji",
-        ],
-      },
+
       keyframes: {
         "fade-in": {
           "0%": { opacity: "0" },

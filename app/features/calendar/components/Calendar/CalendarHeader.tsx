@@ -20,7 +20,7 @@ export function CalendarHeader({ currentDate, onPrevMonth, onNextMonth }: Calend
           />
         </svg>
       </button>
-      <h2 className="text-2xl font-semibold">{formatYearMonth(currentDate)}</h2>
+      <h2 className="text-xl font-semibold">{formatYearMonth(currentDate)}</h2>
       <button onClick={onNextMonth} className="p-2 hover:bg-gray-100 rounded-full">
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path

@@ -27,12 +27,12 @@ export function SidebarHeader({
       }}
     >
       <div className={`p-2 flex w-full items-center gap-2`}>
-        <div className=" flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground ">
-          <img src="/public/svg/logo.svg" className="w-[30px] h-[30px]" alt="로고" />
+        <div className=" flex aspect-square  items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground ">
+          <img src="/public/svg/logo.svg" className="min-w-[32px] w-[32px] h-[32px]" alt="로고" />
         </div>
         <div className="grid flex-1 text-left text-lg leading-tight">
-          <span className="truncate font-semibold">RS-TEAM</span>
-          <span className="truncate text-xs">연차관리시스템</span>
+          <span className="truncate font-semibold text-base tracking-tight">RS-TEAM</span>
+          <span className="truncate text-xs text-gray-500">RSIN Portal</span>
         </div>
       </div>
     </button>

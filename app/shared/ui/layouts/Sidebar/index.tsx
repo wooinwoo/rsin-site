@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { MENU_ITEMS } from "~/shared/constants/navigation";
+import { MENU_GROUPS } from "~/shared/constants/navigation";
 import { SidebarHeader } from "./components/SidebarHeader";
 import { SidebarFooter } from "./components/SidebarFooter";
 import { SidebarItem } from "./components/SidebarItem";
-
+import { SidebarGroup } from "./components/SidebarGroup";
 export function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -54,24 +54,20 @@ export function Sidebar() {
           isMobileOpen={isMobileOpen}
           setIsMobileOpen={setIsMobileOpen}
         />
-
-        <div className="flex h-full w-full flex-col">
-          <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-auto">
-            <div className="relative flex w-full min-w-0 flex-col p-2">
-              <nav className="w-full">
-                <ul className="flex w-full min-w-0 flex-col">
-                  {MENU_ITEMS.map((item, index) => (
-                    <SidebarItem
-                      key={item.label}
-                      {...item}
-                      isCollapsed={isCollapsed}
-                      isFirst={index === 0}
-                    />
-                  ))}
-                </ul>
-              </nav>
-            </div>
-          </div>
+        <div className="flex-1">
+          {MENU_GROUPS.map((group) => (
+            <SidebarGroup key={group.label} label={group.label} isCollapsed={isCollapsed}>
+              {group.items.map((item) => (
+                <SidebarItem
+                  key={item.path}
+                  icon={item.icon}
+                  label={item.label}
+                  path={item.path}
+                  isCollapsed={isCollapsed}
+                />
+              ))}
+            </SidebarGroup>
+          ))}
         </div>
         <SidebarFooter
           isCollapsed={isCollapsed}

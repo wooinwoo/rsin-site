@@ -1,12 +1,26 @@
 import { useLocation } from "@remix-run/react";
 import { useEffect, useState } from "react";
-import { MENU_ITEMS } from "~/shared/constants/navigation";
+import { MENU_GROUPS } from "~/shared/constants/navigation";
 import { LeaveRequestModal } from "~/features/leave/components/LeaveRequestModal";
 import { Button } from "~/shared/ui/components/Button";
 
 export function Header() {
   const location = useLocation();
-  const currentPageTitle = MENU_ITEMS.find((item) => item.path === location.pathname)?.label || "";
+
+  const getCurrentMenu = () => {
+    for (const group of MENU_GROUPS) {
+      const menuItem = group.items.find((item) => item.path === location.pathname);
+      if (menuItem) {
+        return {
+          group: group.label,
+          item: menuItem,
+        };
+      }
+    }
+    return null;
+  };
+
+  const currentMenu = getCurrentMenu();
 
   // 데이터 로드 시점 기록
   const [loadTime, setLoadTime] = useState<string>("");
@@ -15,26 +29,25 @@ export function Header() {
 
   useEffect(() => {
     const now = new Date();
-    const weekdays = ["일", "월", "화", "수", "목", "금", "토"]; // 요일 배열
+    const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
 
     const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0"); // 월(0부터 시작하므로 +1)
+    const month = String(now.getMonth() + 1).padStart(2, "0");
     const day = String(now.getDate()).padStart(2, "0");
-    const weekday = weekdays[now.getDay()]; // 요일 가져오기
-    const hours = String(now.getHours()).padStart(2, "0"); // 24시간 형식
+    const weekday = weekdays[now.getDay()];
+    const hours = String(now.getHours()).padStart(2, "0");
     const minutes = String(now.getMinutes()).padStart(2, "0");
 
-    // 형식: YYYY.MM.DD (요일) HH:mm
     const formattedDate = `${year}.${month}.${day} (${weekday}) ${hours}:${minutes}`;
     setLoadTime(formattedDate);
-  }, []); // 컴포넌트가 처음 렌더링될 때만 실행
+  }, []);
 
   const handleRefresh = () => {
-    window.location.reload(); // 페이지 새로고침
+    window.location.reload();
   };
 
   return (
-    <header className="bg-gray-200 bg-opacity-50 sticky top-0 z-49 flex pl-6 pr-4  h-14 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+    <header className="bg-gray-200 bg-opacity-50 sticky top-0 z-49 flex pl-6 pr-4 h-14 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
       <div className="flex items-center gap-2 px-4">
         <div
           data-orientation="vertical"
@@ -43,11 +56,21 @@ export function Header() {
         ></div>
         <nav aria-label="breadcrumb">
           <ol className="flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5">
-            <li className="items-center gap-1.5 ">
-              <a className="transition-colors hover:text-foreground" href="#">
-                {currentPageTitle}
-              </a>
-            </li>
+            {currentMenu && (
+              <>
+                {currentMenu.group && (
+                  <li className="flex items-center gap-1.5">
+                    <span>{currentMenu.group}</span>
+                    <span className="text-muted-foreground/40">/</span>
+                  </li>
+                )}
+                <li className="flex items-center gap-1.5">
+                  <span className="transition-colors hover:text-foreground">
+                    {currentMenu.item.label}
+                  </span>
+                </li>
+              </>
+            )}
           </ol>
         </nav>
       </div>
