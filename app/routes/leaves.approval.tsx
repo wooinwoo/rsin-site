@@ -1,100 +1,89 @@
-import { Calendar } from "~/features/calendar/components/Calendar";
-import { useEvents } from "~/features/calendar/hooks/useEvents";
-import { CalendarEvent } from "~/features/calendar/types/event";
+// app/routes/leaves.approval.tsx
+import { DataTable } from "~/features/datatable/components/DataTable";
+import { ColumnDef } from "~/features/datatable/types/datatable";
 import { Widget } from "~/shared/ui/widgets/widget";
 
-// 예시 데이터
-const INITIAL_EVENTS: CalendarEvent[] = [
+interface LeaveRequest {
+  id: string;
+  employeeName: string;
+  leaveType: string;
+  startDate: string;
+  endDate: string;
+  status: "pending" | "approved" | "rejected";
+}
+
+const columns: ColumnDef<LeaveRequest>[] = [
   {
-    id: "1",
-    title: "김태완",
-    date: new Date(2024, 11, 10), // 12월 10일
-    leaveType: "full",
-    status: "used",
-    description: "개인 사유",
-    requestDate: new Date(2024, 11, 1),
-    approver: "이상철",
-    approvedDate: new Date(2024, 11, 2),
+    id: "employeeName",
+    header: "신청자",
+    accessorKey: "employeeName",
   },
   {
-    id: "2",
-    title: "김민지",
-    date: new Date(2024, 11, 10),
-    leaveType: "full",
-    status: "used",
-    description: "연차 사용",
-    requestDate: new Date(2024, 11, 1),
-    approver: "이상철",
-    approvedDate: new Date(2024, 11, 2),
+    id: "leaveType",
+    header: "휴가 종류",
+    accessorKey: "leaveType",
   },
   {
-    id: "3",
-    title: "우인우",
-    date: new Date(2024, 11, 10),
-    leaveType: "morning",
-    status: "used",
-    description: "병원 진료",
-    requestDate: new Date(2024, 11, 1),
-    approver: "이상철",
-    approvedDate: new Date(2024, 11, 2),
+    id: "period",
+    header: "기간",
+    accessorKey: "startDate",
+    cell: ({ row }) => (
+      <span>
+        {row.startDate} ~ {row.endDate}
+      </span>
+    ),
   },
   {
-    id: "4",
-    title: "김태완",
-    date: new Date(2024, 11, 20),
-    leaveType: "afternoon",
-    status: "scheduled",
-    description: "개인 일정",
-    requestDate: new Date(2024, 11, 15),
-    approver: "이상철",
-    approvedDate: new Date(2024, 11, 16),
-  },
-  {
-    id: "5",
-    title: "박지성",
-    date: new Date(2024, 11, 20),
-    leaveType: "full",
-    status: "scheduled",
-    description: "가족 행사",
-    requestDate: new Date(2024, 11, 15),
-  },
-  {
-    id: "6",
-    title: "김태완",
-    date: new Date(2024, 11, 22),
-    leaveType: "full",
-    status: "pendingApproval",
-    description: "연말 휴가",
-    requestDate: new Date(2024, 11, 18),
-  },
-  {
-    id: "7",
-    title: "이민정",
-    date: new Date(2024, 11, 22),
-    leaveType: "morning",
-    status: "pendingApproval",
-    description: "병원 검진",
-    requestDate: new Date(2024, 11, 18),
-  },
-  {
-    id: "8",
-    title: "손흥민",
-    date: new Date(2024, 11, 15),
-    leaveType: "afternoon",
-    status: "scheduled",
-    description: "개인 사유",
-    requestDate: new Date(2024, 11, 10),
-    approver: "이상철",
-    approvedDate: new Date(2024, 11, 11),
+    id: "status",
+    header: "상태",
+    accessorKey: "status",
+    cell: ({ row }) => (
+      <span
+        className={`
+        px-2 py-1 rounded-full text-xs
+        ${row.status === "pending" ? "bg-yellow-100 text-yellow-800" : ""}
+        ${row.status === "approved" ? "bg-green-100 text-green-800" : ""}
+        ${row.status === "rejected" ? "bg-red-100 text-red-800" : ""}
+      `}
+      >
+        {row.status === "pending" && "대기중"}
+        {row.status === "approved" && "승인"}
+        {row.status === "rejected" && "반려"}
+      </span>
+    ),
   },
 ];
-export default function Index() {
-  const { events } = useEvents(INITIAL_EVENTS);
+
+export default function LeaveApprovalPage() {
+  // 실제로는 API에서 데이터를 가져올 것입니다
+  const leaveRequests: LeaveRequest[] = [
+    {
+      id: "1",
+      employeeName: "홍길동",
+      leaveType: "연차",
+      startDate: "2024-03-01",
+      endDate: "2024-03-02",
+      status: "pending",
+    },
+    {
+      id: "2",
+      employeeName: "김철수",
+      leaveType: "반차",
+      startDate: "2024-03-05",
+      endDate: "2024-03-05",
+      status: "approved",
+    },
+  ];
+
+  const handleRowSelect = (selectedRequests: LeaveRequest[]) => {
+    console.log("Selected requests:", selectedRequests);
+    // 선택된 항목들에 대한 처리
+  };
 
   return (
-    <div className="container mx-auto">
+    <div className="p-6">
       <Widget>
-        <Calendar events={events} />
+        <DataTable data={leaveRequests} columns={columns} onRowSelect={handleRowSelect} />
       </Widget>
     </div>
   );
