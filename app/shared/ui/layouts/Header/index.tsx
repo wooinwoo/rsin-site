@@ -68,7 +68,7 @@ export function Header() {
         </nav>
       </div>
       <div className="ml-auto flex items-center gap-2">
-        <span className="text-sm">{loadTime}</span>
+        <span className="text-sm hidden xs:block">{loadTime}</span>
         <button
           onClick={handleRefresh}
           className="flex items-center justify-center bg-white w-8 h-8 border border-[#eaeaea] rounded-[6px] transition-colors hover:bg-gray-100"
