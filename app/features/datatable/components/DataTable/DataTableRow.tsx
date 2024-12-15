@@ -25,7 +25,9 @@ export function DataTableRow<T extends Record<string, any>>({
       )}
       {columns.map((column) => (
         <td key={column.id} className="p-4">
-          {column.cell ? column.cell({ row: item }) : item[column.accessorKey]}
+          <div className="flex items-center whitespace-nowrap">
+            {column.cell ? column.cell({ row: item }) : item[column.accessorKey]}
+          </div>
         </td>
       ))}
     </tr>

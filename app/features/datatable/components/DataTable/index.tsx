@@ -35,7 +35,7 @@ export function DataTable<T extends Record<string, any>>({
 
       <div className="relative rounded-md border">
         <div className="overflow-x-auto">
-          <table className="w-full caption-bottom text-sm">
+          <table className="w-full table-auto caption-bottom text-sm">
             <DataTableHeader
               columns={columns}
               selectable={selectable}

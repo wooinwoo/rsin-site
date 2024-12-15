@@ -30,9 +30,11 @@ export default function App() {
       <body className="bg-gray-200">
         <div className="min-h-screen flex">
           <Sidebar />
-          <div className="flex-1 flex flex-col">
+          {/* flex-1과 min-w-0를 함께 사용하여 flex item이 제대로 줄어들 수 있도록 함 */}
+          <div className="flex-1 flex flex-col min-w-0">
             <Header />
-            <main className="flex-1 p-4 sm:p-6">
+            {/* main에도 min-w-0 추가 */}
+            <main className="flex-1 p-4 sm:p-6 min-w-0">
               <Outlet />
             </main>
           </div>
