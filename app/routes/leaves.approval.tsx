@@ -81,7 +81,7 @@ export default function LeaveApprovalPage() {
   };
 
   return (
-    <div className="p-6">
+    <div className="sm:p-6">
       <Widget>
         <DataTable data={leaveRequests} columns={columns} onRowSelect={handleRowSelect} />
       </Widget>

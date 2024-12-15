@@ -21,27 +21,20 @@ export function Header() {
   };
 
   const currentMenu = getCurrentMenu();
-
-  // 데이터 로드 시점 기록
-  const [loadTime, setLoadTime] = useState<string>("");
   // 휴가신청 모달
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
 
-  useEffect(() => {
-    const now = new Date();
-    const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
+  const now = new Date();
+  const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
 
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    const day = String(now.getDate()).padStart(2, "0");
-    const weekday = weekdays[now.getDay()];
-    const hours = String(now.getHours()).padStart(2, "0");
-    const minutes = String(now.getMinutes()).padStart(2, "0");
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  const weekday = weekdays[now.getDay()];
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
 
-    const formattedDate = `${year}.${month}.${day} (${weekday}) ${hours}:${minutes}`;
-    setLoadTime(formattedDate);
-  }, []);
-
+  const loadTime = `${year}.${month}.${day} (${weekday}) ${hours}:${minutes}`;
   const handleRefresh = () => {
     window.location.reload();
   };
