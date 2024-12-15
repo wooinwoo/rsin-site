@@ -1,4 +1,3 @@
-// app/features/datatable/components/DataTable/DataTableFooter.tsx
 interface DataTableFooterProps {
   selectedCount: number;
   totalCount: number;
@@ -16,16 +15,17 @@ export function DataTableFooter({
 }: DataTableFooterProps) {
   return (
     <div className="flex flex-col 2xs:flex-row items-start 2xs:items-center justify-between gap-4 py-4">
-      <div className="text-sm text-gray-500">
+      <div className="text-sm text-gray-600">
         {selectedCount} of {totalCount} row(s) selected.
       </div>
       <div className="flex flex-wrap gap-2">
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="h-9 rounded-md border px-3 text-sm disabled:opacity-50 hover:bg-gray-50"
+          className="h-9 w-9 rounded-md border border-gray-300 flex items-center justify-center text-sm disabled:opacity-50 hover:bg-gray-50"
+          aria-label="Previous page"
         >
-          Previous
+          <img src="/svg/chevron_left.svg" alt="이전" className="w-5 h-5" />
         </button>
 
         <div className="hidden sm:flex gap-2">
@@ -35,7 +35,7 @@ export function DataTableFooter({
               onClick={() => onPageChange(page)}
               className={`
                 h-9 min-w-[36px] rounded-md px-3 text-sm
-                ${page === currentPage ? "bg-gray-900 text-white" : "border hover:bg-gray-50"}
+                ${page === currentPage ? "bg-gray-800 text-white" : "border hover:bg-gray-50"}
               `}
             >
               {page}
@@ -52,9 +52,10 @@ export function DataTableFooter({
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="h-9 rounded-md border px-3 text-sm disabled:opacity-50 hover:bg-gray-50"
+          className="h-9 w-9 rounded-md border flex items-center justify-center text-sm disabled:opacity-50 hover:bg-gray-50"
+          aria-label="Next page"
         >
-          Next
+          <img src="/svg/chevron_right.svg" alt="다음" className="w-5 h-5" />
         </button>
       </div>
     </div>

@@ -1,12 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { MENU_GROUPS } from "~/shared/constants/navigation";
 import { SidebarHeader } from "./components/SidebarHeader";
 import { SidebarFooter } from "./components/SidebarFooter";
 import { SidebarItem } from "./components/SidebarItem";
 import { SidebarGroup } from "./components/SidebarGroup";
 export function Sidebar() {
+  const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+  useEffect(() => {
+    isMobileOpen && setIsMobileOpen(false);
+  }, [location?.pathname]);
 
   return (
     <>

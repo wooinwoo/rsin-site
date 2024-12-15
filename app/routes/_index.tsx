@@ -92,7 +92,7 @@ export default function Index() {
   const { events } = useEvents(INITIAL_EVENTS);
 
   return (
-    <div className="container mx-auto">
+    <div className="mx-auto sm:px-4">
       <Calendar events={events} />
     </div>
   );

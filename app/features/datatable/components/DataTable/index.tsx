@@ -1,4 +1,3 @@
-// app/features/datatable/components/DataTable/index.tsx
 import { useState } from "react";
 import { DataTableHeader } from "./DataTableHeader";
 import { DataTableBody } from "./DataTableBody";

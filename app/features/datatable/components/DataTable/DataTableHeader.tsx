@@ -26,7 +26,10 @@ export function DataTableHeader<T>({
           </th>
         )}
         {columns.map((column) => (
-          <th key={column.id} className="p-4 text-left text-sm font-medium text-gray-500">
+          <th
+            key={column.id}
+            className="whitespace-nowrap p-4 text-left text-sm font-medium text-gray-600"
+          >
             {column.header}
             {column.sortable && <button className="ml-2 text-gray-400">{/* 정렬 아이콘 */}</button>}
           </th>

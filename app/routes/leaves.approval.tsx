@@ -112,7 +112,7 @@ export default function LeaveApprovalPage() {
   };
 
   return (
-    <div className="container mx-auto">
+    <div className="mx-auto sm:px-4">
       <DataTable
         data={leaveRequests}
         columns={columns}

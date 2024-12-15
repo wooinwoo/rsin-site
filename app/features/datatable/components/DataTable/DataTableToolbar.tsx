@@ -35,9 +35,9 @@ export function DataTableToolbar({
     <div className="space-y-4">
       {/* 기존 툴바 내용 */}
       <div className="flex flex-col 2xs:flex-row items-start 2xs:items-center justify-between gap-4">
-        <div className="text-sm text-gray-500">총 {totalItems}건</div>
+        <div className="text-sm text-gray-600">총 {totalItems}건</div>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-500">페이지당 행:</span>
+          <span className="text-sm text-gray-600">페이지당 행:</span>
           <select
             value={pageSize}
             onChange={(e) => onPageSizeChange(Number(e.target.value))}

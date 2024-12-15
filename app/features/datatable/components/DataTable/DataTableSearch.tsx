@@ -29,12 +29,15 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
   return (
     <div className="mb-4">
       <div className="flex flex-wrap items-center gap-2">
-        <img src="/svg/tune.svg" alt="tune" className="w-7 h-7" />
+        <img src="/svg/tune.svg" alt="tune" className="w-6 h-6" />
         {fields.map((field) => (
-          <div key={field.id} className="flex items-center bg-white rounded-md border pl-3">
+          <div
+            key={field.id}
+            className="flex items-center bg-white rounded-md border pl-3 flex-1 sm:flex-none"
+          >
             {field.label && (
               <>
-                <label className="text-sm text-gray-500 whitespace-nowrap mr-2">
+                <label className="text-sm text-gray-600 whitespace-nowrap mr-2">
                   {field.label}
                 </label>
                 <div className="mx-2 h-4 w-px bg-gray-300" />
@@ -44,7 +47,7 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
               <select
                 value={searchParams[field.id] || ""}
                 onChange={(e) => handleValueChange(field.id, e.target.value)}
-                className="h-9 rounded-md border  px-3 text-sm border-none"
+                className="h-9 rounded-md border  px-3 text-sm border-none focus:outline-none flex-1 sm:flex-none"
               >
                 <option value="">전체</option>
                 {field.options?.map((option) => (
@@ -59,7 +62,7 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
                 value={searchParams[field.id] || ""}
                 onChange={(e) => handleValueChange(field.id, e.target.value)}
                 placeholder={field.placeholder}
-                className="h-9 rounded-md border px-3 text-sm border-none"
+                className="h-9 rounded-md border px-3 text-sm border-none focus:outline-none flex-1 sm:flex-none"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleSearch();
                 }}
@@ -68,16 +71,16 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
           </div>
         ))}
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-1 justify-end sm:flex-none">
           <button
             onClick={handleSearch}
-            className="h-9 px-4 rounded-md bg-blue-400 text-white text-sm hover:bg-blue-500"
+            className="whitespace-nowrap h-9 px-4 rounded-md bg-blue-400 text-white text-sm hover:bg-blue-500"
           >
             검색
           </button>
           <button
             onClick={handleReset}
-            className="h-9 px-4 rounded-md border bg-white text-sm hover:bg-gray-50"
+            className="whitespace-nowrap h-9 px-4 rounded-md border bg-white text-sm hover:bg-gray-50"
           >
             초기화
           </button>
