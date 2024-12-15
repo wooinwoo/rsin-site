@@ -1,7 +1,6 @@
 // app/routes/leaves.approval.tsx
 import { DataTable } from "~/features/datatable/components/DataTable";
-import { ColumnDef } from "~/features/datatable/types/datatable";
-import { Widget } from "~/shared/ui/widgets/widget";
+import { ColumnDef, SearchField } from "~/features/datatable/types/datatable";
 
 interface LeaveRequest {
   id: string;
@@ -11,6 +10,38 @@ interface LeaveRequest {
   endDate: string;
   status: "pending" | "approved" | "rejected";
 }
+
+const searchFields: SearchField[] = [
+  {
+    id: "employeeName",
+    type: "input",
+    label: "신청자",
+    placeholder: "이름을 입력하세요",
+    width: "200px",
+  },
+  {
+    id: "leaveType",
+    type: "select",
+    label: "휴가 종류",
+    options: [
+      { value: "annual", label: "연차" },
+      { value: "half", label: "반차" },
+      { value: "sick", label: "병가" },
+    ],
+    width: "150px",
+  },
+  {
+    id: "status",
+    type: "select",
+    label: "상태",
+    options: [
+      { value: "pending", label: "대기중" },
+      { value: "approved", label: "승인" },
+      { value: "rejected", label: "반려" },
+    ],
+    width: "150px",
+  },
+];
 
 const columns: ColumnDef<LeaveRequest>[] = [
   {
@@ -81,10 +112,13 @@ export default function LeaveApprovalPage() {
   };
 
   return (
-    <div className="sm:p-6">
-      <Widget>
-        <DataTable data={leaveRequests} columns={columns} onRowSelect={handleRowSelect} />
-      </Widget>
+    <div className="container mx-auto">
+      <DataTable
+        data={leaveRequests}
+        columns={columns}
+        onRowSelect={handleRowSelect}
+        searchFields={searchFields}
+      />
     </div>
   );
 }

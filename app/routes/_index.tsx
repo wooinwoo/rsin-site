@@ -93,9 +93,7 @@ export default function Index() {
 
   return (
     <div className="container mx-auto">
-      <Widget>
-        <Calendar events={events} />
-      </Widget>
+      <Calendar events={events} />
     </div>
   );
 }
