@@ -2,7 +2,6 @@ import { useCalendar } from "../../hooks/useCalendar";
 import { CalendarHeader } from "./CalendarHeader";
 import { CalendarGrid } from "./CalendarGrid";
 import type { CalendarEvent } from "../../types/event";
-import { Widget } from "~/shared/ui/widgets/widget";
 
 interface CalendarProps {
   events?: CalendarEvent[];
@@ -12,15 +11,13 @@ export function Calendar({ events = [] }: CalendarProps) {
   const { currentDate, calendarDays, goToNextMonth, goToPrevMonth } = useCalendar();
 
   return (
-    <Widget>
-      <div className="sm:p-4">
-        <CalendarHeader
-          currentDate={currentDate}
-          onPrevMonth={goToPrevMonth}
-          onNextMonth={goToNextMonth}
-        />
-        <CalendarGrid days={calendarDays} events={events} />
-      </div>
-    </Widget>
+    <div className="sm:p-4">
+      <CalendarHeader
+        currentDate={currentDate}
+        onPrevMonth={goToPrevMonth}
+        onNextMonth={goToNextMonth}
+      />
+      <CalendarGrid days={calendarDays} events={events} />
+    </div>
   );
 }
