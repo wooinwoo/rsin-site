@@ -28,7 +28,7 @@ export function SidebarHeader({
     >
       <div className={`p-2 flex w-full items-center gap-2`}>
         <div className=" flex aspect-square  items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground ">
-          <img src="/public/svg/logo.svg" className="min-w-[32px] w-[32px] h-[32px]" alt="로고" />
+          <img src="/svg/logo.svg" className="min-w-[32px] w-[32px] h-[32px]" alt="로고" />
         </div>
         <div className="grid flex-1 text-left text-lg leading-tight">
           <span className="truncate font-semibold text-base tracking-tight">RS-TEAM</span>

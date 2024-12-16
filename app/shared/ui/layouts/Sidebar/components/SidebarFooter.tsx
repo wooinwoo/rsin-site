@@ -29,11 +29,7 @@ export function SidebarFooter({
       >
         <div className={`p-2 flex w-full items-center gap-2`}>
           <span className="relative flex shrink-0 overflow-hidden h-8 w-8 rounded-lg">
-            <img
-              className="aspect-square h-full w-full"
-              alt="shadcn"
-              src="/public/images/profile.jpg"
-            />
+            <img className="aspect-square h-full w-full" alt="shadcn" src="/images/profile.jpg" />
           </span>
           <div className="grid flex-1 text-left text-sm leading-tight">
             <span className="truncate font-semibold">김태완</span>
@@ -46,9 +42,9 @@ export function SidebarFooter({
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             className="lucide lucide-chevrons-up-down ml-auto size-4"
           >
             <path d="m7 15 5 5 5-5"></path>
