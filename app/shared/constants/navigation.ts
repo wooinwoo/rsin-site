@@ -1,4 +1,3 @@
-// types/menu.ts
 export interface MenuItem {
   icon: string;
   label: string;
@@ -26,29 +25,36 @@ export const MENU_GROUPS: MenuGroup[] = [
     label: "휴가",
     items: [
       {
-        icon: "/svg/location_away.svg",
-        label: "나의 휴가",
-        path: "/leaves/my",
-      },
-      {
         icon: "/svg/houseboat.svg",
-        label: "휴가 내역",
-        path: "/leaves/history",
+        label: "휴가 현황",
+        path: "/leaves/management/history",
+        children: [
+          {
+            icon: "/svg/calendar.svg",
+            label: "휴가 내역",
+            path: "/leaves/management/history",
+          },
+          {
+            icon: "/svg/description.svg",
+            label: "연차 현황",
+            path: "/leaves/management/summary",
+          },
+        ],
       },
       {
         icon: "/svg/task.svg",
         label: "결재 내역",
-        path: "/leaves/pending", // 여기를 다시 /leaves/pending으로 변경
+        path: "/leaves/approval/pending",
         children: [
           {
             icon: "/svg/pending.svg",
             label: "결재 대기",
-            path: "/leaves/pending",
+            path: "/leaves/approval/pending",
           },
           {
             icon: "/svg/completed.svg",
             label: "결재 완료",
-            path: "/leaves/completed",
+            path: "/leaves/approval/completed",
           },
         ],
       },
