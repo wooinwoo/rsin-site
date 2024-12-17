@@ -1,42 +1,69 @@
-import { NavLink, useLocation } from "@remix-run/react";
-// types/sidebar.ts
-export interface SidebarItemProps {
-  icon: string;
-  label: string;
-  path: string;
+import { NavLink, useNavigate } from "@remix-run/react";
+import { useLocation } from "@remix-run/react";
+import type { MenuItem } from "~/shared/constants/navigation"; // MenuItem 타입 import 추가
+
+// SidebarItemProps 타입 수정
+export interface SidebarItemProps extends MenuItem {
   isCollapsed?: boolean;
   isFirst?: boolean;
 }
 
-// components/Sidebar/SidebarItem.tsx
-export function SidebarItem({ icon, label, path, isCollapsed, isFirst }: SidebarItemProps) {
+export function SidebarItem({
+  icon,
+  label,
+  path,
+  children,
+  isCollapsed,
+  isFirst,
+}: SidebarItemProps) {
   const location = useLocation();
+  const navigate = useNavigate();
 
-  // 홈(/)일 경우 정확히 일치할 때만, 나머지는 startsWith로 체크
-  const isActive = path === "/" ? location.pathname === "/" : location.pathname.startsWith(path);
+  const isPathInGroup = (pathname: string) => {
+    const pathGroups: Record<string, string[]> = {
+      "/leaves/pending": ["/leaves/pending", "/leaves/completed"],
+    };
+
+    const group = pathGroups[path];
+    if (group) {
+      return group.some((groupPath) => pathname.startsWith(groupPath));
+    }
+
+    return path === "/" ? pathname === "/" : pathname.startsWith(path);
+  };
+
+  const isActive = isPathInGroup(location.pathname);
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (children && children.length > 0) {
+      e.preventDefault();
+      navigate(children[0].path);
+    }
+  };
 
   return (
     <li data-sidebar="menu-item" className="group/menu-item relative">
       <NavLink
         to={path}
+        onClick={handleClick}
         data-sidebar="menu-button"
         className={`
-    flex w-full items-center gap-2 rounded-md p-2 
-    text-left outline-none
-    transition-colors
-    disabled:opacity-50 
-    hover:bg-gray-600/10
-    ${isActive ? "font-medium text-gray-950" : ""}
-    h-8 text-sm
-  `}
+          flex w-full items-center gap-2 rounded-md p-2 
+          text-left outline-none
+          transition-colors
+          disabled:opacity-50 
+          hover:bg-gray-600/10
+          ${isActive ? "font-medium text-gray-950" : ""}
+          h-8 text-sm
+        `}
       >
         <img
           src={icon}
           alt={label}
           className={`
-      w-6 h-6 shrink-0
-      ${isActive ? "brightness-0" : ""}
-    `}
+            w-6 h-6 shrink-0
+            ${isActive ? "brightness-0" : ""}
+          `}
         />
         <span className="truncate">{label}</span>
       </NavLink>

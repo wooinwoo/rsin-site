@@ -112,13 +112,11 @@ export default function LeaveApprovalPage() {
   };
 
   return (
-    <div className="mx-auto sm:px-4">
-      <DataTable
-        data={leaveRequests}
-        columns={columns}
-        onRowSelect={handleRowSelect}
-        searchFields={searchFields}
-      />
-    </div>
+    <DataTable
+      data={leaveRequests}
+      columns={columns}
+      onRowSelect={handleRowSelect}
+      searchFields={searchFields}
+    />
   );
 }

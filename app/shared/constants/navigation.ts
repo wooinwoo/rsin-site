@@ -1,9 +1,9 @@
 // types/menu.ts
-interface MenuItem {
+export interface MenuItem {
   icon: string;
   label: string;
   path: string;
-  children?: MenuItem[]; // 서브메뉴 추가
+  children?: MenuItem[];
 }
 
 interface MenuGroup {
@@ -11,7 +11,6 @@ interface MenuGroup {
   items: MenuItem[];
 }
 
-// constants/menu.ts
 export const MENU_GROUPS: MenuGroup[] = [
   {
     label: "",
@@ -38,18 +37,18 @@ export const MENU_GROUPS: MenuGroup[] = [
       },
       {
         icon: "/svg/task.svg",
-        label: "승인 내역",
-        path: "/leaves/approval",
+        label: "결재 내역",
+        path: "/leaves/pending", // 여기를 다시 /leaves/pending으로 변경
         children: [
           {
             icon: "/svg/pending.svg",
-            label: "대기 중",
-            path: "/leaves/approval/pending",
+            label: "결재 대기",
+            path: "/leaves/pending",
           },
           {
             icon: "/svg/completed.svg",
-            label: "처리 완료",
-            path: "/leaves/approval/completed",
+            label: "결재 완료",
+            path: "/leaves/completed",
           },
         ],
       },

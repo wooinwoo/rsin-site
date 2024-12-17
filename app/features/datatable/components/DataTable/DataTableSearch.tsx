@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { SearchField } from "../../types/datatable";
+import { TuneIcon } from "~/shared/ui/icons/TuneIcon";
 
 interface DataTableSearchProps {
   fields: SearchField[];
@@ -29,7 +30,7 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
   return (
     <div className="mb-4">
       <div className="flex flex-wrap items-center gap-2">
-        <img src="/svg/tune.svg" alt="tune" className="w-6 h-6" />
+        <TuneIcon className="w-6 h-6" />
         {fields.map((field) => (
           <div
             key={field.id}

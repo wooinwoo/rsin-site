@@ -1,27 +1,8 @@
-import { useLocation } from "@remix-run/react";
-import { useEffect, useState } from "react";
-import { MENU_GROUPS } from "~/shared/constants/navigation";
+import { useState } from "react";
 import { LeaveRequestModal } from "~/features/leave/components/LeaveRequestModal";
 import { Button } from "~/shared/ui/components/Button";
-
+import { Breadcrumb } from "~/shared/ui/layouts/Header/components/Breadcrumb";
 export function Header() {
-  const location = useLocation();
-
-  const getCurrentMenu = () => {
-    for (const group of MENU_GROUPS) {
-      const menuItem = group.items.find((item) => item.path === location.pathname);
-      if (menuItem) {
-        return {
-          group: group.label,
-          item: menuItem,
-        };
-      }
-    }
-    return null;
-  };
-
-  const currentMenu = getCurrentMenu();
-  // 휴가신청 모달
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
 
   const now = new Date();
@@ -46,26 +27,8 @@ export function Header() {
           data-orientation="vertical"
           role="none"
           className="shrink-0 bg-border w-[1px] mr-2 h-4"
-        ></div>
-        <nav aria-label="breadcrumb">
-          <ol className="flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5">
-            {currentMenu && (
-              <>
-                {currentMenu.group && (
-                  <li className="flex items-center gap-1.5">
-                    <span>{currentMenu.group}</span>
-                    <span className="text-muted-foreground/40">/</span>
-                  </li>
-                )}
-                <li className="flex items-center gap-1.5">
-                  <span className="transition-colors hover:text-foreground">
-                    {currentMenu.item.label}
-                  </span>
-                </li>
-              </>
-            )}
-          </ol>
-        </nav>
+        />
+        <Breadcrumb />
       </div>
       <div className="ml-auto flex items-center gap-2">
         <span className="text-sm hidden xs:block">{loadTime}</span>
