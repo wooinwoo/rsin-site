@@ -1,3 +1,4 @@
+import { ChevronLeftIcon, ChevronRightIcon } from "~/shared/ui/icons";
 interface DataTableFooterProps {
   selectedCount: number;
   totalCount: number;
@@ -25,7 +26,7 @@ export function DataTableFooter({
           className="h-9 w-9 rounded-md border border-gray-300 flex items-center justify-center text-sm disabled:opacity-50 hover:bg-gray-50"
           aria-label="Previous page"
         >
-          <img src="/svg/chevron_left.svg" alt="이전" className="w-5 h-5" />
+          <ChevronLeftIcon />
         </button>
 
         <div className="hidden sm:flex gap-2">
@@ -55,7 +56,7 @@ export function DataTableFooter({
           className="h-9 w-9 rounded-md border flex items-center justify-center text-sm disabled:opacity-50 hover:bg-gray-50"
           aria-label="Next page"
         >
-          <img src="/svg/chevron_right.svg" alt="다음" className="w-5 h-5" />
+          <ChevronRightIcon />
         </button>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { SearchField } from "../../types/datatable";
-import { TuneIcon } from "~/shared/ui/icons/TuneIcon";
+import { TuneIcon } from "~/shared/ui/icons";
 import { DatePicker } from "~/shared/ui/components/DatePicker";
 
 interface DataTableSearchProps {

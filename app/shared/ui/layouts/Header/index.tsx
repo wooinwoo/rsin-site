@@ -2,6 +2,8 @@ import { useState } from "react";
 import { LeaveRequestModal } from "~/features/leave/components/LeaveRequestModal";
 import { Button } from "~/shared/ui/components/Button";
 import { Breadcrumb } from "~/shared/ui/layouts/Header/components/Breadcrumb";
+import { ReplayIcon } from "~/shared/ui/icons";
+
 export function Header() {
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
 
@@ -36,7 +38,7 @@ export function Header() {
           onClick={handleRefresh}
           className="flex items-center justify-center bg-white w-8 h-8 border border-[#eaeaea] rounded-[6px] transition-colors hover:bg-gray-100"
         >
-          <img src="/svg/replay.svg" alt="새로고침" className="w-5 h-5" />
+          <ReplayIcon />
         </button>
         <Button onClick={() => setIsLeaveModalOpen(true)}>휴가신청</Button>
       </div>

@@ -5,6 +5,8 @@ import { SidebarHeader } from "./components/SidebarHeader";
 import { SidebarFooter } from "./components/SidebarFooter";
 import { SidebarItem } from "./components/SidebarItem";
 import { SidebarGroup } from "./components/SidebarGroup";
+import { BoundingBoxIcon } from "~/shared/ui/icons";
+
 export function Sidebar() {
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -24,7 +26,7 @@ export function Sidebar() {
           ${isMobileOpen ? "left-[200px]" : "left-4"}
         `}
       >
-        <img src="/svg/bounding_box.svg" alt="menu" className="w-6 h-6" />
+        <BoundingBoxIcon className="w-6 h-6" />
       </button>
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
@@ -34,7 +36,7 @@ export function Sidebar() {
           ${isCollapsed ? "left-[84px]" : "left-[260px]"}
         `}
       >
-        <img src="/svg/bounding_box.svg" alt="menu" className="w-6 h-6" />
+        <BoundingBoxIcon className="w-6 h-6" />
       </button>
 
       <div

@@ -1,4 +1,3 @@
-// app/shared/ui/icons/CalendarIcon.tsx
 import { IconProps } from "./types";
 
 export function CalendarIcon({ className = "w-5 h-5", color }: IconProps) {

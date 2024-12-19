@@ -1,6 +1,15 @@
-// app/shared/ui/icons/index.ts
 export { CalendarIcon } from "./CalendarIcon";
 export { FilterIcon } from "./FilterIcon";
 export { ChartIcon } from "./ChartIcon";
 export { TuneIcon } from "./TuneIcon";
+export { LogoIcon } from "./LogoIcon";
+export { NotificationIcon } from "./NotificationIcon";
+export { ChevronRightIcon } from "./ChevronRightIcon";
+export { ChevronLeftIcon } from "./ChevronLeftIcon";
+export { HouseboatIcon } from "./HouseboatIcon";
+export { HomeIcon } from "./HomeIcon";
+export { BoundingBoxIcon } from "./BoundingBoxIcon";
+export { ProfileIcon } from "./ProfileIcon";
+export { ReplayIcon } from "./ReplayIcon";
+export { TaskIcon } from "./TaskIcon";
 export type { IconProps } from "./types";

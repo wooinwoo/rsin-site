@@ -9,7 +9,7 @@ export interface SidebarItemProps extends MenuItem {
 }
 
 export function SidebarItem({
-  icon,
+  icon: Icon,
   label,
   path,
   children,
@@ -58,12 +58,10 @@ export function SidebarItem({
           h-8 text-sm
         `}
       >
-        <img
-          src={icon}
-          alt={label}
+        <Icon
           className={`
             w-6 h-6 shrink-0
-            ${isActive ? "brightness-0" : ""}
+            ${isActive ? "text-gray-900" : "text-gray-700"}
           `}
         />
         <span className="truncate">{label}</span>

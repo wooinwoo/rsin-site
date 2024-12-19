@@ -1,5 +1,9 @@
+import { FC } from "react";
+import { IconProps } from "~/shared/ui/icons/types";
+
+import { HomeIcon, HouseboatIcon, ProfileIcon, TaskIcon } from "~/shared/ui/icons";
 export interface MenuItem {
-  icon: string;
+  icon: FC<IconProps> | string;
   label: string;
   path: string;
   children?: MenuItem[];
@@ -15,7 +19,7 @@ export const MENU_GROUPS: MenuGroup[] = [
     label: "",
     items: [
       {
-        icon: "/svg/home.svg",
+        icon: HomeIcon,
         label: "홈",
         path: "/",
       },
@@ -25,7 +29,7 @@ export const MENU_GROUPS: MenuGroup[] = [
     label: "휴가",
     items: [
       {
-        icon: "/svg/houseboat.svg",
+        icon: HouseboatIcon,
         label: "휴가 현황",
         path: "/leaves/management/history",
         children: [
@@ -42,7 +46,7 @@ export const MENU_GROUPS: MenuGroup[] = [
         ],
       },
       {
-        icon: "/svg/task.svg",
+        icon: TaskIcon,
         label: "결재 내역",
         path: "/leaves/approval/pending",
         children: [
@@ -64,7 +68,7 @@ export const MENU_GROUPS: MenuGroup[] = [
     label: "팀원",
     items: [
       {
-        icon: "/svg/profile.svg",
+        icon: ProfileIcon,
         label: "팀원 관리",
         path: "/team/management/list",
         children: [],
