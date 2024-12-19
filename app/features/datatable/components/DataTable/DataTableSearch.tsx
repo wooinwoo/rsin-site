@@ -77,7 +77,7 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
               <DatePicker
                 isRange
                 onChange={(dates) => handleDateRangeChange(dates as [Date | null, Date | null])}
-                className="min-w-[200px]"
+                className="min-w-[200px] border-none focus:outline-none focus:ring-0"
               />
             ) : (
               <input
@@ -85,7 +85,7 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
                 value={searchParams[field.id] || ""}
                 onChange={(e) => handleValueChange(field.id, e.target.value)}
                 placeholder={field.placeholder}
-                className="h-9 rounded-md border px-3 text-sm border-none focus:outline-none flex-1 sm:flex-none"
+                className="h-9 rounded-md border px-3 text-sm border-none focus:outline-none flex-1 sm:flex-none "
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleSearch();
                 }}

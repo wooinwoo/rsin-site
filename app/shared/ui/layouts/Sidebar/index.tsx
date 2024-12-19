@@ -63,7 +63,7 @@ export function Sidebar() {
         <div className="flex-1">
           {MENU_GROUPS.map((group) => (
             <SidebarGroup key={group.label} label={group.label} isCollapsed={isCollapsed}>
-              {group.items.map((item) => (
+              {group.items.map((item: any) => (
                 <SidebarItem
                   key={item.path}
                   icon={item.icon}

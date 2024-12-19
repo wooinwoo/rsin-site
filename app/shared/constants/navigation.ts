@@ -60,4 +60,15 @@ export const MENU_GROUPS: MenuGroup[] = [
       },
     ],
   },
+  {
+    label: "팀원",
+    items: [
+      {
+        icon: "/svg/profile.svg",
+        label: "팀원 관리",
+        path: "/team/management/list",
+        children: [],
+      },
+    ],
+  },
 ] as const;

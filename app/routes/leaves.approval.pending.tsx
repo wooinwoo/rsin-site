@@ -9,12 +9,13 @@ interface LeaveRequest {
   startDate: string;
   endDate: string;
   status: "pending" | "approved" | "rejected";
+  requestDate: string;
 }
 
 const searchFields: SearchField[] = [
   {
     id: "employeeName",
-    type: "input",
+    type: "text",
     label: "신청자",
     placeholder: "이름을 입력하세요",
     width: "200px",
@@ -83,26 +84,59 @@ const columns: ColumnDef<LeaveRequest>[] = [
       </span>
     ),
   },
+  {
+    id: "requestDate",
+    header: "신청일",
+    accessorKey: "requestDate",
+  },
 ];
 
 export default function LeaveApprovalPage() {
-  // 실제로는 API에서 데이터를 가져올 것입니다
   const leaveRequests: LeaveRequest[] = [
     {
       id: "1",
-      employeeName: "홍길동",
+      employeeName: "김태완",
       leaveType: "연차",
-      startDate: "2024-03-01",
-      endDate: "2024-03-02",
+      startDate: "2024-03-15",
+      endDate: "2024-03-15",
       status: "pending",
+      requestDate: "2024-03-10",
     },
     {
       id: "2",
-      employeeName: "김철수",
+      employeeName: "김태완",
       leaveType: "반차",
-      startDate: "2024-03-05",
-      endDate: "2024-03-05",
+      startDate: "2024-03-18",
+      endDate: "2024-03-18",
       status: "approved",
+      requestDate: "2024-03-11",
+    },
+    {
+      id: "3",
+      employeeName: "김태완",
+      leaveType: "병가",
+      startDate: "2024-03-20",
+      endDate: "2024-03-22",
+      status: "approved",
+      requestDate: "2024-03-12",
+    },
+    {
+      id: "4",
+      employeeName: "김태완",
+      leaveType: "경조사",
+      startDate: "2024-03-25",
+      endDate: "2024-03-26",
+      status: "pending",
+      requestDate: "2024-03-13",
+    },
+    {
+      id: "5",
+      employeeName: "김태완",
+      leaveType: "연차",
+      startDate: "2024-04-01",
+      endDate: "2024-04-02",
+      status: "rejected",
+      requestDate: "2024-03-14",
     },
   ];
 

@@ -5,16 +5,21 @@ import { ColumnDef, SearchField } from "~/features/datatable/types/datatable";
 interface LeaveRequest {
   id: string;
   employeeName: string;
+  employeeProfileUrl: string;
   leaveType: string;
   startDate: string;
   endDate: string;
   status: "pending" | "approved" | "rejected";
+  approverName: string;
+  approverProfileUrl: string;
+  requestDate: string;
+  processedDate: string | null;
 }
 
 const searchFields: SearchField[] = [
   {
     id: "employeeName",
-    type: "input",
+    type: "text",
     label: "신청자",
     placeholder: "이름을 입력하세요",
     width: "200px",
@@ -46,17 +51,23 @@ const searchFields: SearchField[] = [
 const columns: ColumnDef<LeaveRequest>[] = [
   {
     id: "employeeName",
-    header: "신청자",
+    header: "이름",
     accessorKey: "employeeName",
+    cell: ({ row }) => (
+      <div className="flex items-center gap-2">
+        <img src={row.employeeProfileUrl} alt={row.employeeName} className="w-8 h-8 rounded-full" />
+        <span>{row.employeeName}</span>
+      </div>
+    ),
   },
   {
     id: "leaveType",
-    header: "휴가 종류",
+    header: "휴가 유형",
     accessorKey: "leaveType",
   },
   {
     id: "period",
-    header: "기간",
+    header: "날짜",
     accessorKey: "startDate",
     cell: ({ row }) => (
       <span>
@@ -83,29 +94,76 @@ const columns: ColumnDef<LeaveRequest>[] = [
       </span>
     ),
   },
+  {
+    id: "approver",
+    header: "처리자",
+    accessorKey: "approverName",
+    cell: ({ row }) =>
+      row.approverName ? (
+        <div className="flex items-center gap-2">
+          <img
+            src={row.approverProfileUrl}
+            alt={row.approverName}
+            className="w-8 h-8 rounded-full"
+          />
+          <span>{row.approverName}</span>
+        </div>
+      ) : null,
+  },
+  {
+    id: "requestDate",
+    header: "신청일",
+    accessorKey: "requestDate",
+  },
+  {
+    id: "processedDate",
+    header: "처리일",
+    accessorKey: "processedDate",
+  },
 ];
 
 export default function LeaveApprovalPage() {
-  // 실제로는 API에서 데이터를 가져올 것입니다
   const leaveRequests: LeaveRequest[] = [
     {
       id: "1",
-      employeeName: "홍길동",
-      leaveType: "연차",
-      startDate: "2024-03-01",
-      endDate: "2024-03-02",
-      status: "pending",
+      employeeName: "김태완",
+      employeeProfileUrl: "/images/profiles/profile2.jpg",
+      leaveType: "반차",
+      startDate: "2024-03-18",
+      endDate: "2024-03-18",
+      status: "approved",
+      approverName: "박부장",
+      approverProfileUrl: "/images/profiles/profile3.jpg",
+      requestDate: "2024-03-11",
+      processedDate: "2024-03-12",
     },
     {
       id: "2",
-      employeeName: "김철수",
+      employeeName: "김태완",
+      employeeProfileUrl: "/images/profiles/profile2.jpg",
       leaveType: "반차",
-      startDate: "2024-03-05",
-      endDate: "2024-03-05",
+      startDate: "2024-03-18",
+      endDate: "2024-03-18",
       status: "approved",
+      approverName: "박부장",
+      approverProfileUrl: "/images/profiles/profile3.jpg",
+      requestDate: "2024-03-11",
+      processedDate: "2024-03-12",
+    },
+    {
+      id: "3",
+      employeeName: "김태완",
+      employeeProfileUrl: "/images/profiles/profile4.jpg",
+      leaveType: "병가",
+      startDate: "2024-03-20",
+      endDate: "2024-03-22",
+      status: "rejected",
+      approverName: "김태완",
+      approverProfileUrl: "/images/profiles/profile5.jpg",
+      requestDate: "2024-03-12",
+      processedDate: "2024-03-13",
     },
   ];
-
   const handleRowSelect = (selectedRequests: LeaveRequest[]) => {
     console.log("Selected requests:", selectedRequests);
     // 선택된 항목들에 대한 처리
