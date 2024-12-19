@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { SearchField } from "../../types/datatable";
 import { TuneIcon } from "~/shared/ui/icons/TuneIcon";
+import { DatePicker } from "~/shared/ui/components/DatePicker";
 
 interface DataTableSearchProps {
   fields: SearchField[];
@@ -9,12 +10,25 @@ interface DataTableSearchProps {
 
 export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
   const [searchParams, setSearchParams] = useState<Record<string, string>>({});
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
 
   const handleValueChange = (fieldId: string, value: string) => {
     setSearchParams((prev) => ({
       ...prev,
       [fieldId]: value,
     }));
+  };
+
+  const handleDateRangeChange = (dates: [Date | null, Date | null]) => {
+    const [start, end] = dates;
+    if (start && end) {
+      setSearchParams((prev) => ({
+        ...prev,
+        startDate: start.toISOString().split("T")[0],
+        endDate: end.toISOString().split("T")[0],
+      }));
+    }
   };
 
   const handleSearch = () => {
@@ -24,6 +38,8 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
   const handleReset = () => {
     const resetParams = Object.fromEntries(fields.map((field) => [field.id, ""]));
     setSearchParams(resetParams);
+    setStartDate(null);
+    setEndDate(null);
     onSearch(resetParams);
   };
 
@@ -57,6 +73,12 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
                   </option>
                 ))}
               </select>
+            ) : field.type === "daterange" ? (
+              <DatePicker
+                isRange
+                onChange={(dates) => handleDateRangeChange(dates as [Date | null, Date | null])}
+                className="min-w-[200px]"
+              />
             ) : (
               <input
                 type="text"

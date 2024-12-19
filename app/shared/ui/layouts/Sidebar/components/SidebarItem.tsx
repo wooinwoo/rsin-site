@@ -21,7 +21,8 @@ export function SidebarItem({
 
   const isPathInGroup = (pathname: string) => {
     const pathGroups: Record<string, string[]> = {
-      "/leaves/pending": ["/leaves/pending", "/leaves/completed"],
+      "/leaves/management/history": ["/leaves/management/history", "/leaves/management/summary"],
+      "/leaves/approval/pending": ["/leaves/approval/pending", "/leaves/approval/completed"],
     };
 
     const group = pathGroups[path];

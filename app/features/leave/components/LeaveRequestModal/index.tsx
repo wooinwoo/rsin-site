@@ -7,8 +7,8 @@ import { LeaveRequestModalProps } from "./types";
 import { useState } from "react";
 
 export function LeaveRequestModal({ isOpen, onClose }: LeaveRequestModalProps) {
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
+  const [startDate, endDate] = dateRange;
 
   const leaveTypeOptions = [
     { value: "full", label: "연차" },
@@ -44,19 +44,14 @@ export function LeaveRequestModal({ isOpen, onClose }: LeaveRequestModalProps) {
           <Select required options={approvalLineOptions} />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1">
-            <label className="block text-sm font-medium">
-              사용시작일 <span className="text-red-500">*</span>
-            </label>
-            <DatePicker value={startDate} onChange={setStartDate} placeholder="날짜를 선택하세요" />
-          </div>
-          <div className="space-y-1">
-            <label className="block text-sm font-medium">
-              사용종료일 <span className="text-red-500">*</span>
-            </label>
-            <DatePicker value={endDate} onChange={setEndDate} placeholder="날짜를 선택하세요" />
-          </div>
+        <div className="space-y-1">
+          <label className="block text-sm font-medium">
+            사용시작일 <span className="text-red-500">*</span>
+          </label>
+          <DatePicker
+            isRange={true}
+            onChange={(dates) => setDateRange(dates as [Date | null, Date | null])}
+          />
         </div>
 
         <div className="space-y-2">

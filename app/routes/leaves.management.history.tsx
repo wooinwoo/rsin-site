@@ -1,23 +1,24 @@
-// app/routes/leaves.approval.tsx
 import { DataTable } from "~/features/datatable/components/DataTable";
 import { ColumnDef, SearchField } from "~/features/datatable/types/datatable";
 
-interface LeaveRequest {
+interface LeaveHistory {
   id: string;
   employeeName: string;
+  department: string;
   leaveType: string;
   startDate: string;
   endDate: string;
-  status: "pending" | "approved" | "rejected";
+  status: "pending" | "scheduled" | "used"; // 승인대기/사용예정/사용완료
+  reason: string;
 }
 
 const searchFields: SearchField[] = [
   {
-    id: "employeeName",
-    type: "input",
-    label: "신청자",
-    placeholder: "이름을 입력하세요",
-    width: "200px",
+    id: "period",
+    type: "daterange",
+    label: "기간",
+    placeholder: "기간을 선택하세요",
+    width: "300px",
   },
   {
     id: "leaveType",
@@ -31,23 +32,28 @@ const searchFields: SearchField[] = [
     width: "150px",
   },
   {
-    id: "status",
+    id: "department",
     type: "select",
-    label: "상태",
+    label: "부서",
     options: [
-      { value: "pending", label: "대기중" },
-      { value: "approved", label: "승인" },
-      { value: "rejected", label: "반려" },
+      { value: "dev", label: "개발팀" },
+      { value: "hr", label: "인사팀" },
+      { value: "sales", label: "영업팀" },
     ],
     width: "150px",
   },
 ];
 
-const columns: ColumnDef<LeaveRequest>[] = [
+const columns: ColumnDef<LeaveHistory>[] = [
   {
     id: "employeeName",
-    header: "신청자",
+    header: "이름",
     accessorKey: "employeeName",
+  },
+  {
+    id: "department",
+    header: "부서",
+    accessorKey: "department",
   },
   {
     id: "leaveType",
@@ -66,54 +72,62 @@ const columns: ColumnDef<LeaveRequest>[] = [
   },
   {
     id: "status",
-    header: "상태",
+    header: "사용 여부",
     accessorKey: "status",
     cell: ({ row }) => (
       <span
         className={`
-        px-2 py-1 rounded-full text-xs
-        ${row.status === "pending" ? "bg-yellow-100 text-yellow-800" : ""}
-        ${row.status === "approved" ? "bg-green-100 text-green-800" : ""}
-        ${row.status === "rejected" ? "bg-red-100 text-red-800" : ""}
-      `}
+          px-2 py-1 rounded-full text-xs
+          ${row.status === "pending" ? "bg-yellow-100 text-yellow-800" : ""}
+          ${row.status === "scheduled" ? "bg-blue-100 text-blue-800" : ""}
+          ${row.status === "used" ? "bg-green-100 text-green-800" : ""}
+        `}
       >
-        {row.status === "pending" && "대기중"}
-        {row.status === "approved" && "승인"}
-        {row.status === "rejected" && "반려"}
+        {row.status === "pending" && "승인대기"}
+        {row.status === "scheduled" && "사용예정"}
+        {row.status === "used" && "사용완료"}
       </span>
     ),
   },
+  {
+    id: "reason",
+    header: "사유",
+    accessorKey: "reason",
+  },
 ];
 
-export default function LeaveApprovalPage() {
+export default function LeaveHistoryPage() {
   // 실제로는 API에서 데이터를 가져올 것입니다
-  const leaveRequests: LeaveRequest[] = [
+  const leaveHistories: LeaveHistory[] = [
     {
       id: "1",
       employeeName: "홍길동",
+      department: "개발팀",
       leaveType: "연차",
       startDate: "2024-03-01",
       endDate: "2024-03-02",
-      status: "pending",
+      status: "used",
+      reason: "개인 사유",
     },
     {
       id: "2",
       employeeName: "김철수",
+      department: "인사팀",
       leaveType: "반차",
       startDate: "2024-03-05",
       endDate: "2024-03-05",
-      status: "approved",
+      status: "scheduled",
+      reason: "병원 방문",
     },
   ];
 
-  const handleRowSelect = (selectedRequests: LeaveRequest[]) => {
-    console.log("Selected requests:", selectedRequests);
-    // 선택된 항목들에 대한 처리
+  const handleRowSelect = (selectedHistories: LeaveHistory[]) => {
+    console.log("Selected histories:", selectedHistories);
   };
 
   return (
     <DataTable
-      data={leaveRequests}
+      data={leaveHistories}
       columns={columns}
       onRowSelect={handleRowSelect}
       searchFields={searchFields}

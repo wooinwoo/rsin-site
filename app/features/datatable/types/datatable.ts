@@ -8,10 +8,11 @@ export interface ColumnDef<T> {
 
 export interface SearchField {
   id: string;
-  type: "select" | "input";
+  type: "text" | "select" | "daterange";
   label: string;
   placeholder?: string;
   options?: { value: string; label: string }[];
+  required?: boolean;
   width?: string;
 }
 
