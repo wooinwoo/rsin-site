@@ -12,4 +12,6 @@ export { BoundingBoxIcon } from "./BoundingBoxIcon";
 export { ProfileIcon } from "./ProfileIcon";
 export { ReplayIcon } from "./ReplayIcon";
 export { TaskIcon } from "./TaskIcon";
+export { EyeIcon } from "./EyeIcon";
+export { EyeOffIcon } from "./EyeOffIcon";
 export type { IconProps } from "./types";

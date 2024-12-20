@@ -1,3 +1,6 @@
+import { useRef, useState } from "react";
+import { useClickAway } from "~/shared/hooks/useClickAway";
+import { useNavigate } from "@remix-run/react";
 interface SidebarFooterProps {
   isCollapsed: boolean;
   setIsCollapsed: (value: boolean) => void;
@@ -11,25 +14,26 @@ export function SidebarFooter({
   isMobileOpen,
   setIsMobileOpen,
 }: SidebarFooterProps) {
+  const navigate = useNavigate();
+  const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
+  const contextMenuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useClickAway([contextMenuRef, buttonRef], () => {
+    setIsContextMenuOpen(false);
+  });
+
   return (
-    <>
+    <div className="relative">
       <button
+        ref={buttonRef}
         data-sidebar="menu-button"
-        data-size="lg"
-        data-active="false"
-        className="w-full  flex justify-between items-center overflow-hidden rounded-md p-2 text-left outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground  text-sm group-data-[collapsible=icon]:!p-0 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-        type="button"
-        aria-haspopup="menu"
-        aria-expanded={isMobileOpen}
-        data-state={isMobileOpen ? "open" : "closed"}
-        onClick={() => {
-          setIsCollapsed(!isCollapsed);
-          setIsMobileOpen(!isMobileOpen);
-        }}
+        className="w-full flex justify-between items-center overflow-hidden rounded-md p-2 text-left outline-none transition-[width,height,padding] hover:bg-gray-100"
+        onClick={() => setIsContextMenuOpen(!isContextMenuOpen)}
       >
         <div className={`p-2 flex w-full items-center gap-2`}>
           <span className="relative flex shrink-0 overflow-hidden h-8 w-8 rounded-lg">
-            <img className="aspect-square h-full w-full" alt="shadcn" src="/images/profile.jpg" />
+            <img className="aspect-square h-full w-full" alt="프로필" src="/images/profile.jpg" />
           </span>
           <div className="grid flex-1 text-left text-sm leading-tight">
             <span className="truncate font-semibold">김태완</span>
@@ -52,6 +56,63 @@ export function SidebarFooter({
           </svg>
         </div>
       </button>
-    </>
+
+      {/* Context Menu */}
+      {isContextMenuOpen && (
+        <div
+          ref={contextMenuRef}
+          className="absolute bottom-full left-[110px] sm:left-[230px] mb-2 w-48 rounded-lg bg-white shadow-lg border border-gray-200 py-1"
+        >
+          <button
+            onClick={() => {
+              /* 내정보 수정 핸들러 */
+            }}
+            className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-user"
+            >
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            내정보 수정
+          </button>
+          <button
+            onClick={() => {
+              navigate("/login");
+              /* 로그아웃 핸들러 */
+            }}
+            className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 flex items-center gap-2"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-log-out"
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" x2="9" y1="12" y2="12" />
+            </svg>
+            로그아웃
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
