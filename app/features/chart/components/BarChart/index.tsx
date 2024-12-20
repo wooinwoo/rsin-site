@@ -23,7 +23,7 @@ export function BarChart({ data, maxValue }: BarChartProps) {
             style={{ minHeight: "100%" }}
           >
             {/* 값 표시 */}
-            <div className="absolute -top-6 text-sm font-medium z-10">{item.value}</div>
+            <div className="absolute -top-6 text-sm  z-10">{item.value}</div>
 
             {/* 막대 컨테이너 */}
             <div className="absolute bottom-0 w-full max-w-[60px] h-[calc(100%-4px)] z-10">

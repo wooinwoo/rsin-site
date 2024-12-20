@@ -137,14 +137,12 @@ export default function Index() {
               <CalendarFilters filters={filters} onFilterChange={handleFilterChange} />
             </div>
             <div className="flex-1 sm:px-4 xl:p-0">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-base font-medium flex items-center gap-2">
+              <div className="flex justify-start items-center mb-6">
+                <h2 className="text-base font-medium flex items-center gap-2 mr-2">
                   <ChartIcon />
-                  근태 현황
+                  현황
                 </h2>
-                <span className="text-sm xs:block hidden text-gray-600">
-                  전체 인원 : {totalEmployees}명
-                </span>
+                <span className="text-sm  text-gray-600">{totalEmployees}명</span>
               </div>
               <div className="h-[150px] sm:h-[200px] ">
                 <BarChart data={chartData} />
