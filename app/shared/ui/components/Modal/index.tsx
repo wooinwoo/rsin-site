@@ -32,20 +32,22 @@ export function Modal({ children, isOpen, onClose, title }: ModalProps) {
   return createPortal(
     <>
       {/* Backdrop */}
-      <div className="fixed inset-0 z-[60] bg-black/80 animate-fade-in" onClick={handleClose} />
+      <div className="fixed inset-0 z-[9993] bg-black/80 animate-fade-in" onClick={handleClose} />
 
       {/* Modal */}
       <div
         role="dialog"
         aria-modal="true"
         className="
-          fixed left-1/2 top-1/2 z-[61] 
+          fixed left-1/2 top-1/2 z-[9994] 
           w-[calc(100%-2rem)] max-w-lg
           -translate-x-1/2 -translate-y-1/2
           rounded-lg border border-gray-200 
           bg-white
           shadow-lg 
           animate-scale-in
+          max-h-[calc(100%-2rem)]
+          flex flex-col
         "
       >
         {/* Header - 패딩 분리 */}
@@ -66,7 +68,7 @@ export function Modal({ children, isOpen, onClose, title }: ModalProps) {
         )}
 
         {/* Content - 패딩 없음 */}
-        <div className="px-6 py-4">{children}</div>
+        <div className="px-6 py-4 flex-1 overflow-y-auto">{children}</div>
       </div>
     </>,
     document.body

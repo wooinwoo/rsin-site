@@ -21,7 +21,7 @@ export function Sidebar() {
       <button
         onClick={() => setIsMobileOpen(!isMobileOpen)}
         className={`
-          md:hidden fixed top-4 z-[60]
+          md:hidden fixed top-4 z-[9992]
           transition-[left] duration-300 ease-in-out
           ${isMobileOpen ? "left-[200px]" : "left-4"}
         `}
@@ -31,7 +31,7 @@ export function Sidebar() {
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
         className={`
-          hidden md:flex fixed top-4 z-[60]
+          hidden md:flex fixed top-4 z-[9992]
           transition-[left] duration-300 ease-in-out
           ${isCollapsed ? "left-[84px]" : "left-[260px]"}
         `}
@@ -53,7 +53,7 @@ export function Sidebar() {
           ${isCollapsed ? "md:w-16" : "md:w-[240px]"}
           md:translate-x-0
           w-[240px]
-          z-[50]
+          z-[9992]
         `}
       >
         <SidebarHeader
@@ -87,7 +87,7 @@ export function Sidebar() {
 
       {isMobileOpen && (
         <div
-          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-[40]"
+          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-[9991]"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
