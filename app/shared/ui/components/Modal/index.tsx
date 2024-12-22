@@ -39,16 +39,16 @@ export function Modal({ children, isOpen, onClose, title }: ModalProps) {
         role="dialog"
         aria-modal="true"
         className="
-          fixed left-1/2 top-1/2 z-[9994] 
-          w-[calc(100%-2rem)] max-w-lg
-          -translate-x-1/2 -translate-y-1/2
-          rounded-lg border border-gray-200 
-          bg-white
-          shadow-lg 
-          animate-scale-in
-          max-h-[calc(100%-2rem)]
-          flex flex-col
-        "
+    fixed left-1/2 top-1/2 z-[9994]
+    w-[calc(100%-2rem)] min-w-[320px] max-w-md  {/* max-w-lg를 max-w-md로 변경하고 min-w 추가 */}
+    -translate-x-1/2 -translate-y-1/2
+    rounded-lg border border-gray-200 
+    bg-white
+    shadow-lg 
+    animate-scale-in
+    max-h-[calc(100%-2rem)]
+    flex flex-col
+  "
       >
         {/* Header - 패딩 분리 */}
         {title && (
