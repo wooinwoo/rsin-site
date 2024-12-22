@@ -40,7 +40,9 @@ export function Header() {
         >
           <ReplayIcon />
         </button>
-        <Button onClick={() => setIsLeaveModalOpen(true)}>휴가신청</Button>
+        <Button variant="primary" onClick={() => setIsLeaveModalOpen(true)}>
+          휴가신청
+        </Button>
       </div>
       <LeaveRequestModal isOpen={isLeaveModalOpen} onClose={() => setIsLeaveModalOpen(false)} />
     </header>

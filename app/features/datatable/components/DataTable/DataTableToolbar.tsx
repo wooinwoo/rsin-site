@@ -1,12 +1,12 @@
 import { useState } from "react";
-
+import { ToolbarButton } from "~/features/datatable/types/datatable";
 interface DataTableToolbarProps {
   totalItems: number;
   pageSize: number;
   onPageSizeChange: (size: number) => void;
   onSearch?: (params: SearchParams) => void;
+  toolbarButtons?: ToolbarButton[];
 }
-
 interface SearchParams {
   type: string;
   keyword: string;
@@ -17,6 +17,7 @@ export function DataTableToolbar({
   pageSize,
   onPageSizeChange,
   onSearch,
+  toolbarButtons,
 }: DataTableToolbarProps) {
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -33,11 +34,38 @@ export function DataTableToolbar({
 
   return (
     <div className="space-y-4">
-      {/* 기존 툴바 내용 */}
       <div className="flex flex-col 2xs:flex-row items-start 2xs:items-center justify-between gap-4">
-        <div className="text-sm text-gray-600">총 {totalItems}건</div>
+        <div className="flex items-center gap-4">
+          <div className="text-sm text-gray-600">총 {totalItems}건</div>
+          {/* 툴바 버튼 렌더링 */}
+          {toolbarButtons && (
+            <div className="flex items-center gap-2">
+              {toolbarButtons.map((button, index) => (
+                <button
+                  key={index}
+                  onClick={button.onClick}
+                  className={`
+                    inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md
+                    ${
+                      button.variant === "primary"
+                        ? "bg-blue-600 text-white hover:bg-blue-700"
+                        : button.variant === "secondary"
+                        ? "bg-gray-100 text-gray-900 hover:bg-gray-200"
+                        : button.variant === "danger" // 새로운 danger variant 추가
+                        ? "border-[1px] border-red-500 text-red-500 bg-white hover:bg-red-50"
+                        : "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+                    }
+                  `}
+                >
+                  {button.icon && <span className="w-4 h-4">{button.icon}</span>}
+                  {button.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600">페이지당 행:</span>
+          <span className="text-sm text-gray-600">행 수:</span>
           <select
             value={pageSize}
             onChange={(e) => onPageSizeChange(Number(e.target.value))}

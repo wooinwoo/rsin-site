@@ -75,47 +75,6 @@ const columns: ColumnDef<TeamMember>[] = [
   },
 ];
 
-const searchFields: SearchField[] = [
-  {
-    id: "department",
-    type: "select",
-    label: "부서",
-    options: [
-      { value: "개발팀", label: "개발팀" },
-      { value: "인사팀", label: "인사팀" },
-      { value: "마케팅팀", label: "마케팅팀" },
-      { value: "기획팀", label: "기획팀" },
-      { value: "디자인팀", label: "디자인팀" },
-      { value: "영업팀", label: "영업팀" },
-    ],
-  },
-  {
-    id: "employeeId",
-    type: "text",
-    label: "사번",
-    placeholder: "사번을 입력하세요",
-  },
-  {
-    id: "name",
-    type: "text",
-    label: "이름",
-    placeholder: "이름을 입력하세요",
-  },
-  {
-    id: "position",
-    type: "select",
-    label: "직급",
-    options: [
-      { value: "사원", label: "사원" },
-      { value: "주임", label: "주임" },
-      { value: "대리", label: "대리" },
-      { value: "과장", label: "과장" },
-      { value: "차장", label: "차장" },
-      { value: "부장", label: "부장" },
-    ],
-  },
-];
-
 const teamMembers: TeamMember[] = [
   {
     id: "1",
@@ -195,11 +154,6 @@ export default function TeamManagementListPage() {
   };
 
   return (
-    <DataTable
-      data={teamMembers}
-      columns={columns}
-      onRowSelect={handleRowSelect}
-      searchFields={searchFields}
-    />
+    <DataTable data={teamMembers} columns={columns} onRowSelect={handleRowSelect} enableSearch />
   );
 }

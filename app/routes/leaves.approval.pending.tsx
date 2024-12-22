@@ -1,7 +1,7 @@
 // app/routes/leaves.approval.tsx
 import { DataTable } from "~/features/datatable/components/DataTable";
 import { ColumnDef, SearchField } from "~/features/datatable/types/datatable";
-
+import { CheckIcon } from "~/shared/ui/icons/CheckIcon";
 interface LeaveRequest {
   id: string;
   employeeName: string;
@@ -151,6 +151,16 @@ export default function LeaveApprovalPage() {
       columns={columns}
       onRowSelect={handleRowSelect}
       searchFields={searchFields}
+      enableSearch
+      enableSelection
+      toolbarButtons={[
+        {
+          label: "일괄승인",
+          onClick: () => {},
+          variant: "danger",
+          icon: <CheckIcon />,
+        },
+      ]}
     />
   );
 }

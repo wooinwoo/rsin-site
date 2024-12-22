@@ -5,6 +5,7 @@ interface DataTableFooterProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  enableSelection: boolean;
 }
 
 export function DataTableFooter({
@@ -13,12 +14,19 @@ export function DataTableFooter({
   currentPage,
   totalPages,
   onPageChange,
+  enableSelection,
 }: DataTableFooterProps) {
   return (
-    <div className="flex flex-col 2xs:flex-row items-start 2xs:items-center justify-between gap-4 py-4">
-      <div className="text-sm text-gray-600">
-        {selectedCount} of {totalCount} row(s) selected.
-      </div>
+    <div
+      className={`flex flex-col 2xs:flex-row items-start 2xs:items-center ${
+        enableSelection ? "justify-between" : "justify-end"
+      } gap-4 py-4`}
+    >
+      {enableSelection && (
+        <div className="text-sm text-gray-600">
+          {selectedCount} of {totalCount} row(s) selected.
+        </div>
+      )}
       <div className="flex flex-wrap gap-2">
         <button
           onClick={() => onPageChange(currentPage - 1)}

@@ -175,6 +175,7 @@ export default function LeaveApprovalPage() {
       columns={columns}
       onRowSelect={handleRowSelect}
       searchFields={searchFields}
+      enableSearch
     />
   );
 }

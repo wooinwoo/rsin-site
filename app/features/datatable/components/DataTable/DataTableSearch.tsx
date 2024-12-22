@@ -2,7 +2,7 @@ import { useState } from "react";
 import { SearchField } from "../../types/datatable";
 import { TuneIcon } from "~/shared/ui/icons/TuneIcon";
 import { DatePicker } from "~/shared/ui/components/DatePicker";
-
+import { Button } from "~/shared/ui/components/Button";
 interface DataTableSearchProps {
   fields: SearchField[];
   onSearch: (params: Record<string, string>) => void;
@@ -96,12 +96,9 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
           ))}
         </div>
         <div className="flex gap-2 flex-1 justify-end sm:flex-none">
-          <button
-            onClick={handleSearch}
-            className="whitespace-nowrap h-9 px-4 rounded-md bg-blue-400 text-white text-sm hover:bg-blue-500"
-          >
+          <Button variant="primary" onClick={handleSearch}>
             검색
-          </button>
+          </Button>
           <button
             onClick={handleReset}
             className="whitespace-nowrap h-9 px-4 rounded-md border bg-white text-sm hover:bg-gray-50"

@@ -25,6 +25,7 @@ export function DataTableHeader<T>({
             />
           </th>
         )}
+        <th className="w-[60px] p-4 text-left text-sm font-medium text-gray-600">No</th>
         {columns.map((column) => (
           <th
             key={column.id}

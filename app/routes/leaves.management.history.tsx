@@ -131,6 +131,7 @@ export default function LeaveHistoryPage() {
       columns={columns}
       onRowSelect={handleRowSelect}
       searchFields={searchFields}
+      enableSearch
     />
   );
 }

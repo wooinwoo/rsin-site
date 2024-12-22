@@ -4,7 +4,6 @@ import { DataTableBody } from "./DataTableBody";
 import { DataTableFooter } from "./DataTableFooter";
 import { DataTableToolbar } from "./DataTableToolbar";
 import { DataTableProps } from "../../types/datatable";
-
 import { Widget } from "~/shared/ui/widgets/widget";
 import { DataTableSearch } from "./DataTableSearch";
 
@@ -13,50 +12,68 @@ export function DataTable<T extends Record<string, any>>({
   columns,
   searchFields,
   onSearch,
-  selectable = true,
+  enableSelection = false,
+  enableSearch = false,
+  enablePagination = true,
   onRowSelect,
+  toolbarButtons,
 }: DataTableProps<T>) {
   const [selectedRows, setSelectedRows] = useState<T[]>([]);
   const [filteredData, setFilteredData] = useState<T[]>(data);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
-  const allSelected = filteredData.length > 0 && selectedRows.length === filteredData.length;
+  const allSelected =
+    enableSelection && filteredData.length > 0 && selectedRows.length === filteredData.length;
   const totalPages = Math.ceil(filteredData.length / pageSize);
-  const paginatedData = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const paginatedData = enablePagination
+    ? filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+    : filteredData;
 
   return (
     <>
-      {searchFields && <DataTableSearch fields={searchFields} onSearch={onSearch!} />}
+      {enableSearch && searchFields && (
+        <DataTableSearch fields={searchFields} onSearch={onSearch!} />
+      )}
       <Widget>
         <div className="w-full space-y-4">
-          <DataTableToolbar
-            totalItems={filteredData.length}
-            pageSize={pageSize}
-            onPageSizeChange={(newSize) => {
-              setPageSize(newSize);
-              setCurrentPage(1);
-            }}
-          />
+          {enablePagination && (
+            <DataTableToolbar
+              totalItems={filteredData.length}
+              pageSize={pageSize}
+              onPageSizeChange={(newSize) => {
+                setPageSize(newSize);
+                setCurrentPage(1);
+              }}
+              toolbarButtons={toolbarButtons}
+            />
+          )}
 
           <div className="relative rounded-md border">
             <div className="overflow-x-auto">
               <table className="w-full table-auto caption-bottom text-sm">
                 <DataTableHeader
                   columns={columns}
-                  selectable={selectable}
+                  selectable={enableSelection}
                   allSelected={allSelected}
-                  onSelectAll={(checked) => {
-                    const newSelectedRows = checked ? filteredData : [];
-                    setSelectedRows(newSelectedRows);
-                    onRowSelect?.(newSelectedRows);
-                  }}
+                  onSelectAll={
+                    enableSelection
+                      ? (checked) => {
+                          const newSelectedRows = checked ? filteredData : [];
+                          setSelectedRows(newSelectedRows);
+                          onRowSelect?.(newSelectedRows);
+                        }
+                      : undefined
+                  }
                 />
                 <DataTableBody
                   data={paginatedData}
                   columns={columns}
-                  selectable={selectable}
+                  selectable={enableSelection}
                   selectedRows={selectedRows}
+                  pageSize={pageSize}
+                  currentPage={currentPage}
+                  totalItems={filteredData.length}
                   onRowSelect={(rows) => {
                     setSelectedRows(rows);
                     onRowSelect?.(rows);
@@ -66,13 +83,16 @@ export function DataTable<T extends Record<string, any>>({
             </div>
           </div>
 
-          <DataTableFooter
-            selectedCount={selectedRows.length}
-            totalCount={filteredData.length}
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
+          {enablePagination && (
+            <DataTableFooter
+              selectedCount={selectedRows.length}
+              totalCount={filteredData.length}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              enableSelection={enableSelection}
+            />
+          )}
         </div>
       </Widget>
     </>

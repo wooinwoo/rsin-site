@@ -7,6 +7,9 @@ interface DataTableBodyProps<T> {
   selectable: boolean;
   selectedRows: T[];
   onRowSelect: (rows: T[]) => void;
+  pageSize: number;
+  currentPage: number;
+  totalItems: number;
 }
 
 export function DataTableBody<T extends Record<string, any>>({
@@ -15,6 +18,9 @@ export function DataTableBody<T extends Record<string, any>>({
   selectable,
   selectedRows,
   onRowSelect,
+  pageSize,
+  currentPage,
+  totalItems,
 }: DataTableBodyProps<T>) {
   return (
     <tbody>
@@ -22,6 +28,10 @@ export function DataTableBody<T extends Record<string, any>>({
         <DataTableRow
           key={index}
           item={item}
+          index={index}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          totalItems={totalItems}
           columns={columns}
           selectable={selectable}
           selected={selectedRows.includes(item)}
