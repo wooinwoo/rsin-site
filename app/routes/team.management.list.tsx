@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { DataTable } from "~/features/datatable/components/DataTable";
-import { ColumnDef, SearchField } from "~/features/datatable/types/datatable";
-
+import { ColumnDef } from "~/features/datatable/types/datatable";
+import { PlusIcon } from "~/shared/ui/icons/PlusIcon";
+import { TeamMemberAddModal } from "~/features/team/components/TeamMemberAddModal";
 interface TeamMember {
   id: string;
   profileUrl: string;
@@ -149,11 +151,41 @@ const teamMembers: TeamMember[] = [
 ];
 
 export default function TeamManagementListPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleRowSelect = (selectedMembers: TeamMember[]) => {
     console.log("Selected members:", selectedMembers);
   };
 
   return (
-    <DataTable data={teamMembers} columns={columns} onRowSelect={handleRowSelect} enableSearch />
+    <>
+      <TeamMemberAddModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={async (data) => {
+          try {
+            // API 호출 등 처리
+            // await addTeamMember(data);
+            setIsModalOpen(false);
+          } catch (error) {
+            console.error(error);
+          }
+        }}
+      />
+      <DataTable
+        data={teamMembers}
+        columns={columns}
+        onRowSelect={handleRowSelect}
+        enableSearch
+        toolbarButtons={[
+          {
+            label: "팀원추가",
+            onClick: () => setIsModalOpen(true),
+            variant: "primary",
+            icon: <PlusIcon />,
+          },
+        ]}
+      />
+    </>
   );
 }

@@ -7,7 +7,8 @@ export function Button({ variant = "primary", className = "", ...props }: Button
     primary: "bg-blue-400 text-white hover:bg-blue-600",
     secondary: "bg-gray-400 text-white hover:bg-gray-600",
     red: "bg-red-400 text-white hover:bg-red-600",
-    outline: "border border-gray-300 hover:bg-gray-100",
+    outline:
+      "rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50",
   };
 
   return (

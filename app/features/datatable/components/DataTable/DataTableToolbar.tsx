@@ -48,7 +48,7 @@ export function DataTableToolbar({
                     inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md
                     ${
                       button.variant === "primary"
-                        ? "bg-blue-600 text-white hover:bg-blue-700"
+                        ? "border-[1px] border-blue-500 text-blue-500 bg-white hover:bg-blue-50"
                         : button.variant === "secondary"
                         ? "bg-gray-100 text-gray-900 hover:bg-gray-200"
                         : button.variant === "danger" // 새로운 danger variant 추가
@@ -57,7 +57,7 @@ export function DataTableToolbar({
                     }
                   `}
                 >
-                  {button.icon && <span className="w-4 h-4">{button.icon}</span>}
+                  {button.icon && <span>{button.icon}</span>}
                   {button.label}
                 </button>
               ))}
