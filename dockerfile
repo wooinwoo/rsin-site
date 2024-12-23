@@ -17,4 +17,5 @@ COPY . .
 EXPOSE 5173
 
 RUN npm run build
+RUN ls -la
 CMD ["node", "./build/server/index.js"]
