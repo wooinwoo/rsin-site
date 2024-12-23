@@ -3,6 +3,8 @@ import { DataTable } from "~/features/datatable/components/DataTable";
 import { ColumnDef } from "~/features/datatable/types/datatable";
 import { PlusIcon } from "~/shared/ui/icons/PlusIcon";
 import { TeamMemberAddModal } from "~/features/team/components/TeamMemberAddModal";
+import { TeamMemberAddData } from "~/features/team/components/TeamMemberAddModal/types";
+
 interface TeamMember {
   id: string;
   profileUrl: string;
@@ -141,35 +143,94 @@ const teamMembers: TeamMember[] = [
 
 export default function TeamManagementListPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
 
-  const handleRowSelect = (selectedMembers: TeamMember[]) => {
-    console.log("Selected members:", selectedMembers);
+  const getInitialModalData = (member: TeamMember | null): TeamMemberAddData => {
+    if (!member) {
+      return {
+        name: "",
+        phone: "",
+        email: "",
+        department: "",
+        position: "",
+        joinDate: "",
+        birthDate: "",
+        mbti: null,
+        isManager: false,
+      };
+    }
+
+    return {
+      name: member.name,
+      phone: member.phone,
+      email: member.email,
+      department: member.department,
+      position: member.position,
+      joinDate: member.joinDate,
+      birthDate: member.birthDate,
+      mbti: member.mbti,
+      isManager: false,
+    };
+  };
+
+  const handleRowClick = (member: TeamMember) => {
+    setSelectedMember(member);
+    setIsModalOpen(true);
   };
 
   return (
     <>
       <TeamMemberAddModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedMember(null);
+        }}
+        mode={selectedMember ? "edit" : "add"}
+        initialData={getInitialModalData(selectedMember)}
         onSubmit={async (data) => {
           try {
-            // API 호출 등 처리
-            // await addTeamMember(data);
+            if (selectedMember) {
+              // 수정 API 호출
+              // await updateTeamMember(selectedMember.id, data);
+            } else {
+              // 추가 API 호출
+              // await addTeamMember(data);
+            }
             setIsModalOpen(false);
+            setSelectedMember(null);
           } catch (error) {
             console.error(error);
           }
         }}
+        onResign={
+          selectedMember
+            ? async () => {
+                try {
+                  // 퇴사 처리 API 호출
+                  // await resignTeamMember(selectedMember.id);
+                  setIsModalOpen(false);
+                  setSelectedMember(null);
+                } catch (error) {
+                  console.error(error);
+                }
+              }
+            : undefined
+        }
       />
+
       <DataTable
         data={teamMembers}
         columns={columns}
-        onRowSelect={handleRowSelect}
+        onRowClick={handleRowClick}
         enableSearch
         toolbarButtons={[
           {
             label: "팀원추가",
-            onClick: () => setIsModalOpen(true),
+            onClick: () => {
+              setSelectedMember(null);
+              setIsModalOpen(true);
+            },
             variant: "primary",
             icon: <PlusIcon />,
           },

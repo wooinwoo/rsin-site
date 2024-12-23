@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal } from "~/shared/ui/components/Modal";
 import { Button } from "~/shared/ui/components/Button";
 import { Select } from "~/shared/ui/components/Select";
@@ -8,27 +8,52 @@ import { Toggle } from "~/shared/ui/components/Toggle";
 import { TeamMemberAddModalProps, TeamMemberAddData } from "./types";
 import { DEPARTMENT_OPTIONS, POSITION_OPTIONS, MBTI_OPTIONS } from "./constants";
 
-export function TeamMemberAddModal({ isOpen, onClose, onSubmit }: TeamMemberAddModalProps) {
-  const [formData, setFormData] = useState<TeamMemberAddData>({
-    name: "",
-    phone: "",
-    email: "",
-    department: "",
-    position: "",
-    joinDate: "",
-    isManager: false,
-    birthDate: "",
-    mbti: null,
-  });
+export function TeamMemberAddModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  mode = "add",
+  initialData,
+  onResign,
+}: TeamMemberAddModalProps) {
+  const [formData, setFormData] = useState<TeamMemberAddData>(
+    initialData || {
+      name: "",
+      phone: "",
+      email: "",
+      department: "",
+      position: "",
+      joinDate: "",
+      isManager: false,
+      birthDate: "",
+      mbti: null,
+    }
+  );
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit?.(formData);
-  };
+  useEffect(() => {
+    if (initialData) {
+      setFormData(initialData);
+    }
+  }, [initialData]);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="팀원 추가">
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={mode === "add" ? "팀원 추가" : "팀원 정보 수정"}
+    >
+      <form
+        className="space-y-4"
+        onSubmit={async (e) => {
+          e.preventDefault();
+          try {
+            await onSubmit(formData);
+            onClose();
+          } catch (error) {
+            console.error(error);
+          }
+        }}
+      >
         <div className="space-y-1">
           <label className="block text-sm font-medium">
             이름 <span className="text-red-500">*</span>
@@ -144,8 +169,26 @@ export function TeamMemberAddModal({ isOpen, onClose, onSubmit }: TeamMemberAddM
         </div>
 
         <div className="flex justify-end gap-2 pt-4 border-t border-gray-300">
+          {mode === "edit" && onResign && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={async () => {
+                if (window.confirm("정말 퇴사 처리하시겠습니까?")) {
+                  try {
+                    await onResign();
+                    onClose();
+                  } catch (error) {
+                    console.error(error);
+                  }
+                }
+              }}
+            >
+              퇴사처리
+            </Button>
+          )}
           <Button type="submit" variant="red">
-            추가
+            {mode === "add" ? "추가" : "수정"}
           </Button>
         </div>
       </form>
