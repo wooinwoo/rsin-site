@@ -1,0 +1,131 @@
+on:
+  push:
+    branches:
+      - dev
+env:
+  SERVICE: site
+  AWS_REGION: ap-northeast-2
+  ECR_REPOSITORY: rsin/${{github.ref_name}}/site
+  TASK_DEFINITION: rsin-${{github.ref_name}}-site
+  ECS_CLUSTER: rsin-${{github.ref_name}}
+  ECS_SERVICE: site
+  CONTAINER_NAME: site
+  ENV_S3_ARN: arn:aws:s3:::rsin-${{github.ref_name}}-envs/site/${{github.ref_name}}.env
+  ENV_S3_URI: s3://rsin-${{github.ref_name}}-envs/site/${{github.ref_name}}.env
+
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{secrets.AWS_ROLE_ARN}}
+          aws-region: ${{env.AWS_REGION}}
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        id: cache
+        with:
+          path: node_modules
+          key: npm-packages-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm install
+
+      # - name: Download env
+      #   run: aws s3 cp ${{env.ENV_S3_URI}} packages/${{env.SERVICE}}/${{env.SCOPE}}/.env
+
+      - name: Build
+        run: npm run build
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{secrets.AWS_ROLE_ARN}}
+          aws-region: ${{env.AWS_REGION}}
+
+      # - name: Download env
+      #   run: aws s3 cp ${{env.ENV_S3_URI}} packages/${{env.SERVICE}}/${{env.SCOPE}}/.env
+
+      - name: Build docker
+        run: docker build -t ${{env.ECR_REPOSITORY}} .
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: true
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker tag ${{env.ECR_REPOSITORY}} $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "CONTAINER_URI=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Download task definition
+        id: task-def
+        run: |
+          aws ecs describe-task-definition \
+          --task-definition ${{env.TASK_DEFINITION}} \
+          --query taskDefinition \
+          > task-definition.json
+
+      - name: Enhance task definition security
+        id: enhance-task-def
+        run: |
+          echo $(cat task-definition.json | jq 'del(
+                  .taskDefinitionArn,
+                  .requiresAttributes,
+                  .compatibilities,
+                  .revision,
+                  .status,
+                  .registeredAt,
+                  .registeredBy
+              )') > task-definition.json
+
+      - name: Render Amazon ECS task definition
+        id: render-web-container
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: ${{env.CONTAINER_NAME}}
+          image: ${{ steps.build-image.outputs.CONTAINER_URI }}
+          env-files: ${{env.ENV_S3_ARN}}
+
+      - name: Deploy to Amazon ECS service
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.render-web-container.outputs.task-definition }}
+          service: ${{env.ECS_SERVICE}}
+          cluster: ${{env.ECS_CLUSTER}}
