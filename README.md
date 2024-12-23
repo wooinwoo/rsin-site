@@ -38,3 +38,14 @@ Make sure to deploy the output of `npm run build`
 ## Styling
 
 This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever css framework you prefer. See the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.
+
+## Commit Message Guidelines
+
+feat: 새로운 기능 추가
+fix: 버그 수정
+docs: 문서 변경 (README, 문서 등)
+style: 코드 포맷, 세미콜론 누락 등 (기능 변화 없음)
+refactor: 코드 리팩토링 (기능 변화 없음)
+test: 테스트 추가 또는 수정
+chore: 빌드 프로세스 또는 보조 도구 변경
+create: 새로운 파일이나 디렉토리 생성
