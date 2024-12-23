@@ -121,7 +121,7 @@ jobs:
           task-definition: task-definition.json
           container-name: ${{env.CONTAINER_NAME}}
           image: ${{ steps.build-image.outputs.CONTAINER_URI }}
-          env-files: ${{env.ENV_S3_ARN}}
+          # env-files: ${{env.ENV_S3_ARN}}
 
       - name: Deploy to Amazon ECS service
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
