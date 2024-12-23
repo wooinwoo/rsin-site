@@ -25,7 +25,7 @@ export function DatePicker({
   const [startDate, endDate] = dateRange;
 
   const baseClassName =
-    "z-10 px-3 py-2 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500";
+    "z-10 px-3 py-2 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-sm";
 
   if (!isRange) {
     return (
