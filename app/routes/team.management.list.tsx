@@ -11,7 +11,6 @@ interface TeamMember {
   name: string;
   position: string;
   joinDate: string;
-  resignDate: string | null;
   email: string;
   phone: string;
   birthDate: string;
@@ -51,11 +50,6 @@ const columns: ColumnDef<TeamMember>[] = [
     accessorKey: "joinDate",
   },
   {
-    id: "resignDate",
-    header: "퇴사일",
-    accessorKey: "resignDate",
-  },
-  {
     id: "email",
     header: "이메일",
     accessorKey: "email",
@@ -86,7 +80,6 @@ const teamMembers: TeamMember[] = [
     name: "김영희",
     position: "대리",
     joinDate: "2021-03-15",
-    resignDate: null,
     email: "kim.yh@company.com",
     phone: "010-1234-5678",
     birthDate: "1995-05-15",
@@ -100,7 +93,6 @@ const teamMembers: TeamMember[] = [
     name: "이철수",
     position: "과장",
     joinDate: "2019-08-20",
-    resignDate: null,
     email: "lee.cs@company.com",
     phone: "010-2345-6789",
     birthDate: "1990-11-23",
@@ -114,7 +106,6 @@ const teamMembers: TeamMember[] = [
     name: "박지민",
     position: "대리",
     joinDate: "2020-01-10",
-    resignDate: "2024-02-29",
     email: "park.jm@company.com",
     phone: "010-3456-7890",
     birthDate: "1993-08-07",
@@ -128,7 +119,6 @@ const teamMembers: TeamMember[] = [
     name: "최수진",
     position: "사원",
     joinDate: "2023-03-02",
-    resignDate: null,
     email: "choi.sj@company.com",
     phone: "010-4567-8901",
     birthDate: "1997-12-30",
@@ -142,7 +132,6 @@ const teamMembers: TeamMember[] = [
     name: "정민준",
     position: "차장",
     joinDate: "2019-04-05",
-    resignDate: null,
     email: "jung.mj@company.com",
     phone: "010-5678-9012",
     birthDate: "1988-02-14",

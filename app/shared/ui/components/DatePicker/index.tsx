@@ -10,6 +10,7 @@ interface DatePickerProps {
   className?: string;
   required?: boolean;
   name?: string;
+  value?: Date | null;
 }
 
 export function DatePicker({
@@ -18,6 +19,7 @@ export function DatePicker({
   className = "",
   required,
   name,
+  value,
 }: DatePickerProps) {
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
   const [startDate, endDate] = dateRange;
@@ -29,7 +31,7 @@ export function DatePicker({
     return (
       <ClientOnly>
         <ReactDatePicker
-          selected={startDate}
+          selected={value || startDate} // value prop 사용
           onChange={(date: Date | null) => {
             setDateRange([date, null]);
             onChange?.(date);

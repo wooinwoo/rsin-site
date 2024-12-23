@@ -9,6 +9,7 @@ export function Toggle({ label, isOn, onToggle, activeColor = "bg-blue-600" }: T
   return (
     <div className="flex items-center gap-2">
       <button
+        type="button"
         onClick={onToggle}
         className={`
           relative h-6 w-12 rounded-full 
