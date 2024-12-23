@@ -10,6 +10,7 @@ import { DataTableSearch } from "./DataTableSearch";
 export function DataTable<T extends Record<string, any>>({
   data,
   columns,
+  onRowClick,
   searchFields,
   onSearch,
   enableSelection = false,
@@ -72,6 +73,7 @@ export function DataTable<T extends Record<string, any>>({
                   selectable={enableSelection}
                   selectedRows={selectedRows}
                   pageSize={pageSize}
+                  onRowClick={onRowClick}
                   currentPage={currentPage}
                   totalItems={filteredData.length}
                   onRowSelect={(rows) => {

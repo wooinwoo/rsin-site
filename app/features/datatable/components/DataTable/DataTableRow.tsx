@@ -11,6 +11,7 @@ interface DataTableRowProps<T> {
   selectable: boolean;
   selected: boolean;
   onSelect: (selected: boolean) => void;
+  onRowClick?: (row: T) => void;
 }
 
 export function DataTableRow<T extends Record<string, any>>({
@@ -23,12 +24,24 @@ export function DataTableRow<T extends Record<string, any>>({
   selectable,
   selected,
   onSelect,
+  onRowClick,
 }: DataTableRowProps<T>) {
   const rowNumber = totalItems - ((currentPage - 1) * pageSize + index);
 
   return (
-    <tr className="border-b transition-colors hover:bg-gray-50">
-      {/* No 컬럼 추가 */}
+    <tr
+      className={`
+        border-b transition-colors
+        ${onRowClick ? "hover:bg-gray-50 cursor-pointer" : ""}
+      `}
+      onClick={(e) => {
+        if (!onRowClick) return;
+        if ((e.target as HTMLElement).closest('[role="checkbox"]')) {
+          return;
+        }
+        onRowClick(item);
+      }}
+    >
       {selectable && (
         <td className="w-[40px] p-4">
           <DataTableCheckbox checked={selected} onChange={onSelect} />
