@@ -3,19 +3,29 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 interface ModalProps {
-  children: React.ReactNode;
   isOpen: boolean;
-  onClose?: () => void;
-  title?: string;
+  onClose: () => void;
+  title: string;
+  children: React.ReactNode;
+  size?: "default" | "small";
+  isOverlay?: boolean;
 }
 
-export function Modal({ children, isOpen, onClose, title }: ModalProps) {
+export function Modal({
+  children,
+  isOpen,
+  onClose,
+  title,
+  size = "default",
+  isOverlay = false,
+}: ModalProps) {
   const navigate = useNavigate();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
   }, [isOpen]);
@@ -29,30 +39,42 @@ export function Modal({ children, isOpen, onClose, title }: ModalProps) {
   };
 
   if (!mounted || !isOpen) return null;
+
   return createPortal(
     <>
       {/* Backdrop */}
-      <div className="fixed inset-0 z-[9993] bg-black/80 animate-fade-in" onClick={handleClose} />
+      <div
+        className={`
+          fixed inset-0 
+          ${isOverlay ? "z-[9999]" : "z-[9993]"} 
+          bg-black/80 
+          animate-fade-in
+        `}
+        onClick={handleClose}
+      />
 
       {/* Modal */}
       <div
         role="dialog"
         aria-modal="true"
-        className="
-    fixed left-1/2 top-1/2 z-[9994]
-    w-[calc(100%-2rem)] min-w-[320px] max-w-md  {/* max-w-lg를 max-w-md로 변경하고 min-w 추가 */}
-    -translate-x-1/2 -translate-y-1/2
-    rounded-lg border border-gray-200 
-    bg-white
-    shadow-lg 
-    animate-scale-in
-    max-h-[calc(100%-2rem)]
-    flex flex-col
-  "
+        className={`
+          fixed left-1/2 top-1/2 
+          ${isOverlay ? "z-[9999]" : "z-[9994]"}
+          w-[calc(100%-2rem)] 
+          min-w-[320px] 
+          ${size === "default" ? "max-w-md" : "max-w-sm"}
+          -translate-x-1/2 -translate-y-1/2
+          rounded-lg border border-gray-200 
+          bg-white
+          shadow-lg 
+          animate-scale-in
+          max-h-[calc(100%-2rem)]
+          flex flex-col
+        `}
       >
-        {/* Header - 패딩 분리 */}
+        {/* Header */}
         {title && (
-          <div className="flex items-center justify-between px-5 py-4 ">
+          <div className="flex items-center justify-between px-5 py-4">
             <h2 className="text-base font-semibold">{title}</h2>
             <button onClick={handleClose} className="ml-auto rounded-md p-1 hover:bg-gray-100">
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -67,7 +89,7 @@ export function Modal({ children, isOpen, onClose, title }: ModalProps) {
           </div>
         )}
 
-        {/* Content - 패딩 없음 */}
+        {/* Content */}
         <div className="px-6 py-4 flex-1 overflow-y-auto">{children}</div>
       </div>
     </>,

@@ -7,6 +7,7 @@ interface DataTableBodyProps<T> {
   selectable: boolean;
   selectedRows: T[];
   onRowSelect: (rows: T[]) => void;
+  onRowClick?: (row: T) => void; // optional로 변경
   pageSize: number;
   currentPage: number;
   totalItems: number;
@@ -18,6 +19,7 @@ export function DataTableBody<T extends Record<string, any>>({
   selectable,
   selectedRows,
   onRowSelect,
+  onRowClick,
   pageSize,
   currentPage,
   totalItems,
@@ -32,6 +34,7 @@ export function DataTableBody<T extends Record<string, any>>({
           pageSize={pageSize}
           currentPage={currentPage}
           totalItems={totalItems}
+          onRowClick={onRowClick}
           columns={columns}
           selectable={selectable}
           selected={selectedRows.includes(item)}

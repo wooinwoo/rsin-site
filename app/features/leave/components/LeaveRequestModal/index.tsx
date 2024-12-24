@@ -46,7 +46,7 @@ export function LeaveRequestModal({ isOpen, onClose }: LeaveRequestModalProps) {
 
         <div className="space-y-1">
           <label className="block text-sm font-medium">
-            사용시작일 <span className="text-red-500">*</span>
+            사용일 <span className="text-red-500">*</span>
           </label>
           <DatePicker
             isRange={true}

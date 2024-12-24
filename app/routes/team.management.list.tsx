@@ -3,6 +3,8 @@ import { DataTable } from "~/features/datatable/components/DataTable";
 import { ColumnDef } from "~/features/datatable/types/datatable";
 import { PlusIcon } from "~/shared/ui/icons/PlusIcon";
 import { TeamMemberAddModal } from "~/features/team/components/TeamMemberAddModal";
+import { TeamMemberAddData } from "~/features/team/components/TeamMemberAddModal/types";
+
 interface TeamMember {
   id: string;
   profileUrl: string;
@@ -11,7 +13,6 @@ interface TeamMember {
   name: string;
   position: string;
   joinDate: string;
-  resignDate: string | null;
   email: string;
   phone: string;
   birthDate: string;
@@ -51,11 +52,6 @@ const columns: ColumnDef<TeamMember>[] = [
     accessorKey: "joinDate",
   },
   {
-    id: "resignDate",
-    header: "퇴사일",
-    accessorKey: "resignDate",
-  },
-  {
     id: "email",
     header: "이메일",
     accessorKey: "email",
@@ -86,7 +82,6 @@ const teamMembers: TeamMember[] = [
     name: "김영희",
     position: "대리",
     joinDate: "2021-03-15",
-    resignDate: null,
     email: "kim.yh@company.com",
     phone: "010-1234-5678",
     birthDate: "1995-05-15",
@@ -100,7 +95,6 @@ const teamMembers: TeamMember[] = [
     name: "이철수",
     position: "과장",
     joinDate: "2019-08-20",
-    resignDate: null,
     email: "lee.cs@company.com",
     phone: "010-2345-6789",
     birthDate: "1990-11-23",
@@ -114,7 +108,6 @@ const teamMembers: TeamMember[] = [
     name: "박지민",
     position: "대리",
     joinDate: "2020-01-10",
-    resignDate: "2024-02-29",
     email: "park.jm@company.com",
     phone: "010-3456-7890",
     birthDate: "1993-08-07",
@@ -128,7 +121,6 @@ const teamMembers: TeamMember[] = [
     name: "최수진",
     position: "사원",
     joinDate: "2023-03-02",
-    resignDate: null,
     email: "choi.sj@company.com",
     phone: "010-4567-8901",
     birthDate: "1997-12-30",
@@ -142,7 +134,6 @@ const teamMembers: TeamMember[] = [
     name: "정민준",
     position: "차장",
     joinDate: "2019-04-05",
-    resignDate: null,
     email: "jung.mj@company.com",
     phone: "010-5678-9012",
     birthDate: "1988-02-14",
@@ -152,35 +143,94 @@ const teamMembers: TeamMember[] = [
 
 export default function TeamManagementListPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
 
-  const handleRowSelect = (selectedMembers: TeamMember[]) => {
-    console.log("Selected members:", selectedMembers);
+  const getInitialModalData = (member: TeamMember | null): TeamMemberAddData => {
+    if (!member) {
+      return {
+        name: "",
+        phone: "",
+        email: "",
+        department: "",
+        position: "",
+        joinDate: "",
+        birthDate: "",
+        mbti: null,
+        isManager: false,
+      };
+    }
+
+    return {
+      name: member.name,
+      phone: member.phone,
+      email: member.email,
+      department: member.department,
+      position: member.position,
+      joinDate: member.joinDate,
+      birthDate: member.birthDate,
+      mbti: member.mbti,
+      isManager: false,
+    };
+  };
+
+  const handleRowClick = (member: TeamMember) => {
+    setSelectedMember(member);
+    setIsModalOpen(true);
   };
 
   return (
     <>
       <TeamMemberAddModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedMember(null);
+        }}
+        mode={selectedMember ? "edit" : "add"}
+        initialData={getInitialModalData(selectedMember)}
         onSubmit={async (data) => {
           try {
-            // API 호출 등 처리
-            // await addTeamMember(data);
+            if (selectedMember) {
+              // 수정 API 호출
+              // await updateTeamMember(selectedMember.id, data);
+            } else {
+              // 추가 API 호출
+              // await addTeamMember(data);
+            }
             setIsModalOpen(false);
+            setSelectedMember(null);
           } catch (error) {
             console.error(error);
           }
         }}
+        onResign={
+          selectedMember
+            ? async () => {
+                try {
+                  // 퇴사 처리 API 호출
+                  // await resignTeamMember(selectedMember.id);
+                  setIsModalOpen(false);
+                  setSelectedMember(null);
+                } catch (error) {
+                  console.error(error);
+                }
+              }
+            : undefined
+        }
       />
+
       <DataTable
         data={teamMembers}
         columns={columns}
-        onRowSelect={handleRowSelect}
+        onRowClick={handleRowClick}
         enableSearch
         toolbarButtons={[
           {
             label: "팀원추가",
-            onClick: () => setIsModalOpen(true),
+            onClick: () => {
+              setSelectedMember(null);
+              setIsModalOpen(true);
+            },
             variant: "primary",
             icon: <PlusIcon />,
           },

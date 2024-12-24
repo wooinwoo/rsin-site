@@ -10,6 +10,7 @@ interface DatePickerProps {
   className?: string;
   required?: boolean;
   name?: string;
+  value?: Date | null;
 }
 
 export function DatePicker({
@@ -18,18 +19,19 @@ export function DatePicker({
   className = "",
   required,
   name,
+  value,
 }: DatePickerProps) {
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
   const [startDate, endDate] = dateRange;
 
   const baseClassName =
-    "z-10 px-3 py-2 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500";
+    "z-10 px-3 py-2 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-sm";
 
   if (!isRange) {
     return (
       <ClientOnly>
         <ReactDatePicker
-          selected={startDate}
+          selected={value || startDate} // value prop 사용
           onChange={(date: Date | null) => {
             setDateRange([date, null]);
             onChange?.(date);
