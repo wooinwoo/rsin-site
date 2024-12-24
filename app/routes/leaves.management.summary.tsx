@@ -4,6 +4,7 @@ import { ColumnDef, SearchField } from "~/features/datatable/types/datatable";
 
 interface Employee {
   employeeId: string; // 사번
+  profileUrl: string; // 프로필 이미지
   name: string; // 이름
   department: string; // 부서
   position: string; // 직급
@@ -16,31 +17,21 @@ interface Employee {
 
 const searchFields: SearchField[] = [
   {
-    id: "employeeName",
+    id: "name",
     type: "text",
-    label: "신청자",
+    label: "이름",
     placeholder: "이름을 입력하세요",
     width: "200px",
   },
   {
-    id: "leaveType",
+    id: "department",
     type: "select",
-    label: "휴가 종류",
+    label: "부서",
     options: [
-      { value: "annual", label: "연차" },
-      { value: "half", label: "반차" },
-      { value: "sick", label: "병가" },
-    ],
-    width: "150px",
-  },
-  {
-    id: "status",
-    type: "select",
-    label: "상태",
-    options: [
-      { value: "pending", label: "대기중" },
-      { value: "approved", label: "승인" },
-      { value: "rejected", label: "반려" },
+      { value: "dev", label: "개발팀" },
+      { value: "design", label: "디자인팀" },
+      { value: "planning", label: "기획팀" },
+      { value: "management", label: "경영지원팀" },
     ],
     width: "150px",
   },
@@ -56,6 +47,12 @@ const columns: ColumnDef<Employee>[] = [
     id: "name",
     header: "이름",
     accessorKey: "name",
+    cell: ({ row }) => (
+      <div className="flex items-center gap-2">
+        <img src={row.profileUrl} alt={row.name} className="w-8 h-8 rounded-full" />
+        <span>{row.name}</span>
+      </div>
+    ),
   },
   {
     id: "department",
@@ -99,6 +96,7 @@ export default function LeaveApprovalPage() {
   const employeeData: Employee[] = [
     {
       employeeId: "2024001",
+      profileUrl: "https://via.placeholder.com/150",
       name: "김영희",
       department: "개발팀",
       position: "선임연구원",
@@ -110,6 +108,7 @@ export default function LeaveApprovalPage() {
     },
     {
       employeeId: "2022015",
+      profileUrl: "https://via.placeholder.com/150",
       name: "이철수",
       department: "인사팀",
       position: "과장",
@@ -121,6 +120,7 @@ export default function LeaveApprovalPage() {
     },
     {
       employeeId: "2020103",
+      profileUrl: "https://via.placeholder.com/150",
       name: "박지민",
       department: "마케팅팀",
       position: "대리",
@@ -132,6 +132,7 @@ export default function LeaveApprovalPage() {
     },
     {
       employeeId: "2023042",
+      profileUrl: "https://via.placeholder.com/150",
       name: "최수진",
       department: "개발팀",
       position: "주임",
@@ -143,6 +144,7 @@ export default function LeaveApprovalPage() {
     },
     {
       employeeId: "2019087",
+      profileUrl: "https://via.placeholder.com/150",
       name: "정민준",
       department: "기획팀",
       position: "차장",
@@ -154,6 +156,7 @@ export default function LeaveApprovalPage() {
     },
     {
       employeeId: "2021056",
+      profileUrl: "https://via.placeholder.com/150",
       name: "강서연",
       department: "디자인팀",
       position: "대리",
@@ -165,6 +168,7 @@ export default function LeaveApprovalPage() {
     },
     {
       employeeId: "2018034",
+      profileUrl: "https://via.placeholder.com/150",
       name: "윤도현",
       department: "영업팀",
       position: "과장",
@@ -176,6 +180,7 @@ export default function LeaveApprovalPage() {
     },
     {
       employeeId: "2022098",
+      profileUrl: "https://via.placeholder.com/150",
       name: "임서영",
       department: "개발팀",
       position: "연구원",
@@ -187,6 +192,7 @@ export default function LeaveApprovalPage() {
     },
     {
       employeeId: "2020145",
+      profileUrl: "https://via.placeholder.com/150",
       name: "한지훈",
       department: "인사팀",
       position: "대리",
@@ -198,6 +204,7 @@ export default function LeaveApprovalPage() {
     },
     {
       employeeId: "2017012",
+      profileUrl: "https://via.placeholder.com/150",
       name: "송미라",
       department: "기획팀",
       position: "부장",

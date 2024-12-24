@@ -1,5 +1,5 @@
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "outline" | "red" | "secondary";
+  variant?: "primary" | "outline" | "red" | "secondary" | "white";
 }
 
 export function Button({ variant = "primary", className = "", ...props }: ButtonProps) {
@@ -7,6 +7,7 @@ export function Button({ variant = "primary", className = "", ...props }: Button
     primary: "bg-blue-400 text-white hover:bg-blue-500",
     secondary: "bg-gray-400 text-white hover:bg-gray-500",
     red: "bg-red-400 text-white hover:bg-red-500",
+    white: "bg-white text-gray-700 border-gray-300 hover:bg-gray-50",
     outline:
       "rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50",
   };

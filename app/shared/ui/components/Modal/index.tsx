@@ -47,7 +47,7 @@ export function Modal({
         className={`
           fixed inset-0 
           ${isOverlay ? "z-[9999]" : "z-[9993]"} 
-          bg-black/80 
+          bg-black/50 
           animate-fade-in
         `}
         onClick={handleClose}

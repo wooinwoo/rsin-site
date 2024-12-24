@@ -7,6 +7,7 @@ import { useState } from "react";
 interface LeaveRequest {
   id: string;
   employeeName: string;
+  profileUrl: string;
   leaveType: string;
   startDate: string;
   endDate: string;
@@ -51,6 +52,12 @@ const columns: ColumnDef<LeaveRequest>[] = [
     id: "employeeName",
     header: "신청자",
     accessorKey: "employeeName",
+    cell: ({ row }) => (
+      <div className="flex items-center gap-2">
+        <img src={row.profileUrl} alt={row.employeeName} className="w-8 h-8 rounded-full" />
+        <span>{row.employeeName}</span>
+      </div>
+    ),
   },
   {
     id: "leaveType",
@@ -96,6 +103,7 @@ const leaveRequests: LeaveRequest[] = [
   {
     id: "1",
     employeeName: "김태완",
+    profileUrl: "https://via.placeholder.com/150",
     leaveType: "연차",
     startDate: "2024-03-15",
     endDate: "2024-03-15",
@@ -105,6 +113,7 @@ const leaveRequests: LeaveRequest[] = [
   {
     id: "2",
     employeeName: "김태완",
+    profileUrl: "https://via.placeholder.com/150",
     leaveType: "반차",
     startDate: "2024-03-18",
     endDate: "2024-03-18",
@@ -114,6 +123,7 @@ const leaveRequests: LeaveRequest[] = [
   {
     id: "3",
     employeeName: "김태완",
+    profileUrl: "https://via.placeholder.com/150",
     leaveType: "병가",
     startDate: "2024-03-20",
     endDate: "2024-03-22",
@@ -123,6 +133,7 @@ const leaveRequests: LeaveRequest[] = [
   {
     id: "4",
     employeeName: "김태완",
+    profileUrl: "https://via.placeholder.com/150",
     leaveType: "경조사",
     startDate: "2024-03-25",
     endDate: "2024-03-26",
@@ -132,6 +143,7 @@ const leaveRequests: LeaveRequest[] = [
   {
     id: "5",
     employeeName: "김태완",
+    profileUrl: "https://via.placeholder.com/150",
     leaveType: "연차",
     startDate: "2024-04-01",
     endDate: "2024-04-02",
@@ -168,6 +180,7 @@ export default function LeaveApprovalPage() {
         columns={columns}
         onRowSelect={handleRowSelect}
         searchFields={searchFields}
+        onSearch={() => {}}
         onRowClick={(row) => {
           setSelectedLeave(row);
           setIsModalOpen(true);

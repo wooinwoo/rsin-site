@@ -3,6 +3,7 @@ import { ColumnDef, SearchField } from "~/features/datatable/types/datatable";
 
 interface LeaveHistory {
   id: string;
+  profileUrl: string;
   employeeName: string;
   department: string;
   leaveType: string;
@@ -37,8 +38,9 @@ const searchFields: SearchField[] = [
     label: "부서",
     options: [
       { value: "dev", label: "개발팀" },
-      { value: "hr", label: "인사팀" },
-      { value: "sales", label: "영업팀" },
+      { value: "design", label: "디자인팀" },
+      { value: "planning", label: "기획팀" },
+      { value: "management", label: "경영지원팀" },
     ],
     width: "150px",
   },
@@ -46,9 +48,15 @@ const searchFields: SearchField[] = [
 
 const columns: ColumnDef<LeaveHistory>[] = [
   {
-    id: "employeeName",
+    id: "profile",
     header: "이름",
     accessorKey: "employeeName",
+    cell: ({ row }) => (
+      <div className="flex items-center gap-2">
+        <img src={row.profileUrl} alt={row.employeeName} className="w-8 h-8 rounded-full" />
+        <span>{row.employeeName}</span>
+      </div>
+    ),
   },
   {
     id: "department",
@@ -101,6 +109,7 @@ export default function LeaveHistoryPage() {
   const leaveHistories: LeaveHistory[] = [
     {
       id: "1",
+      profileUrl: "https://via.placeholder.com/150",
       employeeName: "홍길동",
       department: "개발팀",
       leaveType: "연차",
@@ -111,6 +120,7 @@ export default function LeaveHistoryPage() {
     },
     {
       id: "2",
+      profileUrl: "https://via.placeholder.com/150",
       employeeName: "김철수",
       department: "인사팀",
       leaveType: "반차",
@@ -125,10 +135,15 @@ export default function LeaveHistoryPage() {
     console.log("Selected histories:", selectedHistories);
   };
 
+  const handleSearch = (searchValues: any) => {
+    console.log("Search values:", searchValues);
+  };
+
   return (
     <DataTable
       data={leaveHistories}
       columns={columns}
+      onSearch={handleSearch}
       onRowSelect={handleRowSelect}
       searchFields={searchFields}
       enableSearch

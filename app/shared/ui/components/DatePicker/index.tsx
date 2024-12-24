@@ -10,7 +10,7 @@ interface DatePickerProps {
   className?: string;
   required?: boolean;
   name?: string;
-  value?: Date | null;
+  value?: Date | null | [Date | null, Date | null] | null;
 }
 
 export function DatePicker({
@@ -31,7 +31,7 @@ export function DatePicker({
     return (
       <ClientOnly>
         <ReactDatePicker
-          selected={value || startDate} // value prop 사용
+          selected={value && !Array.isArray(value) ? value : null}
           onChange={(date: Date | null) => {
             setDateRange([date, null]);
             onChange?.(date);

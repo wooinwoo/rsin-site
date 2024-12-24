@@ -21,11 +21,6 @@ interface TeamMember {
 
 const columns: ColumnDef<TeamMember>[] = [
   {
-    id: "department",
-    header: "부서",
-    accessorKey: "department",
-  },
-  {
     id: "employeeId",
     header: "사번",
     accessorKey: "employeeId",
@@ -40,6 +35,11 @@ const columns: ColumnDef<TeamMember>[] = [
         <span>{row.name}</span>
       </div>
     ),
+  },
+  {
+    id: "department",
+    header: "부서",
+    accessorKey: "department",
   },
   {
     id: "position",
