@@ -1,12 +1,14 @@
-export interface SelectOption {
-  value: string;
+export type SelectOption = {
+  value: string | number;
   label: string;
-}
+};
 
-export interface SelectProps
-  extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "value" | "onChange"> {
-  options: SelectOption[];
-  value?: string;
-  onChange?: (value: string) => void;
+export interface SelectProps {
+  options: readonly SelectOption[] | SelectOption[];
+  value?: string | number;
+  onChange: (value: string) => void;
+  required?: boolean;
   placeholder?: string;
+  className?: string;
+  disabled?: boolean;
 }

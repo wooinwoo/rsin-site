@@ -6,7 +6,7 @@ import { Input } from "~/shared/ui/components/Input";
 import { DatePicker } from "~/shared/ui/components/DatePicker";
 import { Toggle } from "~/shared/ui/components/Toggle";
 import { TeamMemberAddModalProps, TeamMemberAddData } from "./types";
-import { DEPARTMENT_OPTIONS, POSITION_OPTIONS, MBTI_OPTIONS } from "./constants";
+import { DEPARTMENT_OPTIONS, POSITION_OPTIONS, MBTI_OPTIONS } from "~/shared/constants/options";
 import { DeleteConfirmModal } from "../DeleteConfirmModal";
 export function TeamMemberAddModal({
   isOpen,

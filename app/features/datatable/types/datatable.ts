@@ -18,7 +18,10 @@ export interface SearchField {
   type: "text" | "select" | "daterange";
   label: string;
   placeholder?: string;
-  options?: { value: string; label: string }[];
+  options?: {
+    value: number | string;
+    label: string;
+  }[];
   required?: boolean;
   width?: string;
   defaultValue?: string;

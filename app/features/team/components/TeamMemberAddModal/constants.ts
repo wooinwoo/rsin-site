@@ -1,38 +1,5 @@
 import { FormField } from "./types";
-
-export const DEPARTMENT_OPTIONS = [
-  { value: "개발팀", label: "개발팀" },
-  { value: "인사팀", label: "인사팀" },
-  { value: "마케팅팀", label: "마케팅팀" },
-  { value: "기획팀", label: "기획팀" },
-];
-
-export const POSITION_OPTIONS = [
-  { value: "사원", label: "사원" },
-  { value: "대리", label: "대리" },
-  { value: "과장", label: "과장" },
-  { value: "차장", label: "차장" },
-  { value: "부장", label: "부장" },
-];
-
-export const MBTI_OPTIONS = [
-  { value: "ISTJ", label: "ISTJ" },
-  { value: "ISFJ", label: "ISFJ" },
-  { value: "INFJ", label: "INFJ" },
-  { value: "INTJ", label: "INTJ" },
-  { value: "ISTP", label: "ISTP" },
-  { value: "ISFP", label: "ISFP" },
-  { value: "INFP", label: "INFP" },
-  { value: "INTP", label: "INTP" },
-  { value: "ESTP", label: "ESTP" },
-  { value: "ESFP", label: "ESFP" },
-  { value: "ENFP", label: "ENFP" },
-  { value: "ENTP", label: "ENTP" },
-  { value: "ESTJ", label: "ESTJ" },
-  { value: "ESFJ", label: "ESFJ" },
-  { value: "ENFJ", label: "ENFJ" },
-  { value: "ENTJ", label: "ENTJ" },
-];
+import { DEPARTMENT_OPTIONS, POSITION_OPTIONS, MBTI_OPTIONS } from "~/shared/constants/options";
 
 export const FORM_FIELDS: FormField[] = [
   {

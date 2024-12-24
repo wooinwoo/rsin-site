@@ -25,5 +25,5 @@ export interface FormField {
   type: "text" | "email" | "tel" | "date" | "select" | "toggle";
   required?: boolean;
   placeholder?: string;
-  options?: { value: string; label: string }[];
+  options?: { value: string | number; label: string }[];
 }

@@ -1,7 +1,7 @@
 // app/routes/leaves.approval.tsx
 import { DataTable } from "~/features/datatable/components/DataTable";
 import { ColumnDef, SearchField } from "~/features/datatable/types/datatable";
-
+import { DEPARTMENT_OPTIONS } from "~/shared/constants/options";
 interface Employee {
   employeeId: string; // 사번
   profileUrl: string; // 프로필 이미지
@@ -27,12 +27,7 @@ const searchFields: SearchField[] = [
     id: "department",
     type: "select",
     label: "부서",
-    options: [
-      { value: "dev", label: "개발팀" },
-      { value: "design", label: "디자인팀" },
-      { value: "planning", label: "기획팀" },
-      { value: "management", label: "경영지원팀" },
-    ],
+    options: DEPARTMENT_OPTIONS,
     width: "150px",
   },
 ];

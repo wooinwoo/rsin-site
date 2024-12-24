@@ -1,6 +1,6 @@
 import { DataTable } from "~/features/datatable/components/DataTable";
 import { ColumnDef, SearchField } from "~/features/datatable/types/datatable";
-
+import { DEPARTMENT_OPTIONS, LEAVE_TYPE_OPTIONS } from "~/shared/constants/options";
 interface LeaveHistory {
   id: string;
   profileUrl: string;
@@ -18,23 +18,14 @@ const searchFields: SearchField[] = [
     id: "leaveType",
     type: "select",
     label: "휴가 종류",
-    options: [
-      { value: "annual", label: "연차" },
-      { value: "half", label: "반차" },
-      { value: "sick", label: "병가" },
-    ],
+    options: LEAVE_TYPE_OPTIONS,
     width: "150px",
   },
   {
     id: "department",
     type: "select",
     label: "부서",
-    options: [
-      { value: "dev", label: "개발팀" },
-      { value: "design", label: "디자인팀" },
-      { value: "planning", label: "기획팀" },
-      { value: "management", label: "경영지원팀" },
-    ],
+    options: DEPARTMENT_OPTIONS,
     width: "150px",
   },
   {

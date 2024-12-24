@@ -1,7 +1,7 @@
 // app/routes/leaves.approval.tsx
 import { DataTable } from "~/features/datatable/components/DataTable";
 import { ColumnDef, SearchField } from "~/features/datatable/types/datatable";
-
+import { LEAVE_TYPE_OPTIONS } from "~/shared/constants/options";
 interface LeaveRequest {
   id: string;
   employeeName: string;
@@ -28,11 +28,7 @@ const searchFields: SearchField[] = [
     id: "leaveType",
     type: "select",
     label: "휴가 종류",
-    options: [
-      { value: "annual", label: "연차" },
-      { value: "half", label: "반차" },
-      { value: "sick", label: "병가" },
-    ],
+    options: LEAVE_TYPE_OPTIONS,
     width: "150px",
   },
   {
