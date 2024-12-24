@@ -76,7 +76,6 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
   };
 
   const handleReset = () => {
-    // 초기화 시 defaultValue가 있는 필드들의 값을 설정
     const defaultValues: Record<string, string> = {};
     const newParams = new URLSearchParams();
 
@@ -85,13 +84,17 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
         defaultValues[field.id] = field.defaultValue;
         newParams.set(field.id, field.defaultValue);
       }
+      // 날짜 필드는 명시적으로 초기화
+      if (field.type === "daterange") {
+        defaultValues.startDate = "";
+        defaultValues.endDate = "";
+      }
     });
 
     setSearchValues(defaultValues);
     setSearchParams(newParams);
     onSearch(defaultValues);
   };
-
   return (
     <div className="mb-4">
       <div className="flex flex-wrap items-center gap-2">
