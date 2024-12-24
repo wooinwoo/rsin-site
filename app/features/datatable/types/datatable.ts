@@ -21,6 +21,9 @@ export interface SearchField {
   options?: { value: string; label: string }[];
   required?: boolean;
   width?: string;
+  defaultValue?: string;
+  showAllOption?: boolean;
+  allOptionLabel?: string;
 }
 
 export interface DataTableProps<TData> {

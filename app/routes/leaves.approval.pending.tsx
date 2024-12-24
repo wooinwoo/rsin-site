@@ -24,26 +24,16 @@ const searchFields: SearchField[] = [
     width: "200px",
   },
   {
-    id: "leaveType",
+    id: "approvalType",
     type: "select",
-    label: "휴가 종류",
+    label: "결재 구분",
     options: [
-      { value: "annual", label: "연차" },
-      { value: "half", label: "반차" },
-      { value: "sick", label: "병가" },
+      { value: "myPending", label: "내 승인대기" },
+      { value: "allApproval", label: "결재선 전체" },
     ],
     width: "150px",
-  },
-  {
-    id: "status",
-    type: "select",
-    label: "상태",
-    options: [
-      { value: "pending", label: "대기중" },
-      { value: "approved", label: "승인" },
-      { value: "rejected", label: "반려" },
-    ],
-    width: "150px",
+    defaultValue: "myPending",
+    showAllOption: false,
   },
 ];
 

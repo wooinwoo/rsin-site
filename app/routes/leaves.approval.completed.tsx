@@ -36,15 +36,10 @@ const searchFields: SearchField[] = [
     width: "150px",
   },
   {
-    id: "status",
-    type: "select",
-    label: "상태",
-    options: [
-      { value: "pending", label: "대기중" },
-      { value: "approved", label: "승인" },
-      { value: "rejected", label: "반려" },
-    ],
-    width: "150px",
+    id: "processDate",
+    type: "daterange",
+    label: "처리일자",
+    width: "300px",
   },
 ];
 
@@ -132,7 +127,7 @@ export default function LeaveApprovalPage() {
       startDate: "2024-03-18",
       endDate: "2024-03-18",
       status: "approved",
-      approverName: "박부장",
+      approverName: "미부장",
       approverProfileUrl: "/images/profiles/profile3.jpg",
       requestDate: "2024-03-11",
       processedDate: "2024-03-12",
@@ -145,7 +140,7 @@ export default function LeaveApprovalPage() {
       startDate: "2024-03-18",
       endDate: "2024-03-18",
       status: "approved",
-      approverName: "박부장",
+      approverName: "미부장",
       approverProfileUrl: "/images/profiles/profile3.jpg",
       requestDate: "2024-03-11",
       processedDate: "2024-03-12",
@@ -158,7 +153,7 @@ export default function LeaveApprovalPage() {
       startDate: "2024-03-20",
       endDate: "2024-03-22",
       status: "rejected",
-      approverName: "김태완",
+      approverName: "태완핑",
       approverProfileUrl: "/images/profiles/profile5.jpg",
       requestDate: "2024-03-12",
       processedDate: "2024-03-13",
@@ -173,6 +168,7 @@ export default function LeaveApprovalPage() {
     <DataTable
       data={leaveRequests}
       columns={columns}
+      onSearch={() => {}}
       onRowSelect={handleRowSelect}
       searchFields={searchFields}
       enableSearch

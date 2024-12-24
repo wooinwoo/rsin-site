@@ -3,6 +3,7 @@ import { useState } from "react";
 import { SearchField } from "../../types/datatable";
 import { DatePicker } from "~/shared/ui/components/DatePicker";
 import { Button } from "~/shared/ui/components/Button";
+import { useEffect } from "react";
 
 interface DataTableSearchProps {
   fields: SearchField[];
@@ -12,13 +13,33 @@ interface DataTableSearchProps {
 export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchValues, setSearchValues] = useState<Record<string, string>>(() => {
-    const values: Record<string, string> = {};
+    // 초기값 설정: URL 파라미터가 있으면 사용, 없으면 defaultValue 사용
+    const initialValues: Record<string, string> = {};
     fields.forEach((field) => {
-      const value = searchParams.get(field.id);
-      if (value) values[field.id] = value;
+      const urlValue = searchParams.get(field.id);
+      if (urlValue) {
+        initialValues[field.id] = urlValue;
+      } else if (field.defaultValue) {
+        initialValues[field.id] = field.defaultValue;
+      }
     });
-    return values;
+    return initialValues;
   });
+
+  // 컴포넌트 마운트 시 defaultValue가 있는 필드들의 값을 URL에 반영
+  useEffect(() => {
+    const hasAnySearchParam = fields.some((field) => searchParams.has(field.id));
+    if (!hasAnySearchParam) {
+      const newParams = new URLSearchParams();
+      fields.forEach((field) => {
+        if (field.defaultValue) {
+          newParams.set(field.id, field.defaultValue);
+        }
+      });
+      setSearchParams(newParams);
+      onSearch(Object.fromEntries(newParams));
+    }
+  }, []);
 
   const handleValueChange = (fieldId: string, value: string) => {
     setSearchValues((prev) => ({
@@ -26,7 +47,6 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
       [fieldId]: value,
     }));
   };
-
   const handleDateRangeChange = (dates: [Date | null, Date | null] | null) => {
     if (!dates) {
       setSearchValues((prev) => {
@@ -56,9 +76,20 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
   };
 
   const handleReset = () => {
-    setSearchValues({});
-    setSearchParams(new URLSearchParams());
-    onSearch({});
+    // 초기화 시 defaultValue가 있는 필드들의 값을 설정
+    const defaultValues: Record<string, string> = {};
+    const newParams = new URLSearchParams();
+
+    fields.forEach((field) => {
+      if (field.defaultValue) {
+        defaultValues[field.id] = field.defaultValue;
+        newParams.set(field.id, field.defaultValue);
+      }
+    });
+
+    setSearchValues(defaultValues);
+    setSearchParams(newParams);
+    onSearch(defaultValues);
   };
 
   return (
@@ -76,11 +107,13 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
             )}
             {field.type === "select" ? (
               <select
-                value={searchValues[field.id] || ""}
+                value={searchValues[field.id] || field.defaultValue || ""}
                 onChange={(e) => handleValueChange(field.id, e.target.value)}
                 className="h-9 rounded-md px-3 text-sm border-none focus:outline-none"
               >
-                <option value="">전체</option>
+                {field.showAllOption !== false && (
+                  <option value="">{field.allOptionLabel || "전체"}</option>
+                )}
                 {field.options?.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}

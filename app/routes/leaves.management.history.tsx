@@ -15,13 +15,6 @@ interface LeaveHistory {
 
 const searchFields: SearchField[] = [
   {
-    id: "period",
-    type: "daterange",
-    label: "기간",
-    placeholder: "기간을 선택하세요",
-    width: "300px",
-  },
-  {
     id: "leaveType",
     type: "select",
     label: "휴가 종류",
@@ -43,6 +36,13 @@ const searchFields: SearchField[] = [
       { value: "management", label: "경영지원팀" },
     ],
     width: "150px",
+  },
+  {
+    id: "period",
+    type: "daterange",
+    label: "기간",
+    placeholder: "기간을 선택하세요",
+    width: "300px",
   },
 ];
 

@@ -225,6 +225,7 @@ export default function LeaveApprovalPage() {
     <DataTable
       data={employeeData}
       columns={columns}
+      onSearch={() => {}}
       onRowSelect={handleRowSelect}
       searchFields={searchFields}
       enableSearch
