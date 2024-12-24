@@ -17,4 +17,5 @@ COPY . .
 EXPOSE 5173
 
 RUN npm run build
-CMD ["remix-serve", "./build/server/index.js"]
+RUN ls -la
+CMD ["node", "./build/server/index.js"]
