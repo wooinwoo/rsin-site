@@ -3,6 +3,12 @@ import { DEPARTMENT_OPTIONS, POSITION_OPTIONS, MBTI_OPTIONS } from "~/shared/con
 
 export const FORM_FIELDS: FormField[] = [
   {
+    label: "프로필 이미지",
+    name: "profileImage",
+    type: "image",
+    required: false,
+  },
+  {
     label: "이름",
     name: "name",
     type: "text",
@@ -27,21 +33,21 @@ export const FORM_FIELDS: FormField[] = [
     label: "부서",
     name: "departmentId",
     type: "select",
-    required: true,
     options: DEPARTMENT_OPTIONS,
+    disabled: true,
   },
   {
     label: "직급",
     name: "position",
     type: "select",
-    required: true,
     options: POSITION_OPTIONS,
+    disabled: true,
   },
   {
     label: "입사일",
     name: "joinedAt",
     type: "date",
-    required: true,
+    disabled: true,
   },
   {
     label: "생년월일",

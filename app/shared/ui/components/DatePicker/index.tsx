@@ -12,6 +12,7 @@ interface DatePickerProps {
   required?: boolean;
   name?: string;
   value?: Date | null | [Date | null, Date | null] | null;
+  disabled?: boolean;
 }
 
 export function DatePicker({
@@ -21,6 +22,7 @@ export function DatePicker({
   required,
   name,
   value,
+  disabled,
 }: DatePickerProps) {
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
 
@@ -52,6 +54,7 @@ export function DatePicker({
             required={required}
             name={name}
             isClearable
+            disabled={disabled}
             locale={ko}
             dateFormat="yyyy.MM.dd"
             placeholderText="날짜 선택"
@@ -77,6 +80,7 @@ export function DatePicker({
           required={required}
           name={name}
           isClearable
+          disabled={disabled}
           locale={ko}
           dateFormat="yyyy.MM.dd"
           placeholderText="시작일 - 종료일"

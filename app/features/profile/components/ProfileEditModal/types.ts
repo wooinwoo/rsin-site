@@ -1,10 +1,3 @@
-export interface ProfileEditModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (data: ProfileEditData) => Promise<void>;
-  initialData?: ProfileEditData;
-}
-
 export interface ProfileEditData {
   name: string;
   departmentId: number;
@@ -14,13 +7,33 @@ export interface ProfileEditData {
   phone: string;
   birth: string;
   mbti: string | null;
+  profileImage?: File;
+  profileImageUrl?: string;
 }
 
 export interface FormField {
   label: string;
-  name: keyof ProfileEditData;
-  type: "text" | "email" | "tel" | "date" | "select";
+  name:
+    | "name"
+    | "departmentId"
+    | "position"
+    | "joinedAt"
+    | "email"
+    | "phone"
+    | "birth"
+    | "mbti"
+    | "profileImage"
+    | "profileImageUrl";
+  type: string;
   required?: boolean;
   placeholder?: string;
-  options?: readonly { readonly value: string | number; readonly label: string }[];
+  options?: { value: string | number; label: string }[];
+  disabled?: boolean;
+}
+
+export interface ProfileEditModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (data: ProfileEditData) => Promise<void>;
+  initialData?: ProfileEditData;
 }
