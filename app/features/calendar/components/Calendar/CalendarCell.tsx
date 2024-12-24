@@ -60,6 +60,7 @@ export function CalendarCell({ day, events = [], isWeekend }: CalendarCellProps)
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title={`${month}월 ${day.formattedDate}일 휴가 내역`}
+        size="small"
       >
         <div className="space-y-2">
           {dayEvents.map((event) => (
