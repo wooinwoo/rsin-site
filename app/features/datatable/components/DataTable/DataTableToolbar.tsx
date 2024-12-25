@@ -69,7 +69,7 @@ export function DataTableToolbar({
           <select
             value={pageSize}
             onChange={(e) => onPageSizeChange(Number(e.target.value))}
-            className="h-8 rounded-md border px-2 text-sm"
+            className="h-8 rounded-md border px-2 text-sm bg-white"
           >
             <option value={10}>10</option>
             <option value={20}>20</option>

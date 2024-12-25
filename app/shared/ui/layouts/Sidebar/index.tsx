@@ -21,7 +21,7 @@ export function Sidebar() {
       <button
         onClick={() => setIsMobileOpen(!isMobileOpen)}
         className={`
-          md:hidden fixed top-4 z-[9992]
+          md:hidden fixed top-4 z-[9993]
           transition-[left] duration-300 ease-in-out
           ${isMobileOpen ? "left-[200px]" : "left-4"}
         `}

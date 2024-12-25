@@ -75,7 +75,11 @@ export function SidebarFooter({
         {isContextMenuOpen && (
           <div
             ref={contextMenuRef}
-            className="absolute bottom-full left-[110px] sm:left-[230px] mb-2 w-48 rounded-lg bg-white shadow-lg border border-gray-200 py-1"
+            className={`
+            absolute bottom-full mb-2 w-48 rounded-lg bg-white shadow-lg border border-gray-200 py-1
+            ${isCollapsed ? "left-16" : "left-[230px]"}
+            ${isMobileOpen ? "left-[230px]" : ""}
+          `}
           >
             <button
               onClick={() => {
