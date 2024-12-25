@@ -1,3 +1,5 @@
+export { BellIcon } from "./BellIcon";
+export { BellActiveIcon } from "./BellActiveIcon";
 export { CalendarIcon } from "./CalendarIcon";
 export { FilterIcon } from "./FilterIcon";
 export { ChartIcon } from "./ChartIcon";
@@ -14,4 +16,6 @@ export { ReplayIcon } from "./ReplayIcon";
 export { TaskIcon } from "./TaskIcon";
 export { EyeIcon } from "./EyeIcon";
 export { EyeOffIcon } from "./EyeOffIcon";
+export { CheckCircleIcon } from "./CheckCircleIcon";
+export { XCircleIcon } from "./XCircleIcon";
 export type { IconProps } from "./types";

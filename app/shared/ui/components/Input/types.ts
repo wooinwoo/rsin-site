@@ -28,4 +28,9 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
    * 입력 타입 (text, email, tel, password 등)
    */
   type?: string;
+
+  /**
+   * 오류 메시지
+   */
+  error?: string;
 }

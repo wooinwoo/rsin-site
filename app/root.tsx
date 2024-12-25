@@ -28,7 +28,7 @@ export const links: LinksFunction = () => [
 
 export default function App() {
   const location = useLocation();
-  const isLoginPage = location.pathname === "/login";
+  const isLoginPage = location.pathname.split("/")[1] === "auth";
 
   return (
     <html lang="ko">

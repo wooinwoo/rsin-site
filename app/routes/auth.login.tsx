@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Form } from "@remix-run/react";
-import { LogoIcon, EyeIcon, EyeOffIcon, ProfileIcon } from "~/shared/ui/icons";
+import { Form, useNavigate } from "@remix-run/react";
+import { LogoIcon, EyeIcon, EyeOffIcon } from "~/shared/ui/icons";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -8,7 +8,7 @@ export default function LoginPage() {
     email: "",
     password: "",
   });
-
+  const navigate = useNavigate();
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -95,7 +95,11 @@ export default function LoginPage() {
           </div>
 
           <div className="flex items-center justify-end">
-            <button type="button" className="text-sm text-gray-800 hover:text-gray-900">
+            <button
+              type="button"
+              className="text-sm text-gray-800 hover:text-gray-900"
+              onClick={() => navigate("/auth/forgot-password")}
+            >
               비밀번호 찾기
             </button>
           </div>
