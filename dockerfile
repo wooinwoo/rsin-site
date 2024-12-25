@@ -14,7 +14,7 @@ WORKDIR /usr/app
 
 COPY --from=installer /usr/app /usr/app
 COPY . .
-EXPOSE 5173
+EXPOSE 3000
 
 RUN npm run build
-CMD ["npx", "remix", "vite:dev"]
+CMD ["npx", "remix-serve", "./build/server/index.js"]
