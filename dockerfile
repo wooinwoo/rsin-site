@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 5173
 
 RUN npm run build
-CMD ["npx", "remix-serve", "./build/server/index.js"]
+CMD ["npx", "remix", "vite:dev"]
