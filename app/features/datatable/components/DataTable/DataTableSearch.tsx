@@ -112,7 +112,7 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
               <select
                 value={searchValues[field.id] || field.defaultValue || ""}
                 onChange={(e) => handleValueChange(field.id, e.target.value)}
-                className="h-9 rounded-md px-3 text-sm border-none focus:outline-none"
+                className="h-9 rounded-md px-3 text-sm border-none focus:outline-none bg-white"
               >
                 {field.showAllOption !== false && (
                   <option value="">{field.allOptionLabel || "전체"}</option>
@@ -135,7 +135,7 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
                       ]
                     : null
                 }
-                className="min-w-[200px] border-none focus:outline-none"
+                className="min-w-[200px] border-none focus:outline-none bg-white"
               />
             ) : (
               <input
@@ -143,7 +143,7 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
                 value={searchValues[field.id] || ""}
                 onChange={(e) => handleValueChange(field.id, e.target.value)}
                 placeholder={field.placeholder}
-                className="h-9 rounded-md px-3 text-sm border-none focus:outline-none"
+                className="h-9 rounded-md px-3 text-sm border-none focus:outline-none bg-white"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     handleSearch();
