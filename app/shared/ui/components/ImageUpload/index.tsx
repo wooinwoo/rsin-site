@@ -70,7 +70,7 @@ export function ImageUpload({
       />
       <div
         className={`
-          flex flex-col items-center justify-center w-32 h-32 rounded-full
+          flex flex-col items-center justify-center w-24 h-24 xs:w-32 xs:h-32 rounded-full
           border-2 border-dashed transition-all duration-200
           ${isDragging ? "border-blue-500 bg-blue-50" : "border-gray-300"}
           ${imageUrl ? "bg-gray-100" : "bg-gray-50 hover:bg-gray-100"}

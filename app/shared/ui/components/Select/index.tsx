@@ -16,7 +16,7 @@ export function Select({
         onChange={(e) => onChange?.(e.target.value)}
         disabled={disabled}
         className={`
-          w-full h-11 rounded-md border border-gray-300 p-2 pr-8 text-sm
+          w-full h-11 rounded-md border border-gray-300 p-2 pr-8 text-sm bg-white
           focus:border-blue-500 focus:ring-1 focus:ring-blue-500
           disabled:bg-gray-100
           appearance-none  /* 기본 화살표 제거 */

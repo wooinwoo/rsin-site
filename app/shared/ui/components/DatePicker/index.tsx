@@ -39,7 +39,7 @@ export function DatePicker({
   const baseClassName =
     "z-10 px-3 py-2 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-sm";
 
-  const wrapperClassName = "min-w-[200px] h-9 inline-block"; // 높이 추가 (h-9)
+  const wrapperClassName = "min-w-[200px] h-9 inline-block bg-white"; // 높이 추가 (h-9)
 
   if (!isRange) {
     return (

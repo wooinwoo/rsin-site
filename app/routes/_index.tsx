@@ -122,7 +122,7 @@ export default function Index() {
       <Widget>
         <div className="flex gap-4 flex-col xl:flex-row">
           <div className="flex-1">
-            <h2 className="text-base font-medium flex items-center gap-2">
+            <h2 className="text-base  flex items-center gap-2">
               <CalendarIcon />
               캘린더
             </h2>
@@ -130,7 +130,7 @@ export default function Index() {
           </div>
           <div className="flex flex-row xl:flex-col xl:w-64 gap-4">
             <div>
-              <h2 className="text-base font-medium flex items-center gap-2">
+              <h2 className="text-base flex items-center gap-2">
                 <FilterIcon />
                 보기
               </h2>
@@ -138,7 +138,7 @@ export default function Index() {
             </div>
             <div className="flex-1 sm:px-4 xl:p-0">
               <div className="flex justify-start items-center mb-6">
-                <h2 className="text-base font-medium flex items-center gap-2 mr-2">
+                <h2 className="text-base flex items-center gap-2 mr-2">
                   <ChartIcon />
                   현황
                 </h2>

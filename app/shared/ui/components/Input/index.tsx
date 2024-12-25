@@ -19,7 +19,7 @@ export function Input({
         disabled={disabled}
         placeholder={placeholder}
         className={`
-          w-full h-11 rounded-md border px-3 text-sm
+          w-full h-11 rounded-md border px-3 text-sm bg-white
           ${
             error
               ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500"
