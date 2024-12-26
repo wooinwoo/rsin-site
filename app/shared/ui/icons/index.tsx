@@ -18,4 +18,6 @@ export { EyeIcon } from "./EyeIcon";
 export { EyeOffIcon } from "./EyeOffIcon";
 export { CheckCircleIcon } from "./CheckCircleIcon";
 export { XCircleIcon } from "./XCircleIcon";
+export { ResetIcon } from "./ResetIcon";
+export { SearchIcon } from "./SearchIcon";
 export type { IconProps } from "./types";

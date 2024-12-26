@@ -4,7 +4,7 @@ import { SearchField } from "../../types/datatable";
 import { DatePicker } from "~/shared/ui/components/DatePicker";
 import { Button } from "~/shared/ui/components/Button";
 import { useEffect } from "react";
-
+import { SearchIcon, ResetIcon } from "~/shared/ui/icons";
 interface DataTableSearchProps {
   fields: SearchField[];
   onSearch: (params: Record<string, string>) => void;
@@ -13,7 +13,6 @@ interface DataTableSearchProps {
 export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchValues, setSearchValues] = useState<Record<string, string>>(() => {
-    // 초기값 설정: URL 파라미터가 있으면 사용, 없으면 defaultValue 사용
     const initialValues: Record<string, string> = {};
     fields.forEach((field) => {
       const urlValue = searchParams.get(field.id);
@@ -26,7 +25,6 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
     return initialValues;
   });
 
-  // 컴포넌트 마운트 시 defaultValue가 있는 필드들의 값을 URL에 반영
   useEffect(() => {
     const hasAnySearchParam = fields.some((field) => searchParams.has(field.id));
     if (!hasAnySearchParam) {
@@ -47,6 +45,7 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
       [fieldId]: value,
     }));
   };
+
   const handleDateRangeChange = (dates: [Date | null, Date | null] | null) => {
     if (!dates) {
       setSearchValues((prev) => {
@@ -84,7 +83,6 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
         defaultValues[field.id] = field.defaultValue;
         newParams.set(field.id, field.defaultValue);
       }
-      // 날짜 필드는 명시적으로 초기화
       if (field.type === "daterange") {
         defaultValues.startDate = "";
         defaultValues.endDate = "";
@@ -95,11 +93,70 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
     setSearchParams(newParams);
     onSearch(defaultValues);
   };
+
+  const renderField = (field: SearchField) => {
+    if (field.type === "select") {
+      return (
+        <select
+          value={searchValues[field.id] || field.defaultValue || ""}
+          onChange={(e) => handleValueChange(field.id, e.target.value)}
+          className="w-full h-9 rounded-md px-3 text-sm border-none focus:outline-none bg-white"
+        >
+          {field.showAllOption !== false && (
+            <option value="">{field.allOptionLabel || "전체"}</option>
+          )}
+          {field.options?.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      );
+    }
+
+    if (field.type === "daterange") {
+      return (
+        <DatePicker
+          isRange
+          onChange={(dates) => handleDateRangeChange(dates as [Date | null, Date | null])}
+          value={
+            searchValues.startDate || searchValues.endDate
+              ? [
+                  searchValues.startDate ? new Date(searchValues.startDate) : null,
+                  searchValues.endDate ? new Date(searchValues.endDate) : null,
+                ]
+              : null
+          }
+          className="w-full border-none focus:outline-none bg-white"
+        />
+      );
+    }
+
+    return (
+      <input
+        type="text"
+        value={searchValues[field.id] || ""}
+        onChange={(e) => handleValueChange(field.id, e.target.value)}
+        placeholder={field.placeholder}
+        className="w-full h-9 rounded-md px-3 text-sm border-none focus:outline-none bg-white"
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            handleSearch();
+          }
+        }}
+      />
+    );
+  };
+
   return (
     <div className="mb-4">
-      <div className="flex flex-wrap items-center gap-2">
+      {/* PC 레이아웃 */}
+      <div className="hidden lg:flex lg:flex-wrap lg:items-center lg:gap-2">
         {fields.map((field) => (
-          <div key={field.id} className="flex items-center bg-white rounded-md border pl-3">
+          <div
+            key={field.id}
+            className="flex items-center bg-white rounded-md border border-gray-300 pl-3"
+          >
             {field.label && (
               <>
                 <label className="text-sm text-gray-600 whitespace-nowrap mr-2">
@@ -108,58 +165,49 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
                 <div className="mx-2 h-4 w-px bg-gray-300" />
               </>
             )}
-            {field.type === "select" ? (
-              <select
-                value={searchValues[field.id] || field.defaultValue || ""}
-                onChange={(e) => handleValueChange(field.id, e.target.value)}
-                className="h-9 rounded-md px-3 text-sm border-none focus:outline-none bg-white"
-              >
-                {field.showAllOption !== false && (
-                  <option value="">{field.allOptionLabel || "전체"}</option>
-                )}
-                {field.options?.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            ) : field.type === "daterange" ? (
-              <DatePicker
-                isRange
-                onChange={(dates) => handleDateRangeChange(dates as [Date | null, Date | null])}
-                value={
-                  searchValues.startDate || searchValues.endDate
-                    ? [
-                        searchValues.startDate ? new Date(searchValues.startDate) : null,
-                        searchValues.endDate ? new Date(searchValues.endDate) : null,
-                      ]
-                    : null
-                }
-                className="min-w-[200px] border-none focus:outline-none bg-white"
-              />
-            ) : (
-              <input
-                type="text"
-                value={searchValues[field.id] || ""}
-                onChange={(e) => handleValueChange(field.id, e.target.value)}
-                placeholder={field.placeholder}
-                className="h-9 rounded-md px-3 text-sm border-none focus:outline-none bg-white"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleSearch();
-                  }
-                }}
-              />
-            )}
+            {renderField(field)}
           </div>
         ))}
         <div className="flex gap-2 ml-auto">
-          <Button variant="primary" onClick={handleSearch}>
+          <Button variant="primary" onClick={handleSearch} className="flex items-center">
+            <SearchIcon className="w-4 h-4" />
             검색
           </Button>
-          <Button variant="white" onClick={handleReset}>
+          <Button variant="white" onClick={handleReset} className="flex items-center">
+            <ResetIcon className="w-4 h-4" />
             초기화
           </Button>
+        </div>
+      </div>
+
+      {/* 태블릿/모바일 레이아웃 */}
+      <div className="lg:hidden">
+        <div className="border border-gray-300  rounded-lg p-4 flex flex-col gap-4 bg-white">
+          <div className="grid grid-cols-1 gap-2">
+            {fields.map((field) => (
+              <div key={field.id} className="flex items-center gap-4">
+                {field.label && (
+                  <label className="text-sm text-gray-700 font-normal w-20 shrink-0">
+                    {field.label}
+                  </label>
+                )}
+                <div className="bg-white rounded-md border border-gray-300 flex-1">
+                  {renderField(field)}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className=" border-t border-gray-300" />
+          <div className="flex justify-center gap-2">
+            <Button variant="primary" onClick={handleSearch} className="flex items-center">
+              <SearchIcon className="w-4 h-4" />
+              검색
+            </Button>
+            <Button variant="outline" onClick={handleReset} className="flex items-center">
+              <ResetIcon className="w-4 h-4" />
+              초기화
+            </Button>
+          </div>
         </div>
       </div>
     </div>
