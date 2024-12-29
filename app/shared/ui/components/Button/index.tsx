@@ -1,5 +1,5 @@
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "outline" | "red" | "secondary" | "white";
+  variant?: "primary" | "outline" | "red" | "secondary" | "white" | "dark"; // dark 추가
   size?: "sm" | "md" | "lg";
   breakpoint?: {
     size: "sm" | "md" | "lg";
@@ -20,12 +20,13 @@ export function Button({
     red: "bg-red-400 text-white hover:bg-red-500",
     white: "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50",
     outline: "border border-gray-300 text-gray-700 hover:bg-gray-50",
+    dark: "bg-gray-800 text-white hover:bg-gray-900", // dark 변형 추가
   };
 
   const sizes = {
     sm: "px-3 py-1.5 text-sm",
     md: "px-4 py-2 text-sm",
-    lg: "px-5 py-2.5 text-sm",
+    lg: "px-5 py-3 text-sm",
   };
 
   const responsiveSize = breakpoint ? `${breakpoint.screen}:${sizes[breakpoint.size]}` : "";

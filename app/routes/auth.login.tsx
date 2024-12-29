@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Form, useNavigate } from "@remix-run/react";
 import { LogoIcon, EyeIcon, EyeOffIcon } from "~/shared/ui/icons";
+import { Button } from "~/shared/ui/components/Button";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -105,12 +106,9 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <button
-              type="submit"
-              className="w-full py-2.5 text-sm font-medium text-white bg-gray-800 hover:bg-gray-900 rounded-md transition-colors"
-            >
+            <Button type="submit" className="w-full" size="lg" variant="dark">
               로그인
-            </button>
+            </Button>
           </div>
         </Form>
       </div>
