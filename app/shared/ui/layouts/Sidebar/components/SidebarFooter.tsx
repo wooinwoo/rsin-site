@@ -78,7 +78,7 @@ export function SidebarFooter({
             className={`
             absolute bottom-full mb-2 w-48 rounded-lg bg-white shadow-lg border border-gray-200 py-1
             ${isCollapsed ? "left-16" : "left-[230px]"}
-            ${isMobileOpen ? "left-[230px]" : ""}
+            ${isMobileOpen ? "left-[130px]" : ""}
           `}
           >
             <button
@@ -103,11 +103,11 @@ export function SidebarFooter({
                 <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
                 <circle cx="12" cy="7" r="4" />
               </svg>
-              내정보 수정
+              내 정보 수정
             </button>
             <button
               onClick={() => {
-                navigate("/login");
+                navigate("/auth/login");
                 /* 로그아웃 핸들러 */
               }}
               className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 flex items-center gap-2"

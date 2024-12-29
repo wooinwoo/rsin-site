@@ -201,11 +201,16 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
           <div className=" border-t border-gray-300" />
           <div className="flex justify-center gap-2">
             <div className="flex justify-center gap-2">
-              <Button variant="primary" onClick={handleSearch} className="flex items-center">
+              <Button
+                variant="primary"
+                onClick={handleSearch}
+                className="flex items-center"
+                size="lg"
+              >
                 <SearchIcon className="w-4 h-4 mr-2" />
                 검색
               </Button>
-              <Button variant="white" onClick={handleReset} className="flex items-center">
+              <Button variant="white" onClick={handleReset} className="flex items-center" size="lg">
                 <ResetIcon className="w-4 h-4 mr-2" />
                 초기화
               </Button>

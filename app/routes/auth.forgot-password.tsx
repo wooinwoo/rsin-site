@@ -50,7 +50,7 @@ export default function ForgotPassword() {
               error={error}
             />
           </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" className="w-full" disabled={isLoading} size="lg">
             {isLoading ? "전송 중..." : "이메일 전송"}
           </Button>
         </form>

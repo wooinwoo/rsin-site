@@ -102,7 +102,7 @@ export default function ResetPassword() {
               required
             />
           </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" className="w-full" disabled={isLoading} size="lg">
             {isLoading ? "변경 중..." : "비밀번호 변경"}
           </Button>
         </form>

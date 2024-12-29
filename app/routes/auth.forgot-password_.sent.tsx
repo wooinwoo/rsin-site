@@ -48,6 +48,7 @@ export default function EmailSent() {
             className="w-full"
             onClick={handleResend}
             disabled={isResending || cooldown > 0}
+            size="lg"
           >
             {cooldown > 0
               ? `${cooldown}초 후 재전송 가능`

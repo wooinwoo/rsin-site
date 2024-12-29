@@ -20,7 +20,9 @@ export default function ResetError() {
         </p>
 
         <Link to="/auth/forgot-password">
-          <Button className="w-full mt-6">비밀번호 찾기 다시 시도</Button>
+          <Button className="w-full mt-6" size="lg">
+            비밀번호 찾기 다시 시도
+          </Button>
         </Link>
       </div>
     </div>

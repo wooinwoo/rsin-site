@@ -19,7 +19,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
-      <div className="w-full max-w-md space-y-12">
+      <div className="w-full max-w-md space-y-12 bg-white p-8 rounded-lg shadow-lg">
         {/* Logo Section */}
         <div className="flex items-center gap-3 justify-center ">
           <LogoIcon className="w-12 h-12" />

@@ -17,7 +17,9 @@ export default function ResetComplete() {
         </p>
 
         <Link to="/auth/login" className="">
-          <Button className="w-full mt-6">로그인하기</Button>
+          <Button className="w-full mt-6" size="lg">
+            로그인하기
+          </Button>
         </Link>
       </div>
     </div>
