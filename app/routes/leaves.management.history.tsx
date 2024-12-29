@@ -1,6 +1,8 @@
 import { DataTable } from "~/features/datatable/components/DataTable";
 import { ColumnDef, SearchField } from "~/features/datatable/types/datatable";
 import { DEPARTMENT_OPTIONS, LEAVE_TYPE_OPTIONS } from "~/shared/constants/options";
+import { LeaveStatusBadge } from "~/features/leave/components/LeaveStatusBadge";
+
 interface LeaveHistory {
   id: string;
   profileUrl: string;
@@ -73,21 +75,9 @@ const columns: ColumnDef<LeaveHistory>[] = [
     id: "status",
     header: "사용 여부",
     accessorKey: "status",
-    cell: ({ row }) => (
-      <span
-        className={`
-          px-2 py-1 rounded-full text-xs
-          ${row.status === "pending" ? "bg-yellow-100 text-yellow-800" : ""}
-          ${row.status === "scheduled" ? "bg-blue-100 text-blue-800" : ""}
-          ${row.status === "used" ? "bg-green-100 text-green-800" : ""}
-        `}
-      >
-        {row.status === "pending" && "승인대기"}
-        {row.status === "scheduled" && "사용예정"}
-        {row.status === "used" && "사용완료"}
-      </span>
-    ),
+    cell: ({ row }) => <LeaveStatusBadge status={row.status} />,
   },
+
   {
     id: "reason",
     header: "사유",

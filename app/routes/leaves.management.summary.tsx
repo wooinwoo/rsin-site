@@ -74,16 +74,22 @@ const columns: ColumnDef<Employee>[] = [
     id: "totalLeaves",
     header: "가용연차",
     accessorKey: "totalLeaves",
+    cell: ({ row }) => <span className=" w-full text-center">{row.usedLeaves}</span>,
+    headerClassName: "text-center",
   },
   {
     id: "usedLeaves",
     header: "사용연차",
     accessorKey: "usedLeaves",
+    cell: ({ row }) => <span className="font-bold w-full text-center">{row.usedLeaves}</span>,
+    headerClassName: "text-center text-gray-800",
   },
   {
     id: "remainingLeaves",
     header: "잔여연차",
     accessorKey: "remainingLeaves",
+    cell: ({ row }) => <span className="font-bold w-full text-center">{row.remainingLeaves}</span>,
+    headerClassName: "text-center text-gray-800",
   },
 ];
 

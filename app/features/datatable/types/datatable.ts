@@ -11,6 +11,7 @@ export interface ColumnDef<T> {
   accessorKey: keyof T;
   cell?: (props: { row: T }) => React.ReactNode;
   sortable?: boolean;
+  headerClassName?: string;
 }
 
 export interface SearchField {

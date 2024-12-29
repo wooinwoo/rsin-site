@@ -4,6 +4,7 @@ import { ColumnDef, SearchField } from "~/features/datatable/types/datatable";
 import { CheckIcon } from "~/shared/ui/icons/CheckIcon";
 import { LeaveApprovalModal } from "~/features/leave/components/LeaveApprovalModal";
 import { useState } from "react";
+import { ApprovalStatusBadge } from "~/features/approval/components/ApprovalStatusBadge";
 interface LeaveRequest {
   id: string;
   employeeName: string;
@@ -68,20 +69,7 @@ const columns: ColumnDef<LeaveRequest>[] = [
     id: "status",
     header: "상태",
     accessorKey: "status",
-    cell: ({ row }) => (
-      <span
-        className={`
-        px-2 py-1 rounded-full text-xs
-        ${row.status === "pending" ? "bg-yellow-100 text-yellow-800" : ""}
-        ${row.status === "approved" ? "bg-green-100 text-green-800" : ""}
-        ${row.status === "rejected" ? "bg-red-100 text-red-800" : ""}
-      `}
-      >
-        {row.status === "pending" && "대기중"}
-        {row.status === "approved" && "승인"}
-        {row.status === "rejected" && "반려"}
-      </span>
-    ),
+    cell: ({ row }) => <ApprovalStatusBadge status={row.status} />,
   },
   {
     id: "requestDate",
@@ -107,7 +95,7 @@ const leaveRequests: LeaveRequest[] = [
     leaveType: "반차",
     startDate: "2024-03-18",
     endDate: "2024-03-18",
-    status: "approved",
+    status: "pending",
     requestDate: "2024-03-11",
   },
   {
@@ -117,7 +105,7 @@ const leaveRequests: LeaveRequest[] = [
     leaveType: "병가",
     startDate: "2024-03-20",
     endDate: "2024-03-22",
-    status: "approved",
+    status: "pending",
     requestDate: "2024-03-12",
   },
   {
@@ -137,7 +125,7 @@ const leaveRequests: LeaveRequest[] = [
     leaveType: "연차",
     startDate: "2024-04-01",
     endDate: "2024-04-02",
-    status: "rejected",
+    status: "pending",
     requestDate: "2024-03-14",
   },
 ];
