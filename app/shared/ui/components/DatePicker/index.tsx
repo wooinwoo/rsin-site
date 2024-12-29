@@ -26,25 +26,32 @@ export function DatePicker({
 }: DatePickerProps) {
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
 
-  // value prop과 내부 상태 동기화
   useEffect(() => {
     if (isRange) {
       setDateRange(Array.isArray(value) ? value : [null, null]);
     } else {
       setDateRange([value as Date | null, null]);
     }
-  }, [value, isRange]);
+  }, []);
 
   const [startDate, endDate] = dateRange;
   const baseClassName =
-    "z-10 px-3 py-2 w-full rounded-lg bg-white disabled:bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-sm";
+    "w-full min-w-[200px] z-10 px-3 py-2 w-full rounded-lg bg-white disabled:bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-sm";
 
-  const wrapperClassName = "min-w-[200px] h-9 inline-block bg-white"; // 높이 추가 (h-9)
+  const wrapperClassName = "w-full h-9 inline-block bg-white";
 
   if (!isRange) {
     return (
       <div className={wrapperClassName}>
-        <ClientOnly>
+        <ClientOnly
+          fallback={
+            <input
+              className={`${baseClassName} ${className}`.trim()}
+              placeholder="날짜 선택"
+              disabled
+            />
+          }
+        >
           <ReactDatePicker
             selected={startDate}
             onChange={(date: Date | null) => {
@@ -67,7 +74,15 @@ export function DatePicker({
 
   return (
     <div className={wrapperClassName}>
-      <ClientOnly>
+      <ClientOnly
+        fallback={
+          <input
+            className={`${baseClassName} text-sm pr-8 ${className}`.trim()}
+            placeholder="시작일 - 종료일"
+            disabled
+          />
+        }
+      >
         <ReactDatePicker
           selectsRange={true}
           selected={startDate}
@@ -79,12 +94,18 @@ export function DatePicker({
           }}
           required={required}
           name={name}
+          onCalendarClose={() => {
+            if (startDate && !endDate) {
+              setDateRange([null, null]);
+              onChange?.([null, null]);
+            }
+          }}
           isClearable
           disabled={disabled}
           locale={ko}
           dateFormat="yyyy.MM.dd"
           placeholderText="시작일 - 종료일"
-          className={`${baseClassName} text-sm ${className}`.trim()}
+          className={`${baseClassName} text-sm pr-8 ${className}`.trim()}
         />
       </ClientOnly>
     </div>

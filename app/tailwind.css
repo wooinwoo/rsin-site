@@ -43,3 +43,11 @@ body {
 .react-datepicker__input-container input {
   @apply w-full;
 }
+
+.react-datepicker-wrapper {
+  width: 100% !important;
+}
+
+.react-datepicker__input-container {
+  width: 100% !important;
+}
