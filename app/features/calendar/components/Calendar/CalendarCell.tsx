@@ -27,6 +27,7 @@ export function CalendarCell({ day, events = [], isWeekend }: CalendarCellProps)
       <div
         onClick={handleCellClick}
         className={`
+          overflow-hidden
           min-h-[70px] lg:min-h-[100px] py-2 border border-gray-400 rounded-md cursor-pointer
           ${day.isCurrentMonth ? (isWeekend ? "bg-[#F6F6F6]" : "bg-white") : "bg-white"}
           ${day.isToday ? "border-blue-500" : ""}
@@ -41,7 +42,7 @@ export function CalendarCell({ day, events = [], isWeekend }: CalendarCellProps)
         >
           {day.formattedDate}
         </span>
-        <div className="hidden lg:flex mt-1 gap-1.5 px-1 flex-wrap">
+        <div className="hidden lg:flex mt-1 gap-1.5 xl:px-1 flex-wrap">
           {dayEvents.map((event) => (
             <EventItem key={event.id} event={event} />
           ))}
