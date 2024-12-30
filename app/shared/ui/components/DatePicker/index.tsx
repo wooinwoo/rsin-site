@@ -32,7 +32,7 @@ export function DatePicker({
     } else {
       setDateRange([value as Date | null, null]);
     }
-  }, []);
+  }, [value]);
 
   const [startDate, endDate] = dateRange;
   const baseClassName =
