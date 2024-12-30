@@ -15,11 +15,13 @@
     "@remix-run/react": "^2.15.0",
     "@remix-run/serve": "^2.15.0",
     "@types/react-datepicker": "^7.0.0",
+    "axios": "^1.7.9",
     "date-fns": "^4.1.0",
     "isbot": "^4.1.0",
     "react": "^18.2.0",
     "react-datepicker": "^7.5.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.15.0",
