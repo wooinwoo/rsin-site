@@ -2,7 +2,7 @@ import { DataTable } from "~/features/datatable/components/DataTable";
 import { ColumnDef, SearchField } from "~/features/datatable/types/datatable";
 import { DEPARTMENT_OPTIONS, LEAVE_TYPE_OPTIONS } from "~/shared/constants/options";
 import { LeaveStatusBadge } from "~/features/leave/components/LeaveStatusBadge";
-
+import { ProfileCell } from "~/features/datatable/components/cells/ProfileCell";
 interface LeaveHistory {
   id: string;
   profileUrl: string;
@@ -44,12 +44,7 @@ const columns: ColumnDef<LeaveHistory>[] = [
     id: "profile",
     header: "이름",
     accessorKey: "employeeName",
-    cell: ({ row }) => (
-      <div className="flex items-center gap-2">
-        <img src={row.profileUrl} alt={row.employeeName} className="w-8 h-8 rounded-full" />
-        <span>{row.employeeName}</span>
-      </div>
-    ),
+    cell: ({ row }) => <ProfileCell profileUrl={row.profileUrl} employeeName={row.employeeName} />,
   },
   {
     id: "department",

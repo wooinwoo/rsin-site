@@ -2,6 +2,7 @@
 import { DataTable } from "~/features/datatable/components/DataTable";
 import { ColumnDef, SearchField } from "~/features/datatable/types/datatable";
 import { DEPARTMENT_OPTIONS } from "~/shared/constants/options";
+import { ProfileCell } from "~/features/datatable/components/cells/ProfileCell";
 interface Employee {
   employeeId: string; // 사번
   profileUrl: string; // 프로필 이미지
@@ -42,12 +43,7 @@ const columns: ColumnDef<Employee>[] = [
     id: "name",
     header: "이름",
     accessorKey: "name",
-    cell: ({ row }) => (
-      <div className="flex items-center gap-2">
-        <img src={row.profileUrl} alt={row.name} className="w-8 h-8 rounded-full" />
-        <span>{row.name}</span>
-      </div>
-    ),
+    cell: ({ row }) => <ProfileCell profileUrl={row.profileUrl} employeeName={row.name} />,
   },
   {
     id: "department",

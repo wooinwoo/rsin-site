@@ -5,6 +5,7 @@ import { CheckIcon } from "~/shared/ui/icons/CheckIcon";
 import { LeaveApprovalModal } from "~/features/leave/components/LeaveApprovalModal";
 import { useState } from "react";
 import { ApprovalStatusBadge } from "~/features/approval/components/ApprovalStatusBadge";
+import { ProfileCell } from "~/features/datatable/components/cells/ProfileCell";
 interface LeaveRequest {
   id: string;
   employeeName: string;
@@ -43,12 +44,7 @@ const columns: ColumnDef<LeaveRequest>[] = [
     id: "employeeName",
     header: "신청자",
     accessorKey: "employeeName",
-    cell: ({ row }) => (
-      <div className="flex items-center gap-2">
-        <img src={row.profileUrl} alt={row.employeeName} className="w-8 h-8 rounded-full" />
-        <span>{row.employeeName}</span>
-      </div>
-    ),
+    cell: ({ row }) => <ProfileCell profileUrl={row.profileUrl} employeeName={row.employeeName} />,
   },
   {
     id: "leaveType",

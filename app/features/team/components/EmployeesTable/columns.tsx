@@ -1,6 +1,6 @@
 import { ColumnDef } from "~/features/datatable/types/datatable";
 import type { Employee } from "~/entities/employees/model";
-
+import { ProfileCell } from "~/features/datatable/components/cells/ProfileCell";
 export const employeeColumns: ColumnDef<Employee>[] = [
   {
     id: "empNo",
@@ -11,12 +11,7 @@ export const employeeColumns: ColumnDef<Employee>[] = [
     id: "profile",
     header: "이름",
     accessorKey: "name",
-    cell: ({ row }) => (
-      <div className="flex items-center gap-2">
-        <img src={row.profileUrl} alt={row.name} className="w-8 h-8 rounded-full" />
-        <span>{row.name}</span>
-      </div>
-    ),
+    cell: ({ row }) => <ProfileCell profileUrl={row.profileUrl} employeeName={row.name} />,
   },
   {
     id: "position",
