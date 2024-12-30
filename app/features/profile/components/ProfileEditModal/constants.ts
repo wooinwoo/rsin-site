@@ -14,6 +14,7 @@ export const FORM_FIELDS: FormField[] = [
     type: "text",
     required: true,
     placeholder: "입력하세요",
+    disabled: true,
   },
   {
     label: "휴대폰 번호",
