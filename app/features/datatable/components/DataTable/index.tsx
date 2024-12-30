@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DataTableHeader } from "./DataTableHeader";
 import { DataTableBody } from "./DataTableBody";
 import { DataTableFooter } from "./DataTableFooter";
@@ -30,6 +30,10 @@ export function DataTable<T extends Record<string, any>>({
   const paginatedData = enablePagination
     ? filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
     : filteredData;
+
+  useEffect(() => {
+    setFilteredData(data);
+  }, [data]);
 
   return (
     <>
