@@ -47,8 +47,8 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm install
 
-      # - name: Download env
-      #   run: aws s3 cp ${{env.ENV_S3_URI}} packages/${{env.SERVICE}}/${{env.SCOPE}}/.env
+      - name: Download env
+        run: aws s3 cp ${{env.ENV_S3_URI}} .env
 
       - name: Build
         run: npm run build
@@ -71,8 +71,8 @@ jobs:
           role-to-assume: ${{secrets.AWS_ROLE_ARN}}
           aws-region: ${{env.AWS_REGION}}
 
-      # - name: Download env
-      #   run: aws s3 cp ${{env.ENV_S3_URI}} packages/${{env.SERVICE}}/${{env.SCOPE}}/.env
+      - name: Download env
+        run: aws s3 cp ${{env.ENV_S3_URI}} .env
 
       - name: Build docker
         run: docker build -t ${{env.ECR_REPOSITORY}} .
