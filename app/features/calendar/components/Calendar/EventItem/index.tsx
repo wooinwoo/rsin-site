@@ -2,6 +2,7 @@ import type { CalendarEvent, LeaveType, LeaveStatus } from "../../../types/event
 
 interface EventItemProps {
   event: CalendarEvent;
+  variant?: "calendar" | "list";
 }
 
 // 상태별 색상 매핑
@@ -14,7 +15,7 @@ const STATUS_STYLES = {
     background: "bg-teal-400",
     text: "text-teal-500",
   },
-  pendingApproval: {
+  pending: {
     background: "bg-red-400",
     text: "text-red-500",
   },
@@ -33,26 +34,38 @@ const DEFAULT_STYLE = {
   text: "text-blue-500",
 };
 
-export function EventItem({ event }: EventItemProps) {
-  // 상태에 따른 스타일 가져오기
+export function EventItem({ event, variant = "calendar" }: EventItemProps) {
   const style = STATUS_STYLES[event.status] || DEFAULT_STYLE;
-
-  // 휴가 유형 라벨 가져오기
   const leaveTypeLabel = LEAVE_TYPE_LABELS[event.leaveType];
 
-  return (
-    <>
-      <div
-        className={`
-        px-2 py-1 text-sm flex-1 flex items-center justify-start
-      `}
-      >
+  if (variant === "calendar") {
+    return (
+      <div className="px-2 py-1 text-sm flex-1 flex items-center justify-start">
         <div className={`${style.background} w-2 h-2 rounded-full mr-1`}></div>
         <span className="whitespace-nowrap">
           {event.title} {leaveTypeLabel}
         </span>
-        {/* <span className="lg:ml-1 whitespace-nowrap">({leaveTypeLabel})</span> */}
       </div>
-    </>
+    );
+  }
+
+  return (
+    <div className="px-3 py-1.5  first:pt-2 last:pb-2">
+      <div className="flex items-center gap-2 text-sm">
+        <div className="flex items-center gap-1.5">
+          <div className={`${style.background} w-1.5 h-1.5 rounded-full`} />
+          <span className="text-gray-600 w-12">{leaveTypeLabel}</span>
+        </div>
+
+        <div className="flex items-center gap-1.5">
+          <span className="font-medium">{event.title}</span>
+          <span className="text-gray-500 text-xs">{event.department}</span>
+        </div>
+
+        <span className="text-gray-400 text-xs mx-1">•</span>
+
+        <div className="text-gray-600 truncate">{event.description || "연차 휴가"}</div>
+      </div>
+    </div>
   );
 }

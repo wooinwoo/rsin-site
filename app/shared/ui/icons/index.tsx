@@ -20,4 +20,5 @@ export { CheckCircleIcon } from "./CheckCircleIcon";
 export { XCircleIcon } from "./XCircleIcon";
 export { ResetIcon } from "./ResetIcon";
 export { SearchIcon } from "./SearchIcon";
+export { ListIcon } from "./ListIcon";
 export type { IconProps } from "./types";

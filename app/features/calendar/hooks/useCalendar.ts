@@ -23,11 +23,17 @@ export function useCalendar() {
       return prevMonth;
     });
   }, []);
+  const goToToday = useCallback(() => {
+    const today = new Date();
+    setCurrentDate(today);
+    setCalendarDays(getCalendarDays(today));
+  }, []);
 
   return {
     currentDate,
     calendarDays,
     goToNextMonth,
     goToPrevMonth,
+    goToToday,
   };
 }

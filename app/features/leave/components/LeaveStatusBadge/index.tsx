@@ -1,6 +1,5 @@
 import { Badge } from "~/shared/ui/components/Badge";
-
-type LeaveStatus = "pending" | "scheduled" | "used";
+import { LeaveStatus } from "~/features/calendar/types/event";
 
 interface LeaveStatusBadgeProps {
   status: LeaveStatus;

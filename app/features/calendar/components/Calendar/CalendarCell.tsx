@@ -4,7 +4,7 @@ import type { CalendarDate } from "../../types/calendar";
 import type { CalendarEvent } from "../../types/event";
 import { EventItem } from "./EventItem";
 import { Modal } from "~/shared/ui/components/Modal";
-
+import { Button } from "~/shared/ui/components/Button";
 interface CalendarCellProps {
   day: CalendarDate;
   events?: CalendarEvent[];
@@ -63,12 +63,23 @@ export function CalendarCell({ day, events = [], isWeekend }: CalendarCellProps)
         title={`${month}월 ${day.formattedDate}일 휴가 내역`}
         size="small"
       >
-        <div className="space-y-2">
-          {dayEvents.map((event) => (
-            <div key={event.id} className="p-1">
-              <EventItem event={event} />
+        <div className="px-1">
+          <div className="mb-4 p-4 bg-gray-50 rounded-lg">
+            <div className="text-sm text-gray-600">
+              총 <span className="font-medium text-gray-900">{dayEvents.length}</span>건의 휴가
             </div>
-          ))}
+          </div>
+
+          <div className="space-y-2">
+            {dayEvents.map((event) => (
+              <div
+                key={event.id}
+                className="p-3 bg-white rounded-lg border border-gray-100 hover:border-gray-200 transition-colors"
+              >
+                <EventItem event={event} variant="list" />
+              </div>
+            ))}
+          </div>
         </div>
       </Modal>
     </>
