@@ -3,7 +3,8 @@ import { DataTable } from "~/features/datatable/components/DataTable";
 import { ColumnDef, SearchField } from "~/features/datatable/types/datatable";
 import { DEPARTMENT_OPTIONS } from "~/shared/constants/options";
 import { ProfileCell } from "~/features/datatable/components/cells/ProfileCell";
-interface Employee {
+import { LeaveEmployeeCard } from "~/features/leave/components/LeaveEmployeeCard";
+export interface Employee {
   employeeId: string; // 사번
   profileUrl: string; // 프로필 이미지
   name: string; // 이름
@@ -226,6 +227,7 @@ export default function LeaveApprovalPage() {
       onRowSelect={handleRowSelect}
       searchFields={searchFields}
       enableSearch
+      mobileCard={LeaveEmployeeCard}
     />
   );
 }

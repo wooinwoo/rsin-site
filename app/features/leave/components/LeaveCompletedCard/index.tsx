@@ -1,5 +1,4 @@
 import { LeaveCompletedCardProps } from "./types";
-import { DataTableCheckbox } from "~/features/datatable/components/DataTableCheckbox";
 import { OptimizedImage } from "~/shared/ui/components/OptimizedImage";
 import { MobileCard } from "~/features/datatable/components/MobileCard";
 import { ApprovalStatusBadge } from "~/features/approval/components/ApprovalStatusBadge";
