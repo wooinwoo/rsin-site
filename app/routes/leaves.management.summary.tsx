@@ -68,9 +68,9 @@ const columns: ColumnDef<Employee>[] = [
   },
   {
     id: "totalLeaves",
-    header: "가용연차",
+    header: "총연차",
     accessorKey: "totalLeaves",
-    cell: ({ row }) => <span className=" w-full text-center">{row.usedLeaves}</span>,
+    cell: ({ row }) => <span className=" w-full text-center">{row.totalLeaves}</span>,
     headerClassName: "text-center",
   },
   {

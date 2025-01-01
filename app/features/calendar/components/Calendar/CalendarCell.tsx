@@ -60,7 +60,7 @@ export function CalendarCell({ day, events = [], isWeekend }: CalendarCellProps)
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={`${month}월 ${day.formattedDate}일 휴가 내역`}
+        title={`${month}월 ${day.formattedDate}일 일정 내역`}
         size="small"
       >
         <div className="px-1">

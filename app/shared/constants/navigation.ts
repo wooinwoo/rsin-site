@@ -30,20 +30,8 @@ export const MENU_GROUPS: MenuGroup[] = [
     items: [
       {
         icon: HouseboatIcon,
-        label: "휴가 현황",
-        path: "/leaves/management/history",
-        children: [
-          {
-            icon: "/svg/calendar.svg",
-            label: "휴가 내역",
-            path: "/leaves/management/history",
-          },
-          {
-            icon: "/svg/description.svg",
-            label: "연차 현황",
-            path: "/leaves/management/summary",
-          },
-        ],
+        label: "연차 현황",
+        path: "/leaves/management/summary",
       },
       {
         icon: TaskIcon,
