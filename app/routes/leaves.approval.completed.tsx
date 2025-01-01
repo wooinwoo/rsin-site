@@ -4,7 +4,8 @@ import { ColumnDef, SearchField } from "~/features/datatable/types/datatable";
 import { LEAVE_TYPE_OPTIONS } from "~/shared/constants/options";
 import { ApprovalStatusBadge } from "~/features/approval/components/ApprovalStatusBadge";
 import { ProfileCell } from "~/features/datatable/components/cells/ProfileCell";
-interface LeaveRequest {
+import { LeaveCompletedCard } from "~/features/leave/components/LeaveCompletedCard";
+export interface LeaveRequest {
   id: string;
   employeeName: string;
   employeeProfileUrl: string;
@@ -73,19 +74,8 @@ const columns: ColumnDef<LeaveRequest>[] = [
   },
   {
     id: "approver",
-    header: "처리자",
+    header: "결재자",
     accessorKey: "approverName",
-    cell: ({ row }) =>
-      row.approverName ? (
-        <div className="flex items-center gap-2">
-          <img
-            src={row.approverProfileUrl}
-            alt={row.approverName}
-            className="w-8 h-8 rounded-full"
-          />
-          <span>{row.approverName}</span>
-        </div>
-      ) : null,
   },
   {
     id: "requestDate",
@@ -94,7 +84,7 @@ const columns: ColumnDef<LeaveRequest>[] = [
   },
   {
     id: "processedDate",
-    header: "처리일",
+    header: "결재일",
     accessorKey: "processedDate",
   },
 ];
@@ -151,6 +141,7 @@ export default function LeaveApprovalPage() {
       data={leaveRequests}
       columns={columns}
       onSearch={() => {}}
+      mobileCard={LeaveCompletedCard}
       onRowSelect={handleRowSelect}
       searchFields={searchFields}
       enableSearch
