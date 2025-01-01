@@ -55,7 +55,7 @@ const columns: ColumnDef<LeaveRequest>[] = [
   },
   {
     id: "period",
-    header: "기간",
+    header: "날짜 ",
     accessorKey: "startDate",
     cell: ({ row }) => (
       <span>
