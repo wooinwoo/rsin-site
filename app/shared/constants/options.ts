@@ -1,8 +1,9 @@
 export const DEPARTMENT_OPTIONS = [
-  { value: 1, label: "개발팀" },
-  { value: 2, label: "디자인팀" },
-  { value: 3, label: "기획팀" },
-  { value: 4, label: "경영지원팀" },
+  { value: 2, label: "기획팀" },
+  { value: 3, label: "디자인팀" },
+  { value: 4, label: "개발팀" },
+  { value: 5, label: "경영지원팀" },
+  { value: 1, label: "경영진" },
 ];
 
 export const POSITION_OPTIONS = [

@@ -1,31 +1,23 @@
 import type { Employee } from "~/entities/employees/model";
 import type { TeamMemberAddData } from "~/features/team/components/TeamMemberAddModal/types";
 
-export function getInitialModalData(member: Employee | null): TeamMemberAddData {
+export function getInitialModalData(member: Employee | null): TeamMemberAddData | undefined {
   console.log("getInitialModalData", member);
+
   if (!member) {
-    return {
-      name: "",
-      phone: "",
-      email: "",
-      department: "",
-      position: "",
-      joinDate: "",
-      birthDate: "",
-      mbti: null,
-      isManager: false,
-    };
+    console.log("member is null");
+    return;
   }
 
   return {
     name: member.name,
     phone: member.phone,
     email: member.email,
-    department: member.department?.name ?? "",
+    departmentId: member.department?.id ?? 1,
     position: member.position,
-    joinDate: member.joinedAt,
-    birthDate: member.birth,
-    mbti: member.mbti,
-    isManager: member.role === "admin",
+    joinedAt: member.joinedAt,
+    birth: member.birth,
+    mbti: member.mbti || "",
+    role: member.role,
   };
 }

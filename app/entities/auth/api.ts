@@ -1,8 +1,8 @@
 import { client } from "~/shared/api";
-import type { SignInRequest } from "./model";
+import type { SignInRequest, SignInResponse } from "./model";
 
 export const authApi = {
   signIn(data: SignInRequest) {
-    return client.post("/auth/signin", data);
+    return client.post<SignInResponse>("/auth/signin", data);
   },
 };

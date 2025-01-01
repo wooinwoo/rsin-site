@@ -1,15 +1,64 @@
-import { useState } from "react";
-import { Form, useNavigate } from "@remix-run/react";
+import { useState, useEffect } from "react";
+import { json, type ActionFunctionArgs } from "@remix-run/node";
+import { useActionData, useNavigate, Form } from "@remix-run/react";
 import { LogoIcon, EyeIcon, EyeOffIcon } from "~/shared/ui/icons";
 import { Button } from "~/shared/ui/components/Button";
+import { authApi } from "~/entities/auth/api";
+import { useAuthStore } from "~/shared/store";
+import type { SignInResponse } from "~/entities/auth/model";
+
+interface ActionSuccessData {
+  success: true;
+  redirectTo: string;
+  user: SignInResponse;
+}
+interface ActionErrorData {
+  success: false;
+  message: string;
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  const formData = await request.formData();
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+
+  try {
+    const response = await authApi.signIn({ email, password });
+    return json<ActionSuccessData>({
+      success: true,
+      redirectTo: "/",
+      user: {
+        role: response.role,
+        sub: response.sub,
+        email: response.email,
+        name: response.name,
+        thumbnailPath: response.thumbnailPath,
+        position: response.position,
+        departmentId: response.departmentId,
+      },
+    });
+  } catch (error) {
+    return json<ActionErrorData>(
+      {
+        success: false,
+        message: "이메일 또는 비밀번호가 올바르지 않습니다.",
+      },
+      { status: 400 }
+    );
+  }
+}
 
 export default function LoginPage() {
+  const navigate = useNavigate();
+  const actionData = useActionData<typeof action>();
+  const setUser = useAuthStore((state) => state.setUser);
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const navigate = useNavigate();
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -18,11 +67,19 @@ export default function LoginPage() {
     }));
   };
 
+  useEffect(() => {
+    if (actionData?.success) {
+      setUser(actionData.user);
+      navigate(actionData.redirectTo || "/");
+    } else if (actionData?.message) {
+      setError(actionData.message);
+    }
+  }, [actionData, navigate]);
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
       <div className="w-full max-w-md space-y-12 bg-white p-8 rounded-lg shadow-lg">
-        {/* Logo Section */}
-        <div className="flex items-center gap-3 justify-center ">
+        <div className="flex items-center gap-3 justify-center">
           <LogoIcon className="w-12 h-12" />
           <div className="flex flex-col mr-11">
             <h2 className="text-2xl font-bold tracking-tight text-gray-900">RS-TEAM</h2>
@@ -30,8 +87,8 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Login Form - 배경 및 그림자 제거 */}
         <Form method="post" className="space-y-8 px-4">
+          {error && <div className="text-red-500 text-sm text-center">{error}</div>}
           <div className="space-y-6">
             <div>
               <label
@@ -39,7 +96,7 @@ export default function LoginPage() {
                 className="flex items-center text-sm font-medium text-gray-700"
               >
                 <img
-                  src="/public/images/profile.jpg"
+                  src="/images/profile.jpg"
                   alt="RS-TEAM Logo"
                   className="w-4 h-4 rounded-full mr-1"
                 />
@@ -64,7 +121,7 @@ export default function LoginPage() {
                 className="flex items-center text-sm font-medium text-gray-700"
               >
                 <img
-                  src="/public/images/profile.jpg"
+                  src="/images/profile.jpg"
                   alt="RS-TEAM Logo"
                   className="w-4 h-4 rounded-full mr-1"
                 />
