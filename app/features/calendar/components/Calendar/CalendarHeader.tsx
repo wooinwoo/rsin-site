@@ -20,12 +20,15 @@ export function CalendarHeader({
   onNextMonth,
   onTodayClick,
 }: CalendarHeaderProps) {
+  const yearMonth = formatYearMonth(currentDate);
+
   return (
-    <div className="flex items-center justify-between mb-4">
-      <div className="w-32" />
-      <div className="flex items-center gap-2">
-        <button onClick={onPrevMonth} className="p-2 hover:bg-gray-200 rounded-full">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div className="flex gap-4 my-4  items-center  justify-between">
+      <div className="hidden 2xs:block w-16"></div>
+      {/* 날짜 네비게이션 */}
+      <div className="flex items-center justify-center gap-1">
+        <button onClick={onPrevMonth} className="p-1.5 hover:bg-gray-200 rounded-full shrink-0">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -34,30 +37,37 @@ export function CalendarHeader({
             />
           </svg>
         </button>
-        <button onClick={onTodayClick} className="text-xl font-semibold hover:text-blue-600">
-          {formatYearMonth(currentDate)}
-        </button>
-        <button onClick={onNextMonth} className="p-2 hover:bg-gray-200 rounded-full">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="flex items-center">
+          <button
+            onClick={onTodayClick}
+            className="text-base sm:text-lg font-medium hover:text-blue-600 px-1 whitespace-nowrap"
+          >
+            {yearMonth}
+          </button>
+        </div>
+        <button onClick={onNextMonth} className="p-1.5 hover:bg-gray-200 rounded-full shrink-0">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
       </div>
-      <div className="w-32 flex justify-end">
-        <div className="flex items-center gap-1 border rounded-lg p-1">
+
+      {/* 뷰 모드 토글 */}
+      <div className="flex justify-center ">
+        <div className="flex items-center gap-1 border rounded-lg p-0.5">
           <button
             onClick={() => onViewModeChange("calendar")}
-            className={`p-2 rounded ${
+            className={`p-1.5 rounded ${
               viewMode === "calendar" ? "bg-gray-200" : "hover:bg-gray-50"
             }`}
           >
-            <CalendarIcon className="w-5 h-5" />
+            <CalendarIcon className="w-4 h-4" />
           </button>
           <button
             onClick={() => onViewModeChange("list")}
-            className={`p-2 rounded ${viewMode === "list" ? "bg-gray-200" : "hover:bg-gray-50"}`}
+            className={`p-1.5 rounded ${viewMode === "list" ? "bg-gray-200" : "hover:bg-gray-50"}`}
           >
-            <ListIcon className="w-5 h-5" />
+            <ListIcon className="w-4 h-4" />
           </button>
         </div>
       </div>

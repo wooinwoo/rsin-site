@@ -54,7 +54,7 @@ export function EventItem({ event, variant = "calendar" }: EventItemProps) {
       <div className="flex items-center gap-2 text-sm">
         <div className="flex items-center gap-1.5">
           <div className={`${style.background} w-1.5 h-1.5 rounded-full`} />
-          <span className="text-gray-600 w-12">{leaveTypeLabel}</span>
+          <span className="text-gray-600 mr-2">{leaveTypeLabel}</span>
         </div>
 
         <div className="flex items-center gap-1.5">
