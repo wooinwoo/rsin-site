@@ -140,10 +140,10 @@ export function LeaveApprovalModal({
 
       {/* 버튼 그룹 */}
       <div className="flex justify-end gap-2">
-        <Button type="button" variant="outline" onClick={onReject}>
+        <Button type="button" variant="outline" onClick={onReject} size="md">
           반려
         </Button>
-        <Button type="button" variant="red" onClick={onApprove}>
+        <Button type="button" variant="red" onClick={onApprove} size="md">
           승인
         </Button>
       </div>

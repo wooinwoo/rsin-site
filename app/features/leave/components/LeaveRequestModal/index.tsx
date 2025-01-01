@@ -111,7 +111,7 @@ export function LeaveRequestModal({ isOpen, onClose }: LeaveRequestModalProps) {
         </div>
 
         <div className="flex justify-end gap-2 pt-4 border-t border-gray-300">
-          <Button type="submit" variant="red">
+          <Button type="submit" variant="red" size="md">
             신청
           </Button>
         </div>

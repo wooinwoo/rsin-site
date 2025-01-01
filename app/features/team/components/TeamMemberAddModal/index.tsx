@@ -172,11 +172,16 @@ export function TeamMemberAddModal({
 
           <div className="flex justify-end gap-2 pt-4 border-t border-gray-300">
             {mode === "edit" && onResign && (
-              <Button type="button" variant="outline" onClick={() => setIsDeleteModalOpen(true)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsDeleteModalOpen(true)}
+                size="md"
+              >
                 퇴사처리
               </Button>
             )}
-            <Button type="submit" variant="red">
+            <Button type="submit" variant="red" size="md">
               {mode === "add" ? "추가" : "수정"}
             </Button>
           </div>
