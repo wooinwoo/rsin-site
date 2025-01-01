@@ -13,6 +13,7 @@ import type {
 } from "~/features/team/types/employeesManagement";
 import { getInitialModalData } from "~/features/team/utils/employee";
 import { PlusIcon } from "~/shared/ui/icons/PlusIcon";
+import { TeamMemberCard } from "~/features/team/components/TeamMemberCard";
 
 // Loader
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -150,6 +151,7 @@ export default function TeamManagementListPage() {
         columns={employeeColumns}
         onRowClick={handleRowClick}
         enableSearch
+        mobileCard={TeamMemberCard}
         toolbarButtons={[
           {
             label: "팀원추가",
