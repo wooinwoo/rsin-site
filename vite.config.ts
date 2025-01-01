@@ -3,7 +3,6 @@ import { defineConfig, loadEnv } from "vite"; // loadEnv 추가
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig(({ mode }) => {
-  // mode 파라미터 추가
   const env = loadEnv(mode, process.cwd(), ""); // env 로드
 
   return {
@@ -21,6 +20,7 @@ export default defineConfig(({ mode }) => {
     ],
     define: {
       "process.env.API_URL": JSON.stringify(env.API_URL),
+      "process.env.CDN_HOST": JSON.stringify(env.CDN_HOST),
     },
   };
 });

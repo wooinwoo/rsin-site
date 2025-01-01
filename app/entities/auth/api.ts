@@ -1,5 +1,5 @@
 import { client } from "~/shared/api";
-import type { SignInRequest, SignInResponse } from "./model";
+import type { SignInRequest, SignInResponse, MyProfileResponse } from "./model";
 
 export const authApi = {
   signIn(data: SignInRequest) {
@@ -7,5 +7,8 @@ export const authApi = {
   },
   signOut() {
     return client.post("/auth/signout");
+  },
+  getMyProfile() {
+    return client.get<MyProfileResponse>("/employees/self");
   },
 };

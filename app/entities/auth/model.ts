@@ -12,3 +12,16 @@ export interface SignInResponse {
   position: string;
   departmentId: number;
 }
+
+export interface MyProfileResponse {
+  name: string;
+  departmentId: number;
+  empNo: string;
+  position: string;
+  joinedAt: string;
+  email: string;
+  phone: string;
+  birth: string;
+  mbti: string;
+  thumbnailPath: string | null;
+}

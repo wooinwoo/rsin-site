@@ -8,9 +8,13 @@ export const useAuthStore = create<AuthStore>()(
       user: null,
       setUser: (user: User | null) => set({ user }),
       clearUser: () => set({ user: null }),
+      updateUser: (additionalInfo: Partial<User>) =>
+        set((state) => ({
+          user: state.user ? { ...state.user, ...additionalInfo } : null,
+        })),
     }),
     {
-      name: "auth-storage", // localStorage에 저장될 키 이름
+      name: "auth-storage", // localStorage
     }
   )
 );
