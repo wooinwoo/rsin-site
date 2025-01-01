@@ -80,7 +80,7 @@ export function Header() {
             />
           )}
         </div>
-        <Button variant="primary" onClick={() => setIsLeaveModalOpen(true)}>
+        <Button variant="ghost" onClick={() => setIsLeaveModalOpen(true)}>
           휴가신청
         </Button>
       </div>
