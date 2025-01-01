@@ -9,15 +9,12 @@ const instance = axios.create({
     "Content-Type": "application/json",
   },
   timeout: 5000,
+  withCredentials: true,
 });
 
 instance.interceptors.request.use(
   (config) => {
-    console.log("API Request:", {
-      url: config.url,
-      baseURL: config.baseURL,
-      method: config.method,
-    });
+    console.log("config", config);
     return config;
   },
   (error) => {
@@ -27,6 +24,7 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (response) => {
+    console.log("response", response.headers["set-cookie"]);
     return response.data;
   },
   (error: AxiosError) => {

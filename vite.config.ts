@@ -1,9 +1,8 @@
 import { vitePlugin as remix } from "@remix-run/dev";
-import { defineConfig, loadEnv } from "vite"; // loadEnv 추가
+import { defineConfig, loadEnv } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
-
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), ""); // env 로드
+  const env = loadEnv(mode, process.cwd(), "");
 
   return {
     plugins: [

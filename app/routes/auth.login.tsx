@@ -1,56 +1,12 @@
-import { useState, useEffect } from "react";
-import { json, type ActionFunctionArgs } from "@remix-run/node";
-import { useActionData, useNavigate, Form } from "@remix-run/react";
-import { LogoIcon, EyeIcon, EyeOffIcon } from "~/shared/ui/icons";
-import { Button } from "~/shared/ui/components/Button";
+import { Form, useNavigate } from "@remix-run/react";
+import { useState } from "react";
 import { authApi } from "~/entities/auth/api";
 import { useAuthStore } from "~/shared/store";
-import type { SignInResponse } from "~/entities/auth/model";
-
-interface ActionSuccessData {
-  success: true;
-  redirectTo: string;
-  user: SignInResponse;
-}
-interface ActionErrorData {
-  success: false;
-  message: string;
-}
-
-export async function action({ request }: ActionFunctionArgs) {
-  const formData = await request.formData();
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-
-  try {
-    const response = await authApi.signIn({ email, password });
-    return json<ActionSuccessData>({
-      success: true,
-      redirectTo: "/",
-      user: {
-        role: response.role,
-        sub: response.sub,
-        email: response.email,
-        name: response.name,
-        thumbnailPath: response.thumbnailPath,
-        position: response.position,
-        departmentId: response.departmentId,
-      },
-    });
-  } catch (error) {
-    return json<ActionErrorData>(
-      {
-        success: false,
-        message: "이메일 또는 비밀번호가 올바르지 않습니다.",
-      },
-      { status: 400 }
-    );
-  }
-}
+import { Button } from "~/shared/ui/components/Button";
+import { EyeIcon, EyeOffIcon, LogoIcon } from "~/shared/ui/icons";
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const actionData = useActionData<typeof action>();
   const setUser = useAuthStore((state) => state.setUser);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -59,6 +15,24 @@ export default function LoginPage() {
     password: "",
   });
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const response = await authApi.signIn({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      console.log(response);
+
+      setUser(response as any);
+      navigate("/");
+    } catch (error) {
+      setError("이메일 또는 비밀번호가 올바르지 않습니다.");
+    }
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -66,31 +40,6 @@ export default function LoginPage() {
       [name]: value,
     }));
   };
-
-  // 폼 제출 핸들러
-  const handleSubmit = () => {
-    const form = document.querySelector("form");
-    if (form) {
-      form.requestSubmit();
-    }
-  };
-
-  // 엔터 키 핸들러
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleSubmit();
-    }
-  };
-
-  useEffect(() => {
-    if (actionData?.success) {
-      setUser(actionData.user);
-      navigate(actionData.redirectTo || "/");
-    } else if (actionData?.message) {
-      setError(actionData.message);
-    }
-  }, [actionData, navigate]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
@@ -103,7 +52,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <Form method="post" className="space-y-8 px-4">
+        <Form method="post" className="space-y-8 px-4" onSubmit={handleSubmit}>
           {error && <div className="text-red-500 text-sm text-center">{error}</div>}
           <div className="space-y-6">
             <div>
@@ -151,7 +100,6 @@ export default function LoginPage() {
                   required
                   value={formData.password}
                   onChange={handleInputChange}
-                  onKeyDown={handleKeyPress}
                   className="w-full px-0 py-2 focus:outline-none border-0 border-b border-gray-300 focus:border-blue-500 focus:ring-0 bg-transparent"
                 />
                 <button
