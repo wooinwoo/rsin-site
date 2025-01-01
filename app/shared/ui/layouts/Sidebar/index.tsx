@@ -45,16 +45,18 @@ export function Sidebar() {
           ${isCollapsed ? "md:w-16" : "md:w-[240px]"}`}
       ></div>
       <aside
-        className={` flex flex-col
-          fixed
-          h-svh bg-white shadow-lg md:shadow-none
-          transition-[transform,width] duration-300 ease-in-out
-          ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
-          ${isCollapsed ? "md:w-16" : "md:w-[240px]"}
-          md:translate-x-0
-          w-[240px]
-          z-[9992]
-        `}
+        className={`
+    flex flex-col
+    fixed
+    h-svh bg-gray-900 shadow-lg md:shadow-none
+    transition-[transform,width] duration-300 ease-in-out
+    ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
+    ${isCollapsed ? "md:w-16" : "md:w-[240px]"}
+    md:translate-x-0
+    w-[240px]
+    z-[9992]
+    border-r border-gray-800
+  `}
       >
         <SidebarHeader
           isCollapsed={isCollapsed}

@@ -38,11 +38,11 @@ export function SidebarFooter({
 
   return (
     <>
-      <div className="relative">
+      <div className="relative border-t border-gray-800">
         <button
           ref={buttonRef}
-          data-sidebar="menu-button"
-          className="w-full flex justify-between items-center overflow-hidden rounded-md p-2 text-left outline-none transition-[width,height,padding] hover:bg-gray-100"
+          className="w-full flex justify-between items-center overflow-hidden rounded-md p-2 text-left outline-none 
+            transition-all hover:bg-gray-800"
           onClick={() => setIsContextMenuOpen(!isContextMenuOpen)}
         >
           <div className={`p-2 flex w-full items-center gap-2`}>
@@ -50,8 +50,8 @@ export function SidebarFooter({
               <img className="aspect-square h-full w-full" alt="프로필" src="/images/profile.jpg" />
             </span>
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-semibold">김태완</span>
-              <span className="truncate text-xs">srpn@rs-team.com</span>
+              <span className="truncate font-semibold text-gray-100">김태완</span>
+              <span className="truncate text-xs text-gray-400">srpn@rs-team.com</span>
             </div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -63,7 +63,7 @@ export function SidebarFooter({
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="lucide lucide-chevrons-up-down ml-auto size-4"
+              className="text-gray-400 ml-auto size-4"
             >
               <path d="m7 15 5 5 5-5"></path>
               <path d="m7 9 5-5 5 5"></path>
@@ -139,7 +139,6 @@ export function SidebarFooter({
         initialData={mockUserData}
         onSubmit={async (data) => {
           console.log("프로필 수정 데이터:", data);
-          // API 호출 로직
           setIsProfileEditModalOpen(false);
         }}
       />
