@@ -2,7 +2,13 @@ import { MobileCard } from "~/features/datatable/components/MobileCard";
 import { TeamMemberCardProps } from "./types";
 import { OptimizedImage } from "~/shared/ui/components/OptimizedImage";
 import { LogoIcon } from "~/shared/ui/icons";
+import { POSITION_OPTIONS } from "~/shared/constants/options";
+
 export function TeamMemberCard({ item, onClick }: TeamMemberCardProps) {
+  const getPositionLabel = (positionCode: string) => {
+    const position = POSITION_OPTIONS.find((pos) => pos.value === positionCode);
+    return position?.label || positionCode;
+  };
   return (
     <MobileCard
       item={item}
@@ -27,8 +33,15 @@ export function TeamMemberCard({ item, onClick }: TeamMemberCardProps) {
             />
             <div>
               <h3 className="text-base font-medium text-gray-900">{employee.name}</h3>
-              <p className="text-sm text-gray-700">{employee.position}</p>
-              <p className="text-xs text-gray-500">{employee.department?.name}</p>
+              <div className="flex items-center gap-1 mt-1">
+                <p className="text-xs text-gray-600">{getPositionLabel(employee.position)}</p>
+                {employee.position !== "ceo" && (
+                  <>
+                    <span className="text-xs text-gray-500">/</span>
+                    <p className="text-xs text-gray-500">{employee.department?.name}</p>
+                  </>
+                )}
+              </div>
             </div>
           </div>
 

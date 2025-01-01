@@ -49,7 +49,7 @@ const columns: ColumnDef<Employee>[] = [
   {
     id: "department",
     header: "부서",
-    accessorKey: "department",
+    accessorKey: "department.name",
   },
   {
     id: "position",

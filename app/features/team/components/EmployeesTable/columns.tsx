@@ -19,12 +19,7 @@ export const employeeColumns: ColumnDef<Employee>[] = [
   {
     id: "department.id",
     header: "부서",
-    accessorKey: "department.id",
-    cell: ({ row }) => {
-      const deptId = getNestedValue(row, "department.id");
-      const department = DEPARTMENT_OPTIONS.find((dept) => dept.value === deptId);
-      return department?.label || "-";
-    },
+    accessorKey: "department.name",
   },
   {
     id: "position",
