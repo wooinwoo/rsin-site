@@ -2,6 +2,8 @@ import { useRef, useState } from "react";
 import { useClickAway } from "~/shared/hooks/useClickAway";
 import { useNavigate } from "@remix-run/react";
 import { ProfileEditModal } from "~/features/profile/components/ProfileEditModal";
+import { useAuthStore } from "~/shared/store";
+import { authApi } from "~/entities/auth/api";
 interface SidebarFooterProps {
   isCollapsed: boolean;
   setIsCollapsed: (value: boolean) => void;
@@ -16,6 +18,7 @@ export function SidebarFooter({
   setIsMobileOpen,
 }: SidebarFooterProps) {
   const navigate = useNavigate();
+  const clearUser = useAuthStore((state) => state.clearUser);
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
   const [isProfileEditModalOpen, setIsProfileEditModalOpen] = useState(false);
   const contextMenuRef = useRef<HTMLDivElement>(null);
@@ -30,6 +33,19 @@ export function SidebarFooter({
     phone: "01012345678",
     birth: "1990-01-01",
     mbti: "ENFP",
+  };
+
+  const handleLogout = async () => {
+    try {
+      await authApi.signOut();
+      clearUser(); // zustand store 초기화
+      navigate("/auth/login");
+    } catch (error) {
+      console.error("로그아웃 실패:", error);
+      // 에러가 발생해도 일단 로그아웃 처리
+      clearUser();
+      navigate("/auth/login");
+    }
   };
 
   useClickAway([contextMenuRef, buttonRef], () => {
@@ -106,10 +122,7 @@ export function SidebarFooter({
               내 정보 수정
             </button>
             <button
-              onClick={() => {
-                navigate("/auth/login");
-                /* 로그아웃 핸들러 */
-              }}
+              onClick={handleLogout}
               className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 flex items-center gap-2"
             >
               <svg

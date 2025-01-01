@@ -5,4 +5,7 @@ export const authApi = {
   signIn(data: SignInRequest) {
     return client.post<SignInResponse>("/auth/signin", data);
   },
+  signOut() {
+    return client.post("/auth/signout");
+  },
 };
