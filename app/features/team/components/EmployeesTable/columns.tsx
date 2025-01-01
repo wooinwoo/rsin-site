@@ -1,8 +1,7 @@
-import { ColumnDef } from "~/features/datatable/types/datatable";
 import type { Employee } from "~/entities/employees/model";
 import { ProfileCell } from "~/features/datatable/components/cells/ProfileCell";
-import { getNestedValue } from "~/features/datatable/utils/tableUtils";
-import { DEPARTMENT_OPTIONS, POSITION_OPTIONS } from "~/shared/constants/options";
+import { ColumnDef } from "~/features/datatable/types/datatable";
+import { POSITION_OPTIONS } from "~/shared/constants/options";
 
 export const employeeColumns: ColumnDef<Employee>[] = [
   {
@@ -11,10 +10,10 @@ export const employeeColumns: ColumnDef<Employee>[] = [
     accessorKey: "empNo",
   },
   {
-    id: "profile",
+    id: "thumbnailPath",
     header: "이름",
     accessorKey: "name",
-    cell: ({ row }) => <ProfileCell profileUrl={row.profileUrl} employeeName={row.name} />,
+    cell: ({ row }) => <ProfileCell profileUrl={row.thumbnailPath} employeeName={row.name} />,
   },
   {
     id: "department.id",

@@ -61,7 +61,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     console.error("Error fetching user profile:", error);
     // 보호된 라우트 접근 시 로그인으로 리다이렉트
     if (!isAuthPath) {
-      return redirect("/auth/login");
+      // return redirect("/auth/login");
     }
     return json({
       isAuthenticated: false,
@@ -81,7 +81,7 @@ export default function App() {
   useEffect(() => {
     // 서버미인증 로컬에 user 정보가 있을시 초기화
     if (!isAuthenticated && user) {
-      clearUser();
+      // clearUser();
     }
 
     // 서버인증 및 추가 정보가 있는 경우 업데이트
@@ -93,7 +93,7 @@ export default function App() {
   // 스토어 조작 감지 시 로그인 페이지
   useEffect(() => {
     if (!isLoginPage && !isAuthenticated && user) {
-      window.location.href = "/auth/login";
+      // window.location.href = "/auth/login";
     }
   }, [isLoginPage, isAuthenticated, user]);
 

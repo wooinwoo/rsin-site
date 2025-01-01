@@ -7,7 +7,7 @@ export interface Employee {
   id: number;
   name: string;
   empNo: string;
-  profileUrl: string;
+  thumbnailPath: string;
   position: string;
   joinedAt: string;
   email: string;

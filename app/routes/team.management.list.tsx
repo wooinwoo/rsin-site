@@ -55,7 +55,6 @@ export async function action({ request }: ActionFunctionArgs) {
         return json(result);
       }
       case "update": {
-        const empNo = Number(formData.get("empNo"));
         const rawData = Object.fromEntries(formData);
 
         console.log("Raw FormData:", rawData);
