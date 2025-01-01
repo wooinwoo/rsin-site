@@ -6,14 +6,16 @@ import { LeaveApprovalModal } from "~/features/leave/components/LeaveApprovalMod
 import { useState } from "react";
 import { ApprovalStatusBadge } from "~/features/approval/components/ApprovalStatusBadge";
 import { ProfileCell } from "~/features/datatable/components/cells/ProfileCell";
-interface LeaveRequest {
+import { LeaveApprovalCard } from "~/features/leave/components/LeaveApprovalCard";
+
+export interface LeaveRequest {
   id: string;
   employeeName: string;
   profileUrl: string;
   leaveType: string;
   startDate: string;
   endDate: string;
-  status: "pending" | "approved" | "rejected";
+  approver: string;
   requestDate: string;
 }
 
@@ -62,10 +64,9 @@ const columns: ColumnDef<LeaveRequest>[] = [
     ),
   },
   {
-    id: "status",
-    header: "상태",
-    accessorKey: "status",
-    cell: ({ row }) => <ApprovalStatusBadge status={row.status} />,
+    id: "approver",
+    header: "결재자",
+    accessorKey: "approver",
   },
   {
     id: "requestDate",
@@ -81,7 +82,7 @@ const leaveRequests: LeaveRequest[] = [
     leaveType: "연차",
     startDate: "2024-03-15",
     endDate: "2024-03-15",
-    status: "pending",
+    approver: "김태완",
     requestDate: "2024-03-10",
   },
   {
@@ -91,7 +92,7 @@ const leaveRequests: LeaveRequest[] = [
     leaveType: "반차",
     startDate: "2024-03-18",
     endDate: "2024-03-18",
-    status: "pending",
+    approver: "김태완",
     requestDate: "2024-03-11",
   },
   {
@@ -101,7 +102,7 @@ const leaveRequests: LeaveRequest[] = [
     leaveType: "병가",
     startDate: "2024-03-20",
     endDate: "2024-03-22",
-    status: "pending",
+    approver: "김태완",
     requestDate: "2024-03-12",
   },
   {
@@ -111,7 +112,7 @@ const leaveRequests: LeaveRequest[] = [
     leaveType: "경조사",
     startDate: "2024-03-25",
     endDate: "2024-03-26",
-    status: "pending",
+    approver: "김태완",
     requestDate: "2024-03-13",
   },
   {
@@ -121,7 +122,7 @@ const leaveRequests: LeaveRequest[] = [
     leaveType: "연차",
     startDate: "2024-04-01",
     endDate: "2024-04-02",
-    status: "pending",
+    approver: "김태완",
     requestDate: "2024-03-14",
   },
 ];
@@ -152,6 +153,7 @@ export default function LeaveApprovalPage() {
       <DataTable
         data={leaveRequests}
         columns={columns}
+        mobileCard={LeaveApprovalCard}
         onRowSelect={handleRowSelect}
         searchFields={searchFields}
         onSearch={() => {}}
