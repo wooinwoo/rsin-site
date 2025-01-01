@@ -67,6 +67,22 @@ export default function LoginPage() {
     }));
   };
 
+  // 폼 제출 핸들러
+  const handleSubmit = () => {
+    const form = document.querySelector("form");
+    if (form) {
+      form.requestSubmit();
+    }
+  };
+
+  // 엔터 키 핸들러
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
   useEffect(() => {
     if (actionData?.success) {
       setUser(actionData.user);
@@ -135,6 +151,7 @@ export default function LoginPage() {
                   required
                   value={formData.password}
                   onChange={handleInputChange}
+                  onKeyDown={handleKeyPress}
                   className="w-full px-0 py-2 focus:outline-none border-0 border-b border-gray-300 focus:border-blue-500 focus:ring-0 bg-transparent"
                 />
                 <button
