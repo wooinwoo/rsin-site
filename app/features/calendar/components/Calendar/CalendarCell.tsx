@@ -35,7 +35,7 @@ export function CalendarCell({ day, events = [], isWeekend }: CalendarCellProps)
       >
         <span
           className={`
-            inline-flex w-6 h-6 items-center justify-center text-xs mx-2
+            inline-flex w-6 h-6 items-center justify-center text-xs mx-1 sm:mx-2
             ${day.isToday ? "bg-[#282828] text-white rounded-md" : ""}
             ${!day.isCurrentMonth ? "text-gray-400" : ""}
           `}
@@ -49,7 +49,7 @@ export function CalendarCell({ day, events = [], isWeekend }: CalendarCellProps)
         </div>
         {dayEvents.length > 0 && (
           <div className="flex lg:hidden justify-center">
-            <button className="w-6 h-6 rounded-full bg-gray-600 text-white">
+            <button className="w-6 h-6 rounded-full bg-gray-600 text-white text-sm flex items-center justify-center">
               {dayEvents.length}
             </button>
           </div>
