@@ -6,10 +6,10 @@ import { DataTableToolbar } from "./DataTableToolbar";
 import { DataTableProps } from "../../types/datatable";
 import { Widget } from "~/shared/ui/widgets/widget";
 import { DataTableSearch } from "./DataTableSearch";
-
 export function DataTable<T extends Record<string, any>>({
   data,
   columns,
+  mobileCard: MobileCardComponent,
   onRowClick,
   searchFields,
   onSearch,
@@ -53,39 +53,64 @@ export function DataTable<T extends Record<string, any>>({
               toolbarButtons={toolbarButtons}
             />
           )}
-
-          <div className="relative rounded-md border">
-            <div className="overflow-x-auto">
-              <table className="w-full table-auto caption-bottom text-sm">
-                <DataTableHeader
-                  columns={columns}
-                  selectable={enableSelection}
-                  allSelected={allSelected}
-                  onSelectAll={
-                    enableSelection
-                      ? (checked) => {
-                          const newSelectedRows = checked ? filteredData : [];
-                          setSelectedRows(newSelectedRows);
-                          onRowSelect?.(newSelectedRows);
+          {MobileCardComponent && (
+            <div className="block sm:hidden">
+              <div className="divide-y divide-gray-200">
+                {data.map((item, index) => (
+                  <MobileCardComponent
+                    key={index}
+                    item={item}
+                    onClick={onRowClick}
+                    selected={selectedRows.some((row) => row.id === item.id)}
+                    onSelect={(selected) => {
+                      setSelectedRows((prev) => {
+                        if (selected) {
+                          return [...prev, item];
+                        } else {
+                          return prev.filter((row) => row.id !== item.id);
                         }
-                      : undefined
-                  }
-                />
-                <DataTableBody
-                  data={paginatedData}
-                  columns={columns}
-                  selectable={enableSelection}
-                  selectedRows={selectedRows}
-                  pageSize={pageSize}
-                  onRowClick={onRowClick}
-                  currentPage={currentPage}
-                  totalItems={filteredData.length}
-                  onRowSelect={(rows) => {
-                    setSelectedRows(rows);
-                    onRowSelect?.(rows);
-                  }}
-                />
-              </table>
+                      });
+                      onRowSelect?.([...selectedRows, item]);
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+          <div className="hidden sm:block">
+            <div className="relative rounded-md border">
+              <div className="overflow-x-auto">
+                <table className="w-full table-auto caption-bottom text-sm">
+                  <DataTableHeader
+                    columns={columns}
+                    selectable={enableSelection}
+                    allSelected={allSelected}
+                    onSelectAll={
+                      enableSelection
+                        ? (checked) => {
+                            const newSelectedRows = checked ? filteredData : [];
+                            setSelectedRows(newSelectedRows);
+                            onRowSelect?.(newSelectedRows);
+                          }
+                        : undefined
+                    }
+                  />
+                  <DataTableBody
+                    data={paginatedData}
+                    columns={columns}
+                    selectable={enableSelection}
+                    selectedRows={selectedRows}
+                    pageSize={pageSize}
+                    onRowClick={onRowClick}
+                    currentPage={currentPage}
+                    totalItems={filteredData.length}
+                    onRowSelect={(rows) => {
+                      setSelectedRows(rows);
+                      onRowSelect?.(rows);
+                    }}
+                  />
+                </table>
+              </div>
             </div>
           </div>
 

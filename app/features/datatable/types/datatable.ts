@@ -33,6 +33,12 @@ export interface SearchField {
 export interface DataTableProps<TData> {
   data: TData[];
   columns: ColumnDef<TData>[];
+  mobileCard?: React.ComponentType<{
+    item: TData;
+    onClick?: (row: TData) => void;
+    onSelect?: (checked: boolean) => void;
+    selected?: boolean;
+  }>;
   enableSelection?: boolean;
   enableSearch?: boolean;
   enablePagination?: boolean;
