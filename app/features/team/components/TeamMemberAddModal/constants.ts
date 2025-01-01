@@ -25,7 +25,7 @@ export const FORM_FIELDS: FormField[] = [
   },
   {
     label: "부서",
-    name: "department",
+    name: "departmentId",
     type: "select",
     required: true,
     options: DEPARTMENT_OPTIONS,
@@ -39,18 +39,18 @@ export const FORM_FIELDS: FormField[] = [
   },
   {
     label: "입사일",
-    name: "joinDate",
+    name: "joinedAt",
     type: "date",
     required: true,
   },
   {
     label: "중간관리자 여부",
-    name: "isManager",
+    name: "role",
     type: "toggle",
   },
   {
     label: "생년월일",
-    name: "birthDate",
+    name: "birth",
     type: "date",
   },
   {

@@ -1,7 +1,7 @@
 // app/routes/leaves.approval.tsx
 import { DataTable } from "~/features/datatable/components/DataTable";
 import { ColumnDef, SearchField } from "~/features/datatable/types/datatable";
-import { DEPARTMENT_OPTIONS } from "~/shared/constants/options";
+import { DEPARTMENT_OPTIONS, POSITION_OPTIONS } from "~/shared/constants/options";
 import { ProfileCell } from "~/features/datatable/components/cells/ProfileCell";
 import { LeaveEmployeeCard } from "~/features/leave/components/LeaveEmployeeCard";
 export interface Employee {
@@ -55,6 +55,10 @@ const columns: ColumnDef<Employee>[] = [
     id: "position",
     header: "직급",
     accessorKey: "position",
+    cell: ({ row }) => {
+      const position = POSITION_OPTIONS.find((pos) => pos.value === row.position);
+      return position?.label || "-";
+    },
   },
   {
     id: "yearsOfService",

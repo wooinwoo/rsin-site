@@ -13,16 +13,3 @@ export interface TeamManagementActionData {
 
 // Action Intent 타입
 export type ActionIntent = "create" | "update" | "resign";
-
-// Form 데이터 타입
-export interface EmployeeFormData {
-  name: string;
-  phone: string;
-  email: string;
-  department: string;
-  position: string;
-  joinDate: string;
-  birthDate: string;
-  mbti: string | null;
-  isManager: boolean;
-}

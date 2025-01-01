@@ -28,9 +28,9 @@ export async function updateEmployee(empNo: number, data: UpdateEmployeeRequest)
   }
 }
 
-export async function resignEmployee(empNo: number, resignedAt: string) {
+export async function resignEmployee(id: number, resignedAt: string) {
   try {
-    await adminEmployeeApi.resignEmployee(empNo, { resignedAt });
+    const response = await adminEmployeeApi.resignEmployee(id, { resignedAt });
     return { success: true, message: "퇴사 처리가 완료되었습니다." };
   } catch (error) {
     throw new Error("Failed to resign employee");

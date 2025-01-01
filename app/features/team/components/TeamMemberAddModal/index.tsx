@@ -16,25 +16,23 @@ export function TeamMemberAddModal({
   initialData,
   onResign,
 }: TeamMemberAddModalProps) {
+  const resetData: TeamMemberAddData = {
+    name: "",
+    phone: "",
+    email: "",
+    departmentId: 1,
+    position: POSITION_OPTIONS[0].value,
+    joinedAt: "",
+    birth: "",
+    mbti: MBTI_OPTIONS[0].value,
+    role: "employee",
+  };
+
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [formData, setFormData] = useState<TeamMemberAddData>(
-    initialData || {
-      name: "",
-      phone: "",
-      email: "",
-      department: "",
-      position: "",
-      joinDate: "",
-      isManager: false,
-      birthDate: "",
-      mbti: null,
-    }
-  );
+  const [formData, setFormData] = useState<TeamMemberAddData>(initialData || resetData);
 
   useEffect(() => {
-    if (initialData) {
-      setFormData(initialData);
-    }
+    setFormData(initialData || resetData);
   }, [initialData]);
 
   return (
@@ -101,8 +99,10 @@ export function TeamMemberAddModal({
             <Select
               required
               options={DEPARTMENT_OPTIONS}
-              value={formData.department}
-              onChange={(value) => setFormData((prev) => ({ ...prev, department: value }))}
+              value={formData.departmentId}
+              onChange={(value) =>
+                setFormData((prev) => ({ ...prev, departmentId: Number(value) }))
+              }
             />
           </div>
 
@@ -126,11 +126,11 @@ export function TeamMemberAddModal({
               required
               name="joinDate"
               isRange={false}
-              value={formData.joinDate ? new Date(formData.joinDate) : null}
+              value={formData.joinedAt ? new Date(formData.joinedAt) : null}
               onChange={(date) =>
                 setFormData((prev) => ({
                   ...prev,
-                  joinDate: date instanceof Date ? date.toISOString().split("T")[0] : "",
+                  joinedAt: date instanceof Date ? date.toISOString().split("T")[0] : "",
                 }))
               }
             />
@@ -140,8 +140,13 @@ export function TeamMemberAddModal({
             <label className="text-sm font-medium">중간관리자 여부</label>
             <Toggle
               label=""
-              isOn={formData.isManager}
-              onToggle={() => setFormData((prev) => ({ ...prev, isManager: !prev.isManager }))}
+              isOn={formData.role === "admin"}
+              onToggle={() =>
+                setFormData((prev) => ({
+                  ...prev,
+                  role: prev.role === "admin" ? "employee" : "admin",
+                }))
+              }
               activeColor="bg-red-500"
             />
           </div>
@@ -151,11 +156,11 @@ export function TeamMemberAddModal({
             <DatePicker
               name="birthDate"
               isRange={false}
-              value={formData.birthDate ? new Date(formData.birthDate) : null}
+              value={formData.birth ? new Date(formData.birth) : null}
               onChange={(date) =>
                 setFormData((prev) => ({
                   ...prev,
-                  birthDate: date instanceof Date ? date.toISOString().split("T")[0] : "",
+                  birth: date instanceof Date ? date.toISOString().split("T")[0] : "",
                 }))
               }
             />

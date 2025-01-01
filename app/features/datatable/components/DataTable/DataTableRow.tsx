@@ -1,6 +1,6 @@
 import { ColumnDef } from "../../types/datatable";
 import { DataTableCheckbox } from "../DataTableCheckbox";
-
+import { get } from "lodash";
 interface DataTableRowProps<T> {
   item: T;
   index: number;
@@ -13,7 +13,9 @@ interface DataTableRowProps<T> {
   onSelect: (selected: boolean) => void;
   onRowClick?: (row: T) => void;
 }
-
+function getNestedValue(obj: any, path: string) {
+  return path.split(".").reduce((acc, part) => acc?.[part], obj);
+}
 export function DataTableRow<T extends Record<string, any>>({
   item,
   index,
@@ -51,7 +53,11 @@ export function DataTableRow<T extends Record<string, any>>({
       {columns.map((column) => (
         <td key={column.id} className="p-4">
           <div className="flex items-center whitespace-nowrap">
-            {column.cell ? column.cell({ row: item }) : item[column.accessorKey]}
+            {column.cell
+              ? column.cell({ row: item })
+              : column.accessorKey
+              ? getNestedValue(item, column.accessorKey as string)
+              : null}
           </div>
         </td>
       ))}

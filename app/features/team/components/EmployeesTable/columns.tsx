@@ -1,6 +1,9 @@
 import { ColumnDef } from "~/features/datatable/types/datatable";
 import type { Employee } from "~/entities/employees/model";
 import { ProfileCell } from "~/features/datatable/components/cells/ProfileCell";
+import { getNestedValue } from "~/features/datatable/utils/tableUtils";
+import { DEPARTMENT_OPTIONS, POSITION_OPTIONS } from "~/shared/constants/options";
+
 export const employeeColumns: ColumnDef<Employee>[] = [
   {
     id: "empNo",
@@ -14,9 +17,23 @@ export const employeeColumns: ColumnDef<Employee>[] = [
     cell: ({ row }) => <ProfileCell profileUrl={row.profileUrl} employeeName={row.name} />,
   },
   {
+    id: "department.id",
+    header: "부서",
+    accessorKey: "department.id",
+    cell: ({ row }) => {
+      const deptId = getNestedValue(row, "department.id");
+      const department = DEPARTMENT_OPTIONS.find((dept) => dept.value === deptId);
+      return department?.label || "-";
+    },
+  },
+  {
     id: "position",
     header: "직급",
     accessorKey: "position",
+    cell: ({ row }) => {
+      const position = POSITION_OPTIONS.find((pos) => pos.value === row.position);
+      return position?.label || "-";
+    },
   },
   {
     id: "joinedAt",

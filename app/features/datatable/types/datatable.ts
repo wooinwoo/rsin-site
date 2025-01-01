@@ -8,8 +8,8 @@ export interface ToolbarButton {
 export interface ColumnDef<T> {
   id: string;
   header: string;
-  accessorKey: keyof T;
-  cell?: (props: { row: T }) => React.ReactNode;
+  accessorKey: string;
+  cell?: ({ row }: { row: T }) => React.ReactNode;
   sortable?: boolean;
   headerClassName?: string;
 }

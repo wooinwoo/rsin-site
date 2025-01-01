@@ -4,6 +4,7 @@ import { Button } from "~/shared/ui/components/Button";
 import { Input } from "~/shared/ui/components/Input";
 import { DatePicker } from "~/shared/ui/components/DatePicker";
 import { TextArea } from "~/shared/ui/components/TextArea";
+import { OptimizedImage } from "~/shared/ui/components/OptimizedImage";
 
 interface DeleteConfirmModalProps {
   isOpen: boolean;
@@ -48,7 +49,7 @@ export function DeleteConfirmModal({
         {/* 멤버 정보 */}
         <div className="flex items-center gap-4 bg-neutral-50 p-4 rounded-lg">
           <div className="relative">
-            <img
+            <OptimizedImage
               src={memberImage}
               alt={memberName}
               className="w-12 h-12 rounded-full object-cover"

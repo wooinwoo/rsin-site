@@ -8,15 +8,15 @@ export interface TeamMemberAddModalProps {
 }
 
 export interface TeamMemberAddData {
-  name: string; // required
-  phone: string; // required
-  email: string; // required
-  department: string; // required
-  position: string; // required
-  joinDate: string; // required
-  isManager: boolean;
-  birthDate: string;
-  mbti: string | null;
+  name: string;
+  phone: string;
+  email: string;
+  departmentId: number;
+  position: string;
+  joinedAt: string;
+  birth: string;
+  mbti: string;
+  role: "admin" | "employee";
 }
 
 export interface FormField {

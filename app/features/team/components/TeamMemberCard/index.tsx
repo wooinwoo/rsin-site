@@ -2,12 +2,15 @@ import { MobileCard } from "~/features/datatable/components/MobileCard";
 import { TeamMemberCardProps } from "./types";
 import { OptimizedImage } from "~/shared/ui/components/OptimizedImage";
 import { LogoIcon } from "~/shared/ui/icons";
-export function TeamMemberCard({ item, onEdit, onDelete }: TeamMemberCardProps) {
+export function TeamMemberCard({ item, onClick }: TeamMemberCardProps) {
   return (
     <MobileCard
       item={item}
       renderHeader={(employee) => (
-        <div className="relative p-4 bg-gradient-to-br from-gray-50 via-white to-red-50 rounded-lg shadow-sm border border-gray-100">
+        <div
+          onClick={() => onClick?.(employee)}
+          className="relative p-4 bg-gradient-to-br from-gray-50 via-white to-red-50 rounded-lg shadow-sm border border-gray-100"
+        >
           {/* 배경 로고 */}
           <div className="absolute top-3 right-3 opacity-[0.1] w-24 h-24">
             <LogoIcon className="w-full h-full text-red-900" />

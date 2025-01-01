@@ -1,14 +1,17 @@
 import { json, type ActionFunctionArgs, type LoaderFunctionArgs } from "@remix-run/node";
 import { useActionData, useLoaderData, useNavigation, useSubmit } from "@remix-run/react";
 import { useEffect, useState } from "react";
-import type { CreateEmployeeRequest, Employee } from "~/entities/employees/model";
+import type {
+  CreateEmployeeRequest,
+  Employee,
+  UpdateEmployeeRequest,
+} from "~/entities/employees/model";
 import { DataTable } from "~/features/datatable/components/DataTable";
 import * as EmployeeAPI from "~/features/team/api/employees.server";
 import { employeeColumns } from "~/features/team/components/EmployeesTable/columns";
 import { TeamMemberAddModal } from "~/features/team/components/TeamMemberAddModal";
 import type {
   ActionIntent,
-  TeamManagementActionData,
   TeamManagementLoaderData,
 } from "~/features/team/types/employeesManagement";
 import { getInitialModalData } from "~/features/team/utils/employee";
@@ -39,30 +42,53 @@ export async function action({ request }: ActionFunctionArgs) {
           email: String(rawData.email),
           phone: String(rawData.phone),
           departmentId: Number(rawData.departmentId),
-          empNo: String(rawData.empNo),
           position: String(rawData.position),
           joinedAt: String(rawData.joinedAt),
           birth: String(rawData.birth),
-          role: "user",
+          role: "employee",
           mbti: rawData.mbti ? String(rawData.mbti) : "",
         };
 
+        console.log(data);
+
         const result = await EmployeeAPI.createEmployee(data);
-        return json<TeamManagementActionData>(result);
+        return json(result);
       }
       case "update": {
         const empNo = Number(formData.get("empNo"));
-        const data = Object.fromEntries(formData);
-        delete data.intent;
-        delete data.empNo;
-        const result = await EmployeeAPI.updateEmployee(empNo, data);
-        return json({ success: true, message: "팀원이 추가되었습니다." });
+        const rawData = Object.fromEntries(formData);
+
+        console.log("Raw FormData:", rawData);
+
+        delete rawData.intent;
+        delete rawData.empNo;
+
+        // API 스펙에 맞게 데이터 변환
+        const data: UpdateEmployeeRequest = {
+          name: String(rawData.name),
+          phone: String(rawData.phone),
+          email: String(rawData.email),
+          departmentId: Number(rawData.departmentId),
+          position: String(rawData.position),
+          joinedAt: String(rawData.joinedAt),
+          birth: String(rawData.birth),
+          mbti: rawData.mbti ? String(rawData.mbti) : undefined,
+          role: String(rawData.role) as "admin" | "user",
+        };
+
+        const result = await EmployeeAPI.updateEmployee(Number(rawData.id), data);
+        console.log("Update API Result:", result);
+
+        return json({
+          success: true,
+          message: "정상적으로 수정되었습니다.",
+        });
       }
       case "resign": {
-        const empNo = Number(formData.get("empNo"));
+        const id = Number(formData.get("id"));
         const resignedAt = formData.get("resignedAt") as string;
-        const result = await EmployeeAPI.resignEmployee(empNo, resignedAt);
-        return json({ success: true, message: "퇴사 처리가 완료되었습니다." });
+        const result = await EmployeeAPI.resignEmployee(id, resignedAt);
+        return json(result);
       }
       default:
         return json({ success: false, message: "잘못된 요청입니다." }, { status: 400 });
@@ -82,7 +108,6 @@ export default function TeamManagementListPage() {
   const { employees } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const submit = useSubmit();
-  const navigation = useNavigation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<Employee | null>(null);
 
@@ -112,14 +137,15 @@ export default function TeamManagementListPage() {
           setSelectedMember(null);
         }}
         mode={selectedMember ? "edit" : "add"}
-        initialData={getInitialModalData(selectedMember)}
+        initialData={selectedMember ? getInitialModalData(selectedMember) : undefined}
         onSubmit={async (data) => {
           // async 추가
+          console.log(data);
           const formData = new FormData();
 
           if (selectedMember) {
             formData.append("intent", "update");
-            formData.append("empNo", selectedMember.empNo.toString());
+            formData.append("id", selectedMember.id.toString());
           } else {
             formData.append("intent", "create");
           }
@@ -138,7 +164,7 @@ export default function TeamManagementListPage() {
                 // async 추가
                 const formData = new FormData();
                 formData.append("intent", "resign");
-                formData.append("empNo", selectedMember.empNo.toString());
+                formData.append("id", selectedMember.id.toString());
                 formData.append("resignedAt", new Date().toISOString());
                 await submit(formData, { method: "post" });
               }
