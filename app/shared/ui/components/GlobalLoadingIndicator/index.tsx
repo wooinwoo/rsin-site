@@ -1,19 +1,42 @@
 import { useNavigation } from "@remix-run/react";
-import { useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 
 export function GlobalLoadingIndicator() {
   const navigation = useNavigation();
-  const [showDelayed, setShowDelayed] = useState(false);
+  const [show, setShow] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout>();
+  const startTimeRef = useRef<number>();
+
+  const MINIMUM_DELAY = 600;
+  const SHOW_DELAY = 200;
 
   useEffect(() => {
-    if (navigation.state === "loading") {
-      const timer = setTimeout(() => setShowDelayed(true), 300);
-      return () => clearTimeout(timer);
+    if (navigation.state === "loading" || navigation.state === "submitting") {
+      if (startTimeRef.current) return;
+      startTimeRef.current = Date.now();
+      timerRef.current = setTimeout(() => {
+        setShow(true);
+      }, SHOW_DELAY);
     }
-    setShowDelayed(false);
-  }, [navigation.state]);
 
-  if (navigation.state === "idle" || !showDelayed) return null;
+    if (navigation.state === "idle" && show) {
+      const totalTime = Date.now() - (startTimeRef.current || Date.now());
+      const remainingTime = Math.max(MINIMUM_DELAY - totalTime, 0);
+
+      setTimeout(() => {
+        setShow(false);
+        startTimeRef.current = undefined;
+      }, remainingTime);
+    }
+
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, [navigation.state, show]);
+
+  if (!show) return null;
 
   return (
     <div className="fixed inset-0 bg-slate-900/10 backdrop-blur-[2px] z-[9999] flex items-center justify-center">

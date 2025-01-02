@@ -51,6 +51,7 @@ export default function App() {
         <Links />
       </head>
       <body className="bg-gray-200 text-gray-800">
+        <GlobalLoadingIndicator />
         {isAuthPage ? (
           <Outlet />
         ) : (
@@ -61,7 +62,6 @@ export default function App() {
               <Header />
               {/* main에도 min-w-0 추가 */}
               <main className="flex-1 p-2 sm:p-4 min-w-0 ">
-                <GlobalLoadingIndicator />
                 <Outlet />
               </main>
             </div>
