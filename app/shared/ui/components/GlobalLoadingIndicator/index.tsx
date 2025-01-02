@@ -13,7 +13,7 @@ export function GlobalLoadingIndicator() {
     setShowDelayed(false);
   }, [navigation.state]);
 
-  // if (navigation.state === "idle" || !showDelayed) return null;
+  if (navigation.state === "idle" || !showDelayed) return null;
 
   return (
     <div className="fixed inset-0 bg-slate-900/10 backdrop-blur-[2px] z-[9999] flex items-center justify-center">
