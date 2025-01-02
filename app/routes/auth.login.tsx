@@ -1,37 +1,43 @@
-import { Form, useNavigate } from "@remix-run/react";
-import { useState } from "react";
+import { json, redirect, type ActionFunctionArgs } from "@remix-run/node";
 import { authApi } from "~/entities/auth/api";
-import { useAuthStore } from "~/shared/store";
+import { saveApiToken } from "~/cookies.server";
+import { Form, useActionData, useNavigate } from "@remix-run/react";
+import { useState } from "react";
 import { Button } from "~/shared/ui/components/Button";
 import { EyeIcon, EyeOffIcon, LogoIcon } from "~/shared/ui/icons";
 
+export async function action({ request }: ActionFunctionArgs) {
+  const formData = await request.formData();
+  const email = formData.get("email");
+  const password = formData.get("password");
+
+  try {
+    const response = await authApi.server.signIn({
+      email: email as string,
+      password: password as string,
+    });
+
+    const cookieHeader = await saveApiToken(response?.headers["set-cookie"]?.[0] ?? "");
+
+    return redirect("/", {
+      headers: {
+        "Set-Cookie": cookieHeader,
+      },
+    });
+  } catch (error) {
+    console.error("Login Error:", error);
+    return json({ error: "이메일 또는 비밀번호가 올바르지 않습니다." });
+  }
+}
+
 export default function LoginPage() {
   const navigate = useNavigate();
-  const setUser = useAuthStore((state) => state.setUser);
+  const actionData = useActionData<typeof action>();
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    try {
-      const response = await authApi.signIn({
-        email: formData.email,
-        password: formData.password,
-      });
-
-      console.log(response);
-
-      setUser(response as any);
-      navigate("/");
-    } catch (error) {
-      setError("이메일 또는 비밀번호가 올바르지 않습니다.");
-    }
-  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -52,8 +58,10 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <Form method="post" className="space-y-8 px-4" onSubmit={handleSubmit}>
-          {error && <div className="text-red-500 text-sm text-center">{error}</div>}
+        <Form method="post" className="space-y-8 px-4">
+          {actionData?.error && (
+            <div className="text-red-500 text-sm text-center">{actionData.error}</div>
+          )}
           <div className="space-y-6">
             <div>
               <label

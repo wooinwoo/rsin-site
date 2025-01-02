@@ -1,9 +1,9 @@
+import { Form, useNavigate } from "@remix-run/react";
 import { useRef, useState } from "react";
-import { useClickAway } from "~/shared/hooks/useClickAway";
-import { useNavigate } from "@remix-run/react";
-import { ProfileEditModal } from "~/features/profile/components/ProfileEditModal";
-import { useAuthStore } from "~/shared/store";
 import { authApi } from "~/entities/auth/api";
+import { ProfileEditModal } from "~/features/profile/components/ProfileEditModal";
+import { useClickAway } from "~/shared/hooks/useClickAway";
+import { useAuthStore } from "~/shared/store";
 interface SidebarFooterProps {
   isCollapsed: boolean;
   setIsCollapsed: (value: boolean) => void;
@@ -37,7 +37,7 @@ export function SidebarFooter({
 
   const handleLogout = async () => {
     try {
-      await authApi.signOut();
+      await authApi.server.signOut();
       clearUser(); // zustand store 초기화
       navigate("/auth/login");
     } catch (error) {
@@ -121,28 +121,36 @@ export function SidebarFooter({
               </svg>
               내 정보 수정
             </button>
-            <button
-              onClick={handleLogout}
-              className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 flex items-center gap-2"
+            <Form
+              action="/auth/logout"
+              method="post"
+              onSubmit={() => {
+                clearUser(); // zustand store 초기화
+              }}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-log-out"
+              <button
+                onClick={handleLogout}
+                className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 flex items-center gap-2"
               >
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                <polyline points="16 17 21 12 16 7" />
-                <line x1="21" x2="9" y1="12" y2="12" />
-              </svg>
-              로그아웃
-            </button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-log-out"
+                >
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" x2="9" y1="12" y2="12" />
+                </svg>
+                로그아웃
+              </button>
+            </Form>
           </div>
         )}
       </div>

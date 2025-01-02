@@ -4,7 +4,7 @@ import type { CreateEmployeeRequest, UpdateEmployeeRequest } from "~/entities/em
 export async function getEmployees() {
   try {
     const response = await adminEmployeeApi.getEmployees();
-    return { employees: response.employees };
+    return { employees: response.data.employees };
   } catch (error) {
     throw new Error("Failed to fetch employees");
   }
@@ -30,7 +30,7 @@ export async function updateEmployee(empNo: number, data: UpdateEmployeeRequest)
 
 export async function resignEmployee(id: number, resignedAt: string) {
   try {
-    const response = await adminEmployeeApi.resignEmployee(id, { resignedAt });
+    await adminEmployeeApi.resignEmployee(id, { resignedAt });
     return { success: true, message: "퇴사 처리가 완료되었습니다." };
   } catch (error) {
     throw new Error("Failed to resign employee");

@@ -1,106 +1,45 @@
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-  useLocation,
-  useLoaderData,
-} from "@remix-run/react";
-import { json, redirect, type LinksFunction, type LoaderFunctionArgs } from "@remix-run/node";
-import { useEffect } from "react";
-import { authApi } from "~/entities/auth/api";
-import { useAuthStore } from "~/shared/store";
-import "./tailwind.css";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "@remix-run/react";
+import { json, redirect, type LoaderFunctionArgs } from "@remix-run/node";
+import { useLocation } from "react-router-dom";
+import { getApiToken } from "~/cookies.server";
+import { authApi } from "./entities/auth/api";
 import { Header } from "./shared/ui/layouts/Header";
 import { Sidebar } from "./shared/ui/layouts/Sidebar";
+import "./tailwind.css";
 
-export const links: LinksFunction = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
-  {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
-    crossOrigin: "anonymous",
-  },
-  {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap",
-  },
-];
-
-export async function loader({ request }: LoaderFunctionArgs) {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
-  const isAuthPath = url.pathname.startsWith("/auth");
-  const cookie = request.headers.get("cookie");
-  console.log("나는 쿠키다22", cookie);
+  const isAuthPage = url.pathname.startsWith("/auth");
 
   try {
-    const response = await authApi.getMyProfile();
-    const userData = response; // API 응답에서 data 객체 접근
+    const token = await getApiToken(request);
 
-    // 인증된 사용자가 auth 페이지 접근 시도하면 메인으로 리다이렉트
-    if (isAuthPath) {
-      return redirect("/");
-    }
-
-    return json({
-      isAuthenticated: true,
-      additionalUserInfo: {
-        birth: userData.birth,
-        phone: userData.phone,
-        mbti: userData.mbti,
-        joinedAt: userData.joinedAt,
-        empNo: userData.empNo,
-        name: userData.name,
-        email: userData.email,
-        thumbnailPath: userData.thumbnailPath,
-        position: userData.position,
-        departmentId: userData.departmentId,
-      },
-    });
-  } catch (error) {
-    console.error("Error fetching user profile:", error);
-    // 보호된 라우트 접근 시 로그인으로 리다이렉트
-    if (!isAuthPath) {
+    if (!token && !isAuthPage) {
       return redirect("/auth/login");
     }
-    return json({
-      isAuthenticated: false,
-      additionalUserInfo: null,
-    });
+
+    if (token) {
+      const response = await authApi.server.getMyProfile(token);
+
+      if (isAuthPage) {
+        return redirect("/");
+      }
+
+      return json({ user: response.data });
+    }
+
+    return json({ user: null });
+  } catch (error) {
+    if (!isAuthPage) {
+      return redirect("/auth/login");
+    }
+    return json({ user: null });
   }
-}
+};
 
 export default function App() {
   const location = useLocation();
-  const { additionalUserInfo, isAuthenticated } = useLoaderData<typeof loader>();
-  const updateUser = useAuthStore((state) => state.updateUser);
-  const clearUser = useAuthStore((state) => state.clearUser);
-  const user = useAuthStore((state) => state.user);
-  const isLoginPage = location.pathname.startsWith("/auth");
-
-  useEffect(() => {
-    // 서버미인증 로컬에 user 정보가 있을시 초기화
-    if (!isAuthenticated && user) {
-      alert(1);
-      clearUser();
-    }
-
-    // 서버인증 및 추가 정보가 있는 경우 업데이트
-    if (isAuthenticated && additionalUserInfo) {
-      alert(2);
-      updateUser(additionalUserInfo);
-    }
-  }, [isAuthenticated, additionalUserInfo, updateUser, clearUser, user]);
-
-  // 스토어 조작 감지 시 로그인 페이지
-  useEffect(() => {
-    if (!isLoginPage && !isAuthenticated && user) {
-      alert(3);
-      window.location.href = "/auth/login";
-    }
-  }, [isLoginPage, isAuthenticated, user]);
+  const isAuthPage = location.pathname.startsWith("/auth");
 
   return (
     <html lang="ko">
@@ -111,7 +50,7 @@ export default function App() {
         <Links />
       </head>
       <body className="bg-gray-200 text-gray-800">
-        {isLoginPage ? (
+        {isAuthPage ? (
           <Outlet />
         ) : (
           <div className="min-h-screen flex">
@@ -131,4 +70,8 @@ export default function App() {
       </body>
     </html>
   );
+}
+
+export function links() {
+  return [{ rel: "stylesheet", href: "/app/tailwind.css" }];
 }
