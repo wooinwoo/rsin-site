@@ -4,7 +4,8 @@ import { saveApiToken } from "~/cookies.server";
 import { Form, useActionData, useNavigate } from "@remix-run/react";
 import { useState } from "react";
 import { Button } from "~/shared/ui/components/Button";
-import { EyeIcon, EyeOffIcon, LogoIcon } from "~/shared/ui/icons";
+import { LogoIcon } from "~/shared/ui/icons";
+import { EyeIcon, EyeOffIcon } from "~/shared/ui/icons";
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
@@ -32,8 +33,8 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const actionData = useActionData<typeof action>();
   const [showPassword, setShowPassword] = useState(false);
+  const actionData = useActionData<typeof action>();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -48,72 +49,59 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center">
-      <div className="w-full max-w-md space-y-12 bg-white p-8 rounded-lg shadow-lg">
-        <div className="flex items-center gap-3 justify-center">
-          <LogoIcon className="w-12 h-12" />
-          <div className="flex flex-col mr-11">
-            <h2 className="text-2xl font-bold tracking-tight text-gray-900">RS-TEAM</h2>
-            <p className="text-sm text-gray-600">RSIN - RS Internal Portal</p>
+    <div className="min-h-screen bg-gray-200 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <div className="bg-gray-200 rounded-2xl shadow-lg p-8 space-y-8 border border-gray-300">
+          <div className="text-center space-y-3">
+            <div className="flex justify-center">
+              <LogoIcon className="w-12 h-12 text-gray-900" />
+            </div>
+            <div className="space-y-1">
+              <h1 className="text-3xl font-bold tracking-tight">
+                <span className="text-red-500">RS</span>
+                <span className="text-gray-900">IN</span>
+              </h1>
+              <p className="text-gray-600 text-sm font-medium">HR Management System</p>
+            </div>
           </div>
-        </div>
 
-        <Form method="post" className="space-y-8 px-4">
-          {actionData?.error && (
-            <div className="text-red-500 text-sm text-center">{actionData.error}</div>
-          )}
-          <div className="space-y-6">
-            <div>
-              <label
-                htmlFor="email"
-                className="flex items-center text-sm font-medium text-gray-700"
-              >
-                <img
-                  src="/images/profile.jpg"
-                  alt="RS-TEAM Logo"
-                  className="w-4 h-4 rounded-full mr-1"
-                />
-                이메일 또는 휴대폰 번호
-              </label>
-              <div className="mt-1">
+          <Form method="post" className="space-y-6">
+            {actionData?.error && (
+              <div className="text-red-500 text-sm text-center bg-red-50 p-2 rounded-lg">
+                {actionData.error}
+              </div>
+            )}
+
+            <div className="space-y-4">
+              <div>
                 <input
-                  id="email"
+                  type="email"
                   name="email"
-                  type="text"
+                  placeholder="이메일을 입력하세요"
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full px-0 py-2 focus:outline-none border-0 border-b border-gray-300 focus:border-blue-500 focus:ring-0 bg-transparent"
+                  className="w-full h-12 px-4 bg-white rounded-xl border border-gray-300
+                           focus:border-red-500/30 focus:ring-2 focus:ring-red-500/10 transition-all
+                           text-gray-900 placeholder:text-gray-500"
                 />
               </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor="password"
-                className="flex items-center text-sm font-medium text-gray-700"
-              >
-                <img
-                  src="/images/profile.jpg"
-                  alt="RS-TEAM Logo"
-                  className="w-4 h-4 rounded-full mr-1"
-                />
-                비밀번호
-              </label>
-              <div className="mt-1 relative">
+              <div className="relative">
                 <input
-                  id="password"
-                  name="password"
                   type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="비밀번호를 입력하세요"
                   required
                   value={formData.password}
                   onChange={handleInputChange}
-                  className="w-full px-0 py-2 focus:outline-none border-0 border-b border-gray-300 focus:border-blue-500 focus:ring-0 bg-transparent"
+                  className="w-full h-12 px-4 bg-white rounded-xl border border-gray-300
+                           focus:border-red-500/30 focus:ring-2 focus:ring-red-500/10 transition-all
+                           text-gray-900 placeholder:text-gray-500"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                 >
                   {showPassword ? (
                     <EyeOffIcon className="w-5 h-5" />
@@ -123,24 +111,25 @@ export default function LoginPage() {
                 </button>
               </div>
             </div>
-          </div>
 
-          <div className="flex items-center justify-end">
-            <button
-              type="button"
-              className="text-sm text-gray-800 hover:text-gray-900"
-              onClick={() => navigate("/auth/forgot-password")}
+            <Button
+              type="submit"
+              className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white rounded-xl font-medium 
+                       transition-all shadow-lg shadow-gray-900/10"
             >
-              비밀번호 찾기
-            </button>
-          </div>
-
-          <div>
-            <Button type="submit" className="w-full" size="lg" variant="dark">
               로그인
             </Button>
-          </div>
-        </Form>
+            <div className="flex items-center justify-end">
+              <button
+                type="button"
+                onClick={() => navigate("/auth/forgot-password")}
+                className="text-gray-700 hover:text-gray-900 font-medium transition-colors text-sm"
+              >
+                비밀번호 찾기
+              </button>
+            </div>
+          </Form>
+        </div>
       </div>
     </div>
   );
