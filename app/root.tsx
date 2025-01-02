@@ -5,6 +5,7 @@ import { getApiToken } from "~/cookies.server";
 import { authApi } from "./entities/auth/api";
 import { Header } from "./shared/ui/layouts/Header";
 import { Sidebar } from "./shared/ui/layouts/Sidebar";
+import { GlobalLoadingIndicator } from "./shared/ui/components/GlobalLoadingIndicator";
 import "./tailwind.css";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -60,6 +61,7 @@ export default function App() {
               <Header />
               {/* main에도 min-w-0 추가 */}
               <main className="flex-1 p-2 sm:p-4 min-w-0 ">
+                <GlobalLoadingIndicator />
                 <Outlet />
               </main>
             </div>
