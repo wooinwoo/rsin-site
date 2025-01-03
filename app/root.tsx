@@ -40,6 +40,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function App() {
   const location = useLocation();
+
   const isAuthPage = location.pathname.startsWith("/auth");
 
   return (
