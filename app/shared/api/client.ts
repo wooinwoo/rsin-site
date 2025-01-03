@@ -12,7 +12,20 @@ const instance = axios.create({
 });
 
 instance.interceptors.response.use(
-  (response: AxiosResponse) => response,
+  (response: AxiosResponse) => {
+    console.log("API Response:", {
+      status: response.status,
+      statusText: response.statusText,
+      data: response.data,
+      headers: response.headers,
+      config: {
+        url: response.config.url,
+        method: response.config.method,
+        headers: response.config.headers,
+      },
+    });
+    return response;
+  },
   (error: AxiosError) => {
     console.error("API Error Details:", {
       status: error.response?.status,

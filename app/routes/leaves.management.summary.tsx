@@ -32,7 +32,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   try {
     const data = await getAnnualStatus(request, params);
-    console.log("dat!!", data.employees[0].leave);
     return json(data);
   } catch (error) {
     throw json({ message: "연차 현황을 불러오는데 실패했습니다." }, { status: 500 });
