@@ -9,12 +9,15 @@ export const useAuthStore = create<AuthStore>()(
       setUser: (user: User | null) => set({ user }),
       clearUser: () => set({ user: null }),
       updateUser: (additionalInfo: Partial<User>) =>
-        set((state) => ({
-          user: state.user ? { ...state.user, ...additionalInfo } : null,
-        })),
+        set((state) => {
+          const newState = {
+            user: state.user ? { ...state.user, ...additionalInfo } : (additionalInfo as User),
+          };
+          return newState;
+        }),
     }),
     {
-      name: "auth-storage", // localStorage
+      name: "auth-storage",
     }
   )
 );

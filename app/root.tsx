@@ -1,12 +1,19 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "@remix-run/react";
 import { json, redirect, type LoaderFunctionArgs } from "@remix-run/node";
-import { useLocation } from "react-router-dom";
+import { useLocation, useLoaderData } from "react-router-dom";
 import { getApiToken } from "~/cookies.server";
 import { authApi } from "./entities/auth/api";
 import { Header } from "./shared/ui/layouts/Header";
 import { Sidebar } from "./shared/ui/layouts/Sidebar";
 import { GlobalLoadingIndicator } from "./shared/ui/components/GlobalLoadingIndicator";
+import { useAuthStore } from "./shared/store/auth";
+import { useEffect } from "react";
 import "./tailwind.css";
+import { User } from "./shared/store/auth/types";
+
+export type LoaderData = {
+  user: User | null;
+};
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
@@ -18,23 +25,29 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     if (!token && !isAuthPage) {
       return redirect("/auth/login");
     }
-
     if (token) {
       const response = await authApi.getMyProfile(token);
+      const userData = response.data as User;
 
       if (isAuthPage) {
-        return redirect("/");
+        return json<LoaderData>({ user: userData });
       }
 
-      return json({ user: response.data });
+      return json<LoaderData>({ user: userData });
     }
 
-    return json({ user: null });
+    // 토큰이 없는 경우
+    if (!isAuthPage) {
+      return redirect("/auth/login");
+    }
+
+    // 인증 페이지면서 토큰이 없는 경우
+    return json<LoaderData>({ user: null });
   } catch (error) {
     if (!isAuthPage) {
       return redirect("/auth/login");
     }
-    return json({ user: null });
+    return json<LoaderData>({ user: null });
   }
 };
 
@@ -43,6 +56,12 @@ export default function App() {
 
   const isAuthPage = location.pathname.startsWith("/auth");
 
+  const { user } = useLoaderData() as LoaderData;
+  const updateUser = useAuthStore((state) => state.updateUser);
+
+  useEffect(() => {
+    updateUser(user || {}); // updateUser 사용
+  }, [user, updateUser]);
   return (
     <html lang="ko">
       <head>
