@@ -1,8 +1,8 @@
 import { client } from "~/shared/api";
 import { GetEmployeeAnnualParams, GetEmployeeAnnualResponse } from "./model";
 
-export const employeeApi = {
-  getAnnualStatus(params?: GetEmployeeAnnualParams) {
+export const leaveApi = {
+  getAnnualStatus(CookieHeader?: string, params?: GetEmployeeAnnualParams) {
     const searchParams = new URLSearchParams();
 
     if (params?.size) searchParams.append("size", params.size.toString());
@@ -10,6 +10,10 @@ export const employeeApi = {
     if (params?.departmentId) searchParams.append("departmentId", params.departmentId.toString());
     if (params?.employeeName) searchParams.append("employeeName", params.employeeName);
 
-    return client.get<GetEmployeeAnnualResponse>(`/leaves/annual?${searchParams.toString()}`);
+    return client.get<GetEmployeeAnnualResponse>(`/leaves/annual?${searchParams.toString()}`, {
+      headers: {
+        Cookie: CookieHeader || "",
+      },
+    });
   },
 };

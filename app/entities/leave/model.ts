@@ -1,8 +1,7 @@
 export interface Leave {
-  id: number;
-  type: "annual";
-  startedAt: string;
-  endedAt: string;
+  total: number;
+  used: number;
+  remain: number;
 }
 export interface Department {
   id: number;
@@ -10,6 +9,7 @@ export interface Department {
 }
 
 export interface EmployeeAnnual {
+  thumbnailPath: string;
   name: string;
   empNo: string;
   position: string;

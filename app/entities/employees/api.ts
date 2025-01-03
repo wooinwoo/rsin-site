@@ -14,7 +14,7 @@ interface ApiResponse<T> {
 // 관리자용 API
 export const adminEmployeeApi = {
   getEmployees(cookieHeader?: string | null): Promise<ApiResponse<{ employees: Employee[] }>> {
-    return client.get(`/admin/employees`, {
+    return client.get(`/employees`, {
       headers: {
         Cookie: cookieHeader || "",
       },
