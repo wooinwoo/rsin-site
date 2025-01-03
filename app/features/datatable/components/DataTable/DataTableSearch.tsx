@@ -25,20 +25,6 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
     return initialValues;
   });
 
-  useEffect(() => {
-    const hasAnySearchParam = fields.some((field) => searchParams.has(field.id));
-    if (!hasAnySearchParam) {
-      const newParams = new URLSearchParams();
-      fields.forEach((field) => {
-        if (field.defaultValue) {
-          newParams.set(field.id, field.defaultValue);
-        }
-      });
-      setSearchParams(newParams);
-      onSearch(Object.fromEntries(newParams));
-    }
-  }, []);
-
   const handleValueChange = (fieldId: string, value: string) => {
     setSearchValues((prev) => ({
       ...prev,

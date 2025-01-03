@@ -30,6 +30,12 @@ export interface SearchField {
   allOptionLabel?: string;
 }
 
+export interface ServerPaginationOptions {
+  currentPage: number;
+  pageSize: number;
+  totalItems: number;
+  onPageChange: (page: number, size: number) => void;
+}
 export interface DataTableProps<TData> {
   data: TData[];
   columns: ColumnDef<TData>[];
@@ -41,7 +47,7 @@ export interface DataTableProps<TData> {
   }>;
   enableSelection?: boolean;
   enableSearch?: boolean;
-  enablePagination?: boolean;
+  pagination?: ServerPaginationOptions; // 변경
   onRowSelect?: (selectedRows: TData[]) => void;
   searchFields?: SearchField[];
   onSearch?: (params: Record<string, string>) => void;

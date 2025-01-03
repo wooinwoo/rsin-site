@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { DataTableHeader } from "./DataTableHeader";
 import { DataTableBody } from "./DataTableBody";
 import { DataTableFooter } from "./DataTableFooter";
@@ -6,6 +6,7 @@ import { DataTableToolbar } from "./DataTableToolbar";
 import { DataTableProps } from "../../types/datatable";
 import { Widget } from "~/shared/ui/widgets/widget";
 import { DataTableSearch } from "./DataTableSearch";
+
 export function DataTable<T extends Record<string, any>>({
   data,
   columns,
@@ -15,25 +16,13 @@ export function DataTable<T extends Record<string, any>>({
   onSearch,
   enableSelection = false,
   enableSearch = false,
-  enablePagination = true,
+  pagination,
   onRowSelect,
   toolbarButtons,
 }: DataTableProps<T>) {
   const [selectedRows, setSelectedRows] = useState<T[]>([]);
-  const [filteredData, setFilteredData] = useState<T[]>(data);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
 
-  const allSelected =
-    enableSelection && filteredData.length > 0 && selectedRows.length === filteredData.length;
-  const totalPages = Math.ceil(filteredData.length / pageSize);
-  const paginatedData = enablePagination
-    ? filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
-    : filteredData;
-
-  useEffect(() => {
-    setFilteredData(data);
-  }, [data]);
+  const allSelected = enableSelection && data.length > 0 && selectedRows.length === data.length;
 
   return (
     <>
@@ -42,17 +31,17 @@ export function DataTable<T extends Record<string, any>>({
       )}
       <Widget>
         <div className="w-full space-y-4">
-          {enablePagination && (
+          {pagination && (
             <DataTableToolbar
-              totalItems={filteredData.length}
-              pageSize={pageSize}
+              totalItems={pagination.totalItems}
+              pageSize={pagination.pageSize}
               onPageSizeChange={(newSize) => {
-                setPageSize(newSize);
-                setCurrentPage(1);
+                pagination.onPageChange(1, newSize);
               }}
               toolbarButtons={toolbarButtons}
             />
           )}
+
           {MobileCardComponent && (
             <div className="block sm:hidden">
               <div className="divide-y divide-gray-200">
@@ -77,6 +66,7 @@ export function DataTable<T extends Record<string, any>>({
               </div>
             </div>
           )}
+
           <div className="hidden sm:block">
             <div className="relative rounded-md border">
               <div className="overflow-x-auto">
@@ -88,7 +78,7 @@ export function DataTable<T extends Record<string, any>>({
                     onSelectAll={
                       enableSelection
                         ? (checked) => {
-                            const newSelectedRows = checked ? filteredData : [];
+                            const newSelectedRows = checked ? data : [];
                             setSelectedRows(newSelectedRows);
                             onRowSelect?.(newSelectedRows);
                           }
@@ -96,31 +86,31 @@ export function DataTable<T extends Record<string, any>>({
                     }
                   />
                   <DataTableBody
-                    data={paginatedData}
+                    data={data}
                     columns={columns}
                     selectable={enableSelection}
                     selectedRows={selectedRows}
-                    pageSize={pageSize}
-                    onRowClick={onRowClick}
-                    currentPage={currentPage}
-                    totalItems={filteredData.length}
                     onRowSelect={(rows) => {
                       setSelectedRows(rows);
                       onRowSelect?.(rows);
                     }}
+                    onRowClick={onRowClick}
+                    currentPage={pagination?.currentPage || 1}
+                    pageSize={pagination?.pageSize || data.length}
+                    totalItems={pagination?.totalItems || data.length}
                   />
                 </table>
               </div>
             </div>
           </div>
 
-          {enablePagination && (
+          {pagination && (
             <DataTableFooter
               selectedCount={selectedRows.length}
-              totalCount={filteredData.length}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
+              totalCount={pagination.totalItems}
+              currentPage={pagination.currentPage}
+              totalPages={Math.ceil(pagination.totalItems / pagination.pageSize)}
+              onPageChange={(page) => pagination.onPageChange(page, pagination.pageSize)}
               enableSelection={enableSelection}
             />
           )}
