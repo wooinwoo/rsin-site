@@ -1,7 +1,6 @@
 import { memo } from "react";
 import { OptimizedImage } from "~/shared/ui/components/OptimizedImage";
-
-const CDN_HOST = process.env.CDN_HOST;
+import { getFullImageUrl } from "~/shared/utils/imges";
 
 interface ProfileCellProps {
   profileUrl: string;
@@ -12,13 +11,6 @@ export const ProfileCell = memo(function ProfileCell({
   profileUrl,
   employeeName,
 }: ProfileCellProps) {
-  // S3 key 형식에 맞춰 URL 생성
-  const getFullImageUrl = (profileUrl: string) => {
-    if (!profileUrl) return "/images/profile.jpg";
-    if (profileUrl.startsWith("http")) return profileUrl;
-    return `${CDN_HOST}${profileUrl}`;
-  };
-
   return (
     <div className="flex items-center gap-2">
       <OptimizedImage
