@@ -10,9 +10,28 @@ import { useAuthStore } from "./shared/store/auth";
 import { useEffect } from "react";
 import "./tailwind.css";
 import { User } from "./shared/store/auth/types";
-
+import { ShouldRevalidateFunction } from "@remix-run/react";
 export type LoaderData = {
   user: User | null;
+};
+
+export const shouldRevalidate: ShouldRevalidateFunction = ({
+  currentUrl,
+  nextUrl,
+  formAction,
+  defaultShouldRevalidate,
+}) => {
+  // 같은 페이지 내에서 검색이나 페이지네이션으로 인한 변경인 경우
+  if (currentUrl.pathname === nextUrl.pathname && currentUrl.search !== nextUrl.search) {
+    return false;
+  }
+
+  // 로그인/로그아웃 관련 action이 아닌 경우 루트 loader 재실행 방지
+  if (!formAction?.includes("/auth")) {
+    return false;
+  }
+
+  return defaultShouldRevalidate;
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
