@@ -7,25 +7,38 @@ import type {
   Employee,
 } from "./model";
 
+interface ApiResponse<T> {
+  data: T;
+}
+
 // 관리자용 API
 export const adminEmployeeApi = {
-  getEmployees(size: number = 25) {
-    return client.get<GetEmployeesResponse>(`/admin/employees?size=${size}`);
+  getEmployees(cookieHeader?: string | null): Promise<ApiResponse<{ employees: Employee[] }>> {
+    return client.get(`/admin/employees`, {
+      headers: {
+        Cookie: cookieHeader || "",
+      },
+    });
   },
 
-  createEmployee(data: CreateEmployeeRequest) {
-    return client.post<Employee>("/admin/employees", data);
+  createEmployee(cookieHeader: string, data: CreateEmployeeRequest) {
+    return client.post(`/admin/employees`, data, {
+      headers: { Cookie: cookieHeader || "" },
+    });
   },
 
-  updateEmployee(id: number, data: UpdateEmployeeRequest) {
-    return client.patch<Employee>(`/admin/employees/${id}`, data);
+  updateEmployee(cookieHeader: string, empNo: number, data: UpdateEmployeeRequest) {
+    return client.patch(`/admin/employees/${empNo}`, data, {
+      headers: { Cookie: cookieHeader || "" },
+    });
   },
 
-  resignEmployee(id: number, data: ResignEmployeeRequest) {
-    return client.patch<Employee>(`/admin/employees/${id}/resign`, data);
+  resignEmployee(cookieHeader: string, id: number, data: { resignedAt: string }) {
+    return client.patch(`/admin/employees/${id}/resign`, data, {
+      headers: { Cookie: cookieHeader || "" },
+    });
   },
 };
-
 // 일반 직원용 API
 export const employeeApi = {
   getSelf() {

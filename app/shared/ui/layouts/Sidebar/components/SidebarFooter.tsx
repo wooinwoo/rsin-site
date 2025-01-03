@@ -37,7 +37,7 @@ export function SidebarFooter({
 
   const handleLogout = async () => {
     try {
-      await authApi.server.signOut();
+      await authApi.signOut();
       clearUser(); // zustand store 초기화
       navigate("/auth/login");
     } catch (error) {

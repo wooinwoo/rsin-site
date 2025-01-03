@@ -30,15 +30,12 @@ instance.interceptors.response.use(
 );
 
 instance.interceptors.request.use(async (config: RemixRequestConfig) => {
-  if (typeof window === "undefined" && config.headers) {
-    const request = config._remix?.request;
-    if (request) {
-      const apiCookie = request.headers.get("X-API-Cookie");
-      if (apiCookie) {
-        config.headers.Cookie = apiCookie;
-      }
-    }
-  }
+  console.log("Request Config:", {
+    url: config.url,
+    method: config.method,
+    headers: config.headers,
+    data: config.data,
+  });
   return config;
 });
 

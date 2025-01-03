@@ -20,7 +20,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     }
 
     if (token) {
-      const response = await authApi.server.getMyProfile(token);
+      const response = await authApi.getMyProfile(token);
 
       if (isAuthPage) {
         return redirect("/");

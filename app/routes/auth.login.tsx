@@ -13,7 +13,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const password = formData.get("password");
 
   try {
-    const response = await authApi.server.signIn({
+    const response = await authApi.signIn({
       email: email as string,
       password: password as string,
     });

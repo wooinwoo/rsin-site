@@ -20,12 +20,10 @@ import { TeamMemberCard } from "~/features/team/components/TeamMemberCard";
 
 // Loader
 export async function loader({ request }: LoaderFunctionArgs) {
-  try {
-    const data = await EmployeeAPI.getEmployees();
-    return json<TeamManagementLoaderData>(data);
-  } catch (error) {
-    throw json({ message: "직원 목록을 불러오는데 실패했습니다." }, { status: 500 });
-  }
+  const data = await EmployeeAPI.getEmployees(request);
+  return json<TeamManagementLoaderData>(data);
+
+  throw json({ message: "직원 목록을 불러오는데 실패했습니다." }, { status: 500 });
 }
 
 // Action
@@ -51,7 +49,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
         console.log(data);
 
-        const result = await EmployeeAPI.createEmployee(data);
+        const result = await EmployeeAPI.createEmployee(request, data);
         return json(result);
       }
       case "update": {
@@ -75,7 +73,7 @@ export async function action({ request }: ActionFunctionArgs) {
           role: String(rawData.role) as "admin" | "user",
         };
 
-        const result = await EmployeeAPI.updateEmployee(Number(rawData.id), data);
+        const result = await EmployeeAPI.updateEmployee(request, Number(rawData.id), data);
         console.log("Update API Result:", result);
 
         return json({
@@ -86,7 +84,7 @@ export async function action({ request }: ActionFunctionArgs) {
       case "resign": {
         const id = Number(formData.get("id"));
         const resignedAt = formData.get("resignedAt") as string;
-        const result = await EmployeeAPI.resignEmployee(id, resignedAt);
+        const result = await EmployeeAPI.resignEmployee(request, id, resignedAt);
         return json(result);
       }
       default:
