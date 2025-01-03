@@ -4,6 +4,7 @@ import { authApi } from "~/entities/auth/api";
 import { ProfileEditModal } from "~/features/profile/components/ProfileEditModal";
 import { useClickAway } from "~/shared/hooks/useClickAway";
 import { useAuthStore } from "~/shared/store";
+import { getFullImageUrl } from "~/shared/utils/imges";
 interface SidebarFooterProps {
   isCollapsed: boolean;
   setIsCollapsed: (value: boolean) => void;
@@ -18,22 +19,12 @@ export function SidebarFooter({
   setIsMobileOpen,
 }: SidebarFooterProps) {
   const navigate = useNavigate();
+  const user = useAuthStore((state) => state.user);
   const clearUser = useAuthStore((state) => state.clearUser);
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
   const [isProfileEditModalOpen, setIsProfileEditModalOpen] = useState(false);
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
-
-  const mockUserData = {
-    name: "김태완",
-    departmentId: 1,
-    position: "manager",
-    joinedAt: "2024-01-01",
-    email: "srpn@rs-team.com",
-    phone: "01012345678",
-    birth: "1990-01-01",
-    mbti: "ENFP",
-  };
 
   const handleLogout = async () => {
     try {
@@ -63,11 +54,15 @@ export function SidebarFooter({
         >
           <div className={`p-2 flex w-full items-center gap-2`}>
             <span className="relative flex shrink-0 overflow-hidden h-8 w-8 rounded-lg">
-              <img className="aspect-square h-full w-full" alt="프로필" src="/images/profile.jpg" />
+              <img
+                className="aspect-square h-full w-full"
+                alt="프로필"
+                src={getFullImageUrl(user?.thumbnailPath)}
+              />
             </span>
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-semibold text-gray-100">김태완</span>
-              <span className="truncate text-xs text-gray-400">srpn@rs-team.com</span>
+              <span className="truncate font-semibold text-gray-100">{user?.name}</span>
+              <span className="truncate text-xs text-gray-400">{user?.email}</span>
             </div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -157,7 +152,7 @@ export function SidebarFooter({
       <ProfileEditModal
         isOpen={isProfileEditModalOpen}
         onClose={() => setIsProfileEditModalOpen(false)}
-        initialData={mockUserData}
+        initialData={user || undefined}
         onSubmit={async (data) => {
           console.log("프로필 수정 데이터:", data);
           setIsProfileEditModalOpen(false);
