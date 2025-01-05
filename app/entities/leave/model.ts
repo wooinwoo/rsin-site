@@ -31,3 +31,45 @@ export interface GetEmployeeAnnualParams {
   departmentId?: number;
   employeeName?: string;
 }
+
+export interface LeaveDocument {
+  id: number;
+  submittedAt: string;
+  leave: {
+    type: "annual" | "annual_am" | "annual_pm";
+    startedAt: string;
+    endedAt: string;
+    reason: string;
+  };
+  requester: {
+    id: number;
+    name: string;
+    departmentId: number;
+    position: string;
+    thumbnailPath: string;
+  };
+  approvals: Array<{
+    name: string;
+    departmentId: number;
+    position: string;
+    thumbnailPath: string;
+    step: number;
+    status: "pending" | "approved" | "rejected";
+  }>;
+}
+
+export interface GetLeavesParams {
+  size?: number;
+  page?: number;
+  type?: "annual" | "annual_am" | "annual_pm";
+  startDate?: string;
+  endDate?: string;
+  applicant?: string;
+  approvalStatus?: "pending" | "approved" | "rejected";
+  scope?: "self" | "all";
+}
+
+export interface GetLeavesResponse {
+  totalCount: number;
+  documents: LeaveDocument[];
+}
