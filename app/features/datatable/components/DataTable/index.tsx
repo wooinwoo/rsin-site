@@ -20,6 +20,7 @@ export function DataTable<T extends Record<string, any>>({
   onRowSelect,
   toolbarButtons,
 }: DataTableProps<T>) {
+  console.log(pagination);
   const [selectedRows, setSelectedRows] = useState<T[]>([]);
 
   const allSelected = enableSelection && data.length > 0 && selectedRows.length === data.length;

@@ -4,7 +4,6 @@ import { ProfileCell } from "~/features/datatable/components/cells/ProfileCell";
 import type { SearchField } from "~/features/datatable/types/datatable";
 import { DEPARTMENT_OPTIONS } from "~/shared/constants/options";
 import { POSITION_OPTIONS } from "~/shared/constants/options";
-import { getFullImageUrl } from "~/shared/utils/imges";
 export const annualColumns: ColumnDef<EmployeeAnnual>[] = [
   {
     id: "empNo",
@@ -12,12 +11,10 @@ export const annualColumns: ColumnDef<EmployeeAnnual>[] = [
     accessorKey: "empNo",
   },
   {
-    id: "name",
+    id: "thumbnailPath",
     header: "이름",
     accessorKey: "name",
-    cell: ({ row }) => (
-      <ProfileCell profileUrl={getFullImageUrl(row.thumbnailPath)} employeeName={row.name} />
-    ),
+    cell: ({ row }) => <ProfileCell profileUrl={row.thumbnailPath} employeeName={row.name} />,
   },
   {
     id: "department",

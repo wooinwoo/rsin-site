@@ -2,9 +2,8 @@ import { client } from "~/shared/api";
 import type {
   CreateEmployeeRequest,
   UpdateEmployeeRequest,
-  ResignEmployeeRequest,
-  GetEmployeesResponse,
   Employee,
+  GetEmployeesParams,
 } from "./model";
 
 interface ApiResponse<T> {
@@ -13,8 +12,11 @@ interface ApiResponse<T> {
 
 // 관리자용 API
 export const adminEmployeeApi = {
-  getEmployees(cookieHeader?: string | null): Promise<ApiResponse<{ employees: Employee[] }>> {
-    return client.get(`/employees`, {
+  getEmployees(
+    cookieHeader: string | null,
+    params: GetEmployeesParams
+  ): Promise<ApiResponse<{ totalCount: number; employees: Employee[] }>> {
+    return client.get(`/employees?size=${params.size}&page=${params.page}`, {
       headers: {
         Cookie: cookieHeader || "",
       },
