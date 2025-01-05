@@ -1,5 +1,5 @@
-import { json, type ActionFunctionArgs, type LoaderFunctionArgs } from "@remix-run/node";
-import { useActionData, useLoaderData, useNavigation, useSubmit } from "@remix-run/react";
+import { json, redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from "@remix-run/node";
+import { useActionData, useLoaderData, useSearchParams, useSubmit } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import type {
   CreateEmployeeRequest,
@@ -10,24 +10,41 @@ import { DataTable } from "~/features/datatable/components/DataTable";
 import * as EmployeeAPI from "~/features/team/api/employees.server";
 import { employeeColumns } from "~/features/team/components/EmployeesTable/columns";
 import { TeamMemberAddModal } from "~/features/team/components/TeamMemberAddModal";
+import { TeamMemberCard } from "~/features/team/components/TeamMemberCard";
 import type {
   ActionIntent,
   TeamManagementLoaderData,
 } from "~/features/team/types/employeesManagement";
 import { getInitialModalData } from "~/features/team/utils/employee";
 import { PlusIcon } from "~/shared/ui/icons/PlusIcon";
-import { TeamMemberCard } from "~/features/team/components/TeamMemberCard";
-
+import type { GetEmployeesParams } from "~/entities/employees/model";
 // Loader
 export async function loader({ request }: LoaderFunctionArgs) {
-  const data = await EmployeeAPI.getEmployees(request);
+  const url = new URL(request.url);
+
+  // page와 size가 없으면 기본값으로 리다이렉트
+  const page = url.searchParams.get("page");
+  const size = url.searchParams.get("size");
+
+  if (!page || !size) {
+    const newUrl = new URL(request.url);
+    if (!page) newUrl.searchParams.set("page", "1");
+    if (!size) newUrl.searchParams.set("size", "25");
+    return redirect(newUrl.toString());
+  }
+
+  const params: GetEmployeesParams = {
+    size: Number(size),
+    page: Number(page),
+  };
+
   try {
+    const data = await EmployeeAPI.getEmployees(request, params);
     return json<TeamManagementLoaderData>(data);
   } catch (error) {
     throw json({ message: "직원 목록을 불러오는데 실패했습니다." }, { status: 500 });
   }
 }
-
 // Action
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
@@ -92,11 +109,16 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function TeamManagementListPage() {
-  const { employees } = useLoaderData<typeof loader>();
+  const { employees, totalCount } = useLoaderData<typeof loader>(); // totalCount 추가
+  console.log(totalCount, employees.length);
+  const [searchParams] = useSearchParams();
   const actionData = useActionData<typeof action>();
   const submit = useSubmit();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<Employee | null>(null);
+
+  const currentPage = Number(searchParams.get("page")) || 1;
+  const pageSize = Number(searchParams.get("size")) || 25;
 
   // 액션 결과 처리
   useEffect(() => {
@@ -165,6 +187,17 @@ export default function TeamManagementListPage() {
         onRowClick={handleRowClick}
         enableSearch
         mobileCard={TeamMemberCard}
+        pagination={{
+          currentPage,
+          pageSize,
+          totalItems: totalCount,
+          onPageChange: (page, size) => {
+            const params = new URLSearchParams(searchParams);
+            params.set("page", page.toString());
+            params.set("size", size.toString());
+            submit(params);
+          },
+        }}
         toolbarButtons={[
           {
             label: "팀원추가",

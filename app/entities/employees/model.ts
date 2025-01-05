@@ -19,6 +19,11 @@ export interface Employee {
   department?: Department;
 }
 
+export interface GetEmployeesParams {
+  size?: number;
+  page?: number;
+}
+
 export interface CreateEmployeeRequest {
   name: string;
   departmentId: number;

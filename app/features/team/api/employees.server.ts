@@ -1,11 +1,14 @@
 import { adminEmployeeApi } from "~/entities/employees/api";
 import { withAuth } from "~/shared/api/withAuth";
 import type { CreateEmployeeRequest, UpdateEmployeeRequest } from "~/entities/employees/model";
-import type { Employee } from "~/entities/employees/model";
-export async function getEmployees(request: Request) {
+import type { Employee, GetEmployeesParams } from "~/entities/employees/model";
+export async function getEmployees(request: Request, params: GetEmployeesParams) {
   return withAuth(request, async (token) => {
-    const response = await adminEmployeeApi.getEmployees(token);
-    return { employees: response.data.employees as Employee[] };
+    const response = await adminEmployeeApi.getEmployees(token, params);
+    return {
+      employees: response.data.employees as Employee[],
+      totalCount: response.data.totalCount,
+    };
   });
 }
 

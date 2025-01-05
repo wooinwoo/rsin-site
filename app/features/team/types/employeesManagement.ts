@@ -3,6 +3,7 @@ import type { Employee } from "~/entities/employees/model";
 // Loader 타입
 export interface TeamManagementLoaderData {
   employees: Employee[];
+  totalCount: number;
 }
 
 // Action 타입
