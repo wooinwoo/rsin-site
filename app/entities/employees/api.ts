@@ -24,19 +24,19 @@ export const adminEmployeeApi = {
   },
 
   createEmployee(cookieHeader: string, data: CreateEmployeeRequest) {
-    return client.post(`/admin/employees`, data, {
+    return client.post(`/employees`, data, {
       headers: { Cookie: cookieHeader || "" },
     });
   },
 
   updateEmployee(cookieHeader: string, empNo: number, data: UpdateEmployeeRequest) {
-    return client.patch(`/admin/employees/${empNo}`, data, {
+    return client.patch(`/employees/${empNo}`, data, {
       headers: { Cookie: cookieHeader || "" },
     });
   },
 
   resignEmployee(cookieHeader: string, id: number, data: { resignedAt: string }) {
-    return client.patch(`/admin/employees/${id}/resign`, data, {
+    return client.patch(`/employees/${id}/resign`, data, {
       headers: { Cookie: cookieHeader || "" },
     });
   },

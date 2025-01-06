@@ -54,7 +54,7 @@ export const pendingColumns: ColumnDef<LeaveDocument>[] = [
     header: "결재자",
     accessorKey: "approvals",
     cell: ({ row }) => {
-      const currentApprover = row.approvals.find((a) => a.status === "pending");
+      const currentApprover = row.approvals?.find((a) => a.status === "pending");
       return currentApprover?.name || "-";
     },
   },
