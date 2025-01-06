@@ -55,6 +55,7 @@ export interface LeaveDocument {
     thumbnailPath: string;
     step: number;
     status: "pending" | "approved" | "rejected";
+    processedAt: string;
   }>;
 }
 

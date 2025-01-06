@@ -56,16 +56,20 @@ export const completedColumns: ColumnDef<LeaveDocument>[] = [
     id: "status",
     header: "상태",
     accessorKey: "approvals.status",
-    cell: ({ row }) => (
-      <ApprovalStatusBadge status={row.approvals[row.approvals.length - 1].status} />
-    ),
+    cell: ({ row }) => {
+      const approvals = row.approvals || [];
+      if (!approvals.length) return "-";
+      return <ApprovalStatusBadge status={approvals[approvals.length - 1].status} />;
+    },
   },
   {
     id: "approver",
     header: "결재자",
     accessorKey: "approvals",
     cell: ({ row }) => {
-      const lastApprover = row.approvals[row.approvals.length - 1];
+      const approvals = row.approvals || [];
+      if (!approvals.length) return "-";
+      const lastApprover = approvals[approvals.length - 1];
       return lastApprover?.name || "-";
     },
   },
@@ -73,15 +77,17 @@ export const completedColumns: ColumnDef<LeaveDocument>[] = [
     id: "requestDate",
     header: "신청일",
     accessorKey: "submittedAt",
+    cell: ({ row }) => row.submittedAt || "-",
   },
   {
     id: "approvalDate",
     header: "결재일",
     accessorKey: "approvals",
     cell: ({ row }) => {
-      const lastApproval = row.approvals[row.approvals.length - 1];
-      // return lastApproval?.updatedAt || "-";
-      return "-";
+      const approvals = row.approvals || [];
+      if (!approvals.length) return "-";
+      const lastApproval = approvals[approvals.length - 1];
+      return lastApproval?.processedAt || "-";
     },
   },
 ];
