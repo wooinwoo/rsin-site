@@ -2,7 +2,7 @@ import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { DataTable } from "~/features/datatable/components/DataTable";
 import { LeaveEmployeeCard } from "~/features/leave/components/LeaveEmployeeCard";
-import { annualColumns, searchFields } from "~/features/leave/LeaveTable/columns";
+import { annualColumns, searchFields } from "~/features/leave/LeaveTable/annualColumns";
 import type { GetEmployeeAnnualParams } from "~/entities/leave/model";
 import { getAnnualStatus } from "~/features/leave/api/leave.server";
 import { useSubmit, useSearchParams, redirect } from "@remix-run/react";

@@ -1,140 +1,57 @@
-// app/routes/leaves.approval.tsx
+import { json, redirect, type LoaderFunctionArgs } from "@remix-run/node";
+import { useLoaderData, useSearchParams, useSubmit } from "@remix-run/react";
+import { useState } from "react";
+import type { GetLeavesParams, LeaveDocument } from "~/entities/leave/model";
+import { ProfileCell } from "~/features/datatable/components/cells/ProfileCell";
 import { DataTable } from "~/features/datatable/components/DataTable";
 import { ColumnDef, SearchField } from "~/features/datatable/types/datatable";
-import { CheckIcon } from "~/shared/ui/icons/CheckIcon";
-import { LeaveApprovalModal } from "~/features/leave/components/LeaveApprovalModal";
-import { useState } from "react";
-import { ApprovalStatusBadge } from "~/features/approval/components/ApprovalStatusBadge";
-import { ProfileCell } from "~/features/datatable/components/cells/ProfileCell";
+import { getLeaves } from "~/features/leave/api/leave.server";
 import { LeaveApprovalCard } from "~/features/leave/components/LeaveApprovalCard";
+import { LeaveApprovalModal } from "~/features/leave/components/LeaveApprovalModal";
+import { CheckIcon } from "~/shared/ui/icons/CheckIcon";
+import { documentColumns, searchFields } from "~/features/leave/LeaveTable/documentColumns";
 
-export interface LeaveRequest {
-  id: string;
-  employeeName: string;
-  profileUrl: string;
-  leaveType: string;
-  startDate: string;
-  endDate: string;
-  approver: string;
-  requestDate: string;
+export async function loader({ request }: LoaderFunctionArgs) {
+  const url = new URL(request.url);
+  const page = url.searchParams.get("page");
+  const size = url.searchParams.get("size");
+  const scope = url.searchParams.get("scope");
+  const type = url.searchParams.get("type");
+
+  if (!page || !size || !scope || !type) {
+    const newUrl = new URL(request.url);
+    if (!page) newUrl.searchParams.set("page", "1");
+    if (!size) newUrl.searchParams.set("size", "25");
+    if (!scope) newUrl.searchParams.set("scope", "self");
+    if (!type) newUrl.searchParams.set("type", "annual");
+    return redirect(newUrl.toString());
+  }
+
+  const params: GetLeavesParams = {
+    size: Number(size),
+    page: Number(page),
+    scope: scope as "self" | "all",
+    type: type as "annual" | "annual_am" | "annual_pm",
+  };
+
+  try {
+    const data = await getLeaves(request, params);
+    console.log("data", data.documents);
+    return json(data);
+  } catch (error) {
+    throw json({ message: "휴가 신청 목록을 불러오는데 실패했습니다." }, { status: 500 });
+  }
 }
 
-const searchFields: SearchField[] = [
-  {
-    id: "employeeName",
-    type: "text",
-    label: "신청자",
-    placeholder: "이름을 입력하세요",
-    width: "200px",
-  },
-  {
-    id: "approvalType",
-    type: "select",
-    label: "결재 구분",
-    options: [
-      { value: "myPending", label: "내 승인대기" },
-      { value: "allApproval", label: "결재선 전체" },
-    ],
-    width: "150px",
-    defaultValue: "myPending",
-    showAllOption: false,
-  },
-];
-
-const columns: ColumnDef<LeaveRequest>[] = [
-  {
-    id: "employeeName",
-    header: "신청자",
-    accessorKey: "employeeName",
-    cell: ({ row }) => <ProfileCell profileUrl={row.profileUrl} employeeName={row.employeeName} />,
-  },
-  {
-    id: "leaveType",
-    header: "휴가 종류",
-    accessorKey: "leaveType",
-  },
-  {
-    id: "period",
-    header: "날짜 ",
-    accessorKey: "startDate",
-    cell: ({ row }) => (
-      <span>
-        {row.startDate} ~ {row.endDate}
-      </span>
-    ),
-  },
-  {
-    id: "approver",
-    header: "결재자",
-    accessorKey: "approver",
-  },
-  {
-    id: "requestDate",
-    header: "신청일",
-    accessorKey: "requestDate",
-  },
-];
-const leaveRequests: LeaveRequest[] = [
-  {
-    id: "1",
-    employeeName: "김태완",
-    profileUrl: "https://via.placeholder.com/150",
-    leaveType: "연차",
-    startDate: "2024-03-15",
-    endDate: "2024-03-15",
-    approver: "김태완",
-    requestDate: "2024-03-10",
-  },
-  {
-    id: "2",
-    employeeName: "김태완",
-    profileUrl: "https://via.placeholder.com/150",
-    leaveType: "반차",
-    startDate: "2024-03-18",
-    endDate: "2024-03-18",
-    approver: "김태완",
-    requestDate: "2024-03-11",
-  },
-  {
-    id: "3",
-    employeeName: "김태완",
-    profileUrl: "https://via.placeholder.com/150",
-    leaveType: "병가",
-    startDate: "2024-03-20",
-    endDate: "2024-03-22",
-    approver: "김태완",
-    requestDate: "2024-03-12",
-  },
-  {
-    id: "4",
-    employeeName: "김태완",
-    profileUrl: "https://via.placeholder.com/150",
-    leaveType: "경조사",
-    startDate: "2024-03-25",
-    endDate: "2024-03-26",
-    approver: "김태완",
-    requestDate: "2024-03-13",
-  },
-  {
-    id: "5",
-    employeeName: "김태완",
-    profileUrl: "https://via.placeholder.com/150",
-    leaveType: "연차",
-    startDate: "2024-04-01",
-    endDate: "2024-04-02",
-    approver: "김태완",
-    requestDate: "2024-03-14",
-  },
-];
-
 export default function LeaveApprovalPage() {
-  const [selectedLeave, setSelectedLeave] = useState<LeaveRequest | null>(null);
+  const { totalCount, documents } = useLoaderData<typeof loader>();
+  const [searchParams] = useSearchParams();
+  const submit = useSubmit();
+  const [selectedLeave, setSelectedLeave] = useState<LeaveDocument | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleRowSelect = (selectedRequests: LeaveRequest[]) => {
-    console.log("Selected requests:", selectedRequests);
-    // 선택된 항목들에 대한 처리
-  };
+  const currentPage = Number(searchParams.get("page")) || 1;
+  const pageSize = Number(searchParams.get("size")) || 25;
 
   return (
     <>
@@ -142,27 +59,45 @@ export default function LeaveApprovalPage() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onApprove={() => {
-          // 승인 처리
           setIsModalOpen(false);
         }}
         onReject={() => {
-          // 반려 처리
           setIsModalOpen(false);
         }}
       />
       <DataTable
-        data={leaveRequests}
-        columns={columns}
+        data={documents}
+        columns={documentColumns}
         mobileCard={LeaveApprovalCard}
-        onRowSelect={handleRowSelect}
         searchFields={searchFields}
-        onSearch={() => {}}
+        onSearch={(values) => {
+          const params = new URLSearchParams(searchParams);
+          Object.entries(values).forEach(([key, value]) => {
+            if (value) {
+              params.set(key, value);
+            } else {
+              params.delete(key);
+            }
+          });
+          params.set("page", "1"); // 검색 시 첫 페이지로
+          submit(params);
+        }}
+        pagination={{
+          currentPage,
+          pageSize,
+          totalItems: totalCount,
+          onPageChange: (page, size) => {
+            const params = new URLSearchParams(searchParams);
+            params.set("page", page.toString());
+            params.set("size", size.toString());
+            submit(params);
+          },
+        }}
         onRowClick={(row) => {
           setSelectedLeave(row);
           setIsModalOpen(true);
-        }} // 행 클릭 핸들러 추가
+        }}
         enableSearch
-        enableSelection
         toolbarButtons={[
           {
             label: "일괄승인",
