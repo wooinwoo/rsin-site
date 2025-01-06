@@ -66,7 +66,7 @@ export function CalendarCell({ day, events = [], isWeekend }: CalendarCellProps)
         <div className="px-1">
           <div className="mb-4 p-4 bg-gray-50 rounded-lg">
             <div className="text-sm text-gray-600">
-              총 <span className="font-medium text-gray-900">{dayEvents.length}</span>건의 휴가
+              총 <span className="font-medium text-gray-900">{dayEvents.length}</span>건의 일정
             </div>
           </div>
 
