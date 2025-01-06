@@ -15,7 +15,9 @@ interface CalendarProps {
 export function Calendar({ events = [], filters }: CalendarProps) {
   const { currentDate, calendarDays, goToNextMonth, goToPrevMonth, goToToday } = useCalendar();
   const [viewMode, setViewMode] = useState<ViewMode>("calendar");
+
   const filteredEvents = events.filter((event) => {
+    if (event.isHoliday) return true;
     if (event.status === "used" && !filters.showUsed) return false;
     if (event.status === "scheduled" && !filters.showScheduled) return false;
     if (event.status === "pending" && !filters.showPending) return false;
@@ -32,11 +34,13 @@ export function Calendar({ events = [], filters }: CalendarProps) {
         onNextMonth={goToNextMonth}
         onTodayClick={goToToday}
       />
-      {viewMode === "calendar" ? (
-        <CalendarGrid days={calendarDays} events={filteredEvents} />
-      ) : (
-        <ListView events={filteredEvents} currentDate={currentDate} />
-      )}
+      <div>
+        {viewMode === "calendar" ? (
+          <CalendarGrid days={calendarDays} events={filteredEvents} />
+        ) : (
+          <ListView events={filteredEvents} currentDate={currentDate} />
+        )}
+      </div>
     </div>
   );
 }

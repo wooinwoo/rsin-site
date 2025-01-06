@@ -1,139 +1,138 @@
-import { Calendar } from "~/features/calendar/components/Calendar";
-import { useEvents } from "~/features/calendar/hooks/useEvents";
-import { Widget } from "~/shared/ui/widgets/widget";
-import { BarChart } from "~/features/chart/components/BarChart";
-import { CalendarEvent } from "~/features/calendar/types/event";
-import { CalendarFilters } from "~/features/calendar/components/CalendarFilters";
-import { CalendarIcon, FilterIcon, ChartIcon } from "~/shared/ui/icons";
+import { json, type LoaderFunctionArgs } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
+import type {
+  DashboardBirthday,
+  DashboardHoliday,
+  DashboardLeave,
+} from "~/entities/dashboard/model";
+import { Calendar } from "~/features/calendar/components/Calendar";
+import { CalendarFilters } from "~/features/calendar/components/CalendarFilters";
+import { useCalendarEvents } from "~/features/calendar/hooks/useCalendarEvents";
+import type { CalendarEvent, LeaveStatus, LeaveType } from "~/features/calendar/types/event";
+import type { BarChartData } from "~/features/chart/components/BarChart";
+import { BarChart } from "~/features/chart/components/BarChart";
+import { useCalendar } from "~/features/calendar/hooks/useCalendar";
+import {
+  getDashboardBirthdays,
+  getDashboardHolidays,
+  getDashboardLeaves,
+} from "~/features/dashboard/api/dashboard.server";
+import { CalendarIcon, ChartIcon, FilterIcon } from "~/shared/ui/icons";
+import { Widget } from "~/shared/ui/widgets/widget";
 
-// 예시 데이터
-const INITIAL_EVENTS: CalendarEvent[] = [
-  {
-    id: "1",
-    title: "김태완",
-    date: new Date(2024, 11, 10),
-    profileUrl: "https://via.placeholder.com/150",
-    employeeId: "1",
-    employeeName: "김태완",
-    department: "개발팀",
-    leaveType: "full",
-    status: "used",
-    description: "개인 사유",
-    requestDate: new Date(2024, 11, 1),
-    approver: "이상철",
-    approvedDate: new Date(2024, 11, 2),
-  },
-  {
-    id: "2",
-    title: "김민지",
-    date: new Date(2024, 11, 10),
-    profileUrl: "https://via.placeholder.com/150",
-    employeeId: "2",
-    employeeName: "김민지",
-    department: "개발팀",
-    leaveType: "full",
-    status: "used",
-    description: "연차 사용",
-    requestDate: new Date(2024, 11, 1),
-    approver: "이상철",
-    approvedDate: new Date(2024, 11, 2),
-  },
-  {
-    id: "3",
-    title: "우인우",
-    date: new Date(2024, 11, 10),
-    profileUrl: "https://via.placeholder.com/150",
-    employeeId: "3",
-    employeeName: "우인우",
-    department: "개발팀",
-    leaveType: "morning",
-    status: "used",
-    description: "병원 진료",
-    requestDate: new Date(2024, 11, 1),
-    approver: "이상철",
-    approvedDate: new Date(2024, 11, 2),
-  },
-  {
-    id: "4",
-    title: "김태완",
-    date: new Date(2024, 11, 20),
-    profileUrl: "https://via.placeholder.com/150",
-    employeeId: "4",
-    employeeName: "김태완",
-    department: "개발팀",
-    leaveType: "afternoon",
-    status: "scheduled",
-    description: "개인 일정",
-    requestDate: new Date(2024, 11, 15),
-    approver: "이상철",
-    approvedDate: new Date(2024, 11, 16),
-  },
-  {
-    id: "5",
-    title: "박지성",
-    date: new Date(2024, 11, 20),
-    profileUrl: "https://via.placeholder.com/150",
-    employeeId: "5",
-    employeeName: "박지성",
-    department: "개발팀",
-    leaveType: "full",
-    status: "scheduled",
-    description: "가족 행사",
-    requestDate: new Date(2024, 11, 15),
-  },
-  {
-    id: "6",
-    title: "김태완",
-    date: new Date(2024, 11, 22),
-    profileUrl: "https://via.placeholder.com/150",
-    employeeId: "6",
-    employeeName: "김태완",
-    department: "개발팀",
-    leaveType: "full",
-    status: "pending",
-    description: "연말 휴가",
-    requestDate: new Date(2024, 11, 18),
-  },
-  {
-    id: "7",
-    title: "이민정",
-    date: new Date(2024, 11, 22),
-    profileUrl: "https://via.placeholder.com/150",
-    employeeId: "7",
-    employeeName: "이민정",
-    department: "개발팀",
-    leaveType: "morning",
-    status: "pending",
-    description: "병원 검진",
-    requestDate: new Date(2024, 11, 18),
-  },
-  {
-    id: "8",
-    title: "손흥민",
-    date: new Date(2024, 11, 15),
-    profileUrl: "https://via.placeholder.com/150",
-    employeeId: "8",
-    employeeName: "손흥민",
-    department: "개발팀",
-    leaveType: "afternoon",
-    status: "scheduled",
-    description: "개인 사유",
-    requestDate: new Date(2024, 11, 10),
-    approver: "이상철",
-    approvedDate: new Date(2024, 11, 11),
-  },
-];
+// 서버에서 데이터를 가져오는 loader 함수
+export async function loader({ request }: LoaderFunctionArgs) {
+  const url = new URL(request.url);
+  const dateParam = url.searchParams.get("date");
+  const baseDate = dateParam ? new Date(dateParam) : new Date();
 
-const chartData = [
-  { label: "출근", value: 16, color: "#2563eb" },
-  { label: "연차", value: 2, color: "#2563eb" },
-  { label: "오전", value: 1, color: "#2563eb" },
-  { label: "오후", value: 1, color: "#2563eb" },
-  { label: "기타", value: 0, color: "#2563eb" },
-];
+  // 현재 달의 이전 달 1일부터
+  const startDate = new Date(baseDate.getFullYear(), baseDate.getMonth() - 1, 1);
+  // 현재 달의 다음 달 말일까지
+  const endDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + 2, 0);
+
+  const params = {
+    startDate: startDate.toISOString().split("T")[0],
+    endDate: endDate.toISOString().split("T")[0],
+  };
+
+  const [leaves, birthdays, holidays] = await Promise.all([
+    getDashboardLeaves(request, params),
+    getDashboardBirthdays(request, params),
+    getDashboardHolidays(request, params),
+  ]);
+
+  // API 응답을 Calendar 컴포넌트의 이벤트 형식으로 변환
+  const events: CalendarEvent[] = [
+    ...holidays?.map((holiday: DashboardHoliday) => ({
+      id: `holiday-${holiday.date}`,
+      title: holiday.name,
+      date: new Date(holiday.date),
+      status: "holiday" as LeaveStatus,
+      isHoliday: true,
+    })),
+    ...(birthdays?.map(
+      (birthday: DashboardBirthday) => {
+        const currentYear = baseDate.getFullYear();
+        const [month, day] = birthday.birth.split("-").map(Number);
+        const birthDate = new Date(currentYear, month - 1, day);
+
+        return {
+          id: `birthday-${birthday.id}`,
+          title: `${birthday.name} 생일`,
+          date: birthDate,
+          profileUrl: birthday.thumbnailPath || "",
+          employeeName: birthday.name,
+          department: birthday.department.name,
+          status: "holiday" as LeaveStatus,
+          isBirthday: true,
+        };
+      },
+      ...leaves.map((leave: DashboardLeave) => ({
+        id: leave.leave.id.toString(),
+        title: leave.requester.name,
+        date: new Date(leave.leave.startedAt),
+        profileUrl: leave.requester.thumbnailPath || "",
+        employeeId: leave.requester.id.toString(),
+        employeeName: leave.requester.name,
+        department: leave.requester.departmentId.toString(),
+        leaveType: leave.leave.type as LeaveType,
+        status: "scheduled" as LeaveStatus,
+        description: "",
+        requestDate: new Date(leave.leave.startedAt),
+      }))
+    ) || []),
+  ];
+
+  const totalEmployees = 20;
+
+  // 차트 데이터 계산
+  const leaveStats = leaves.reduce(
+    (acc, leave) => {
+      const type = leave.leave.type;
+      if (type === "full") acc.annual++;
+      else if (type === "morning") acc.morning++;
+      else if (type === "afternoon") acc.afternoon++;
+      return acc;
+    },
+    {
+      annual: 0,
+      morning: 0,
+      afternoon: 0,
+    }
+  );
+
+  const chartData: BarChartData[] = [
+    {
+      label: "출근",
+      value: totalEmployees - (leaveStats.annual + leaveStats.morning + leaveStats.afternoon),
+    },
+    {
+      label: "연차",
+      value: leaveStats.annual,
+    },
+    {
+      label: "오전",
+      value: leaveStats.morning,
+    },
+    {
+      label: "오후",
+      value: leaveStats.afternoon,
+    },
+    {
+      label: "기타",
+      value: 0,
+    },
+  ];
+
+  return json({ events, chartData, totalEmployees: 20 });
+}
+
 export default function Index() {
-  const { events } = useEvents(INITIAL_EVENTS);
+  const { chartData, totalEmployees } = useLoaderData<typeof loader>();
+  const events = useCalendarEvents();
+
   const [filters, setFilters] = useState({
     showUsed: true,
     showScheduled: true,
@@ -147,14 +146,12 @@ export default function Index() {
     }));
   };
 
-  const totalEmployees = 20;
-
   return (
     <div className="mx-auto sm:px-4">
       <Widget>
         <div className="flex gap-4 flex-col xl:flex-row">
           <div className="flex-1">
-            <h2 className="text-base  flex items-center gap-2">
+            <h2 className="text-base flex items-center gap-2">
               <CalendarIcon />
               캘린더
             </h2>
@@ -174,9 +171,9 @@ export default function Index() {
                   <ChartIcon />
                   현황
                 </h2>
-                <span className="text-sm  text-gray-600">{totalEmployees}명</span>
+                <span className="text-sm text-gray-600">{totalEmployees}명</span>
               </div>
-              <div className="h-[150px] sm:h-[200px] ">
+              <div className="h-[150px] sm:h-[200px]">
                 <BarChart data={chartData} />
               </div>
             </div>

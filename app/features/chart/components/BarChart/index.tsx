@@ -1,7 +1,6 @@
-interface BarChartData {
+export interface BarChartData {
   label: string;
   value: number;
-  color: string;
 }
 
 interface BarChartProps {
@@ -12,7 +11,6 @@ interface BarChartProps {
 export function BarChart({ data, maxValue }: BarChartProps) {
   const chartTotalValue = maxValue || data.reduce((sum, item) => sum + item.value, 0);
 
-  console.log(data);
   return (
     <div className="w-full h-full">
       <div className="relative flex items-end gap-4  p-4 h-full">

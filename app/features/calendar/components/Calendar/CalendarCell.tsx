@@ -42,9 +42,9 @@ export function CalendarCell({ day, events = [], isWeekend }: CalendarCellProps)
         >
           {day.formattedDate}
         </span>
-        <div className="hidden lg:flex mt-1 gap-1.5 xl:px-1 flex-wrap">
+        <div className="hidden lg:flex mt-1 gap-1.5 xl:px-1 flex-wrap flex-col">
           {dayEvents.map((event) => (
-            <EventItem key={event.id} event={event} />
+            <EventItem key={event.id} event={event} isOtherMonth={!day.isCurrentMonth} />
           ))}
         </div>
         {dayEvents.length > 0 && (
