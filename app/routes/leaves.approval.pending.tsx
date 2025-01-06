@@ -2,14 +2,12 @@ import { json, redirect, type LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData, useSearchParams, useSubmit } from "@remix-run/react";
 import { useState } from "react";
 import type { GetLeavesParams, LeaveDocument } from "~/entities/leave/model";
-import { ProfileCell } from "~/features/datatable/components/cells/ProfileCell";
 import { DataTable } from "~/features/datatable/components/DataTable";
-import { ColumnDef, SearchField } from "~/features/datatable/types/datatable";
 import { getLeaves } from "~/features/leave/api/leave.server";
 import { LeaveApprovalCard } from "~/features/leave/components/LeaveApprovalCard";
 import { LeaveApprovalModal } from "~/features/leave/components/LeaveApprovalModal";
+import { pendingColumns, searchFields } from "~/features/leave/LeaveTable/pendingColumns";
 import { CheckIcon } from "~/shared/ui/icons/CheckIcon";
-import { documentColumns, searchFields } from "~/features/leave/LeaveTable/documentColumns";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
@@ -67,7 +65,7 @@ export default function LeaveApprovalPage() {
       />
       <DataTable
         data={documents}
-        columns={documentColumns}
+        columns={pendingColumns}
         mobileCard={LeaveApprovalCard}
         searchFields={searchFields}
         onSearch={(values) => {
@@ -98,6 +96,7 @@ export default function LeaveApprovalPage() {
           setIsModalOpen(true);
         }}
         enableSearch
+        enableSelection
         toolbarButtons={[
           {
             label: "일괄승인",
