@@ -8,8 +8,14 @@ import { RemixBrowser } from "@remix-run/react";
 import { startTransition } from "react";
 import { hydrateRoot } from "react-dom/client";
 
-// 원본 fetch 저장
-const originalFetch = window.fetch;
+// 서비스 워커 등록 해제
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function (registrations) {
+    for (let registration of registrations) {
+      registration.unregister();
+    }
+  });
+}
 
 startTransition(() => {
   hydrateRoot(document, <RemixBrowser />);
