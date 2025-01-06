@@ -65,6 +65,7 @@ export interface GetLeavesParams {
   startDate?: string;
   endDate?: string;
   applicant?: string;
+  processDate?: string;
   approvalStatus?: "pending" | "approved" | "rejected";
   scope?: "self" | "all";
 }

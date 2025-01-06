@@ -2,6 +2,8 @@ import type { ColumnDef } from "~/features/datatable/types/datatable";
 import { ProfileCell } from "~/features/datatable/components/cells/ProfileCell";
 import type { SearchField } from "~/features/datatable/types/datatable";
 import type { LeaveDocument } from "~/entities/leave/model";
+import { ApprovalStatusBadge } from "~/features/approval/components/ApprovalStatusBadge";
+import { LEAVE_TYPE_OPTIONS } from "~/shared/constants/options";
 
 export const searchFields: SearchField[] = [
   {
@@ -12,20 +14,21 @@ export const searchFields: SearchField[] = [
     width: "200px",
   },
   {
-    id: "scope",
+    id: "type",
     type: "select",
-    label: "결재 구분",
-    options: [
-      { value: "self", label: "내 승인대기" },
-      { value: "all", label: "결재선 전체" },
-    ],
+    label: "휴가 종류",
+    options: LEAVE_TYPE_OPTIONS,
     width: "150px",
-    defaultValue: "self",
-    showAllOption: false,
+  },
+  {
+    id: "processDate",
+    type: "daterange",
+    label: "처리일자",
+    width: "300px",
   },
 ];
 
-export const documentColumns: ColumnDef<LeaveDocument>[] = [
+export const completedColumns: ColumnDef<LeaveDocument>[] = [
   {
     id: "employeeName",
     header: "신청자",
@@ -50,17 +53,35 @@ export const documentColumns: ColumnDef<LeaveDocument>[] = [
     ),
   },
   {
+    id: "status",
+    header: "상태",
+    accessorKey: "approvals.status",
+    cell: ({ row }) => (
+      <ApprovalStatusBadge status={row.approvals[row.approvals.length - 1].status} />
+    ),
+  },
+  {
     id: "approver",
     header: "결재자",
     accessorKey: "approvals",
     cell: ({ row }) => {
-      const currentApprover = row.approvals.find((a) => a.status === "pending");
-      return currentApprover?.name || "-";
+      const lastApprover = row.approvals[row.approvals.length - 1];
+      return lastApprover?.name || "-";
     },
   },
   {
     id: "requestDate",
     header: "신청일",
     accessorKey: "submittedAt",
+  },
+  {
+    id: "approvalDate",
+    header: "결재일",
+    accessorKey: "approvals",
+    cell: ({ row }) => {
+      const lastApproval = row.approvals[row.approvals.length - 1];
+      // return lastApproval?.updatedAt || "-";
+      return "-";
+    },
   },
 ];
