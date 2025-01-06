@@ -1,7 +1,9 @@
 import { FC } from "react";
 import { IconProps } from "~/shared/ui/icons/types";
-
 import { HomeIcon, HouseboatIcon, ProfileIcon, TaskIcon } from "~/shared/ui/icons";
+
+const BASE_URL = process.env.NODE_ENV === "production" ? "https://d-site-rsin.rsteam.co.kr" : "";
+
 export interface MenuItem {
   icon: FC<IconProps> | string;
   label: string;
@@ -21,7 +23,7 @@ export const MENU_GROUPS: MenuGroup[] = [
       {
         icon: HomeIcon,
         label: "홈",
-        path: "/",
+        path: `${BASE_URL}/`,
       },
     ],
   },
@@ -31,22 +33,22 @@ export const MENU_GROUPS: MenuGroup[] = [
       {
         icon: HouseboatIcon,
         label: "연차 현황",
-        path: "/leaves/management/summary",
+        path: `${BASE_URL}/leaves/management/summary`,
       },
       {
         icon: TaskIcon,
         label: "결재 내역",
-        path: "/leaves/approval/pending",
+        path: `${BASE_URL}/leaves/approval/pending`,
         children: [
           {
             icon: "/svg/pending.svg",
             label: "결재 대기",
-            path: "/leaves/approval/pending",
+            path: `${BASE_URL}/leaves/approval/pending`,
           },
           {
             icon: "/svg/completed.svg",
             label: "결재 완료",
-            path: "/leaves/approval/completed",
+            path: `${BASE_URL}/leaves/approval/completed`,
           },
         ],
       },
@@ -58,7 +60,7 @@ export const MENU_GROUPS: MenuGroup[] = [
       {
         icon: ProfileIcon,
         label: "팀원 관리",
-        path: "/team/management/list",
+        path: `${BASE_URL}/team/management/list`,
         children: [],
       },
     ],
