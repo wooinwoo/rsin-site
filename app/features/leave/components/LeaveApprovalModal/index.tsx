@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useFetcher } from "@remix-run/react";
 import type { LeaveDocument, LeaveDetail } from "~/entities/leave/model";
 import { Modal } from "~/shared/ui/components/Modal";
 import { Button } from "~/shared/ui/components/Button";
@@ -28,7 +30,47 @@ export function LeaveApprovalModal({
   selectedLeave,
   isLoading,
 }: LeaveApprovalModalProps) {
-  if (isLoading) {
+  const fetcher = useFetcher();
+  const isProcessing = fetcher.state !== "idle";
+
+  const handleApprove = () => {
+    if (!leaveDetail || !leaveDetail.approvals[0]) return;
+
+    fetcher.submit(
+      {
+        status: "approve",
+        leaveId: String(selectedLeave?.id),
+      },
+      {
+        method: "post",
+        action: "/resources/leave-approval",
+      }
+    );
+  };
+
+  const handleReject = () => {
+    if (!leaveDetail || !leaveDetail.approvals[0]) return;
+
+    fetcher.submit(
+      {
+        status: "rejected",
+        leaveId: String(selectedLeave?.id),
+      },
+      {
+        method: "post",
+        action: "/resources/leave-approval",
+      }
+    );
+  };
+
+  useEffect(() => {
+    if (fetcher.state === "idle" && fetcher.data) {
+      onClose();
+      window.location.reload(); // 목록 새로고침
+    }
+  }, [fetcher.state, fetcher.data]);
+
+  if (isLoading || fetcher.state === "submitting") {
     return (
       <Modal isOpen={isOpen} onClose={onClose} title="휴가 승인">
         <div className="flex justify-center py-8">
@@ -161,11 +203,23 @@ export function LeaveApprovalModal({
 
       {/* 버튼 그룹 */}
       <div className="flex justify-end gap-2">
-        <Button type="button" variant="outline" onClick={onReject} size="md">
-          반려
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handleReject}
+          size="md"
+          disabled={isProcessing}
+        >
+          {isProcessing ? "처리 중..." : "반려"}
         </Button>
-        <Button type="button" variant="red" onClick={onApprove} size="md">
-          승인
+        <Button
+          type="button"
+          variant="red"
+          onClick={handleApprove}
+          size="md"
+          disabled={isProcessing}
+        >
+          {isProcessing ? "처리 중..." : "승인"}
         </Button>
       </div>
     </Modal>

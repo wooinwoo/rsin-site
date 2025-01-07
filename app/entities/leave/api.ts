@@ -8,6 +8,7 @@ import type {
   CreateLeaveRequest,
   GetApproverLinesResponse,
   GetLeaveDetailResponse,
+  ApproveRequest,
 } from "./model";
 
 export const leaveApi = {
@@ -47,6 +48,22 @@ export const leaveApi = {
 
   getLeaveDetail(CookieHeader: string, documentId: number) {
     return client.get<GetLeaveDetailResponse>(`/documents/leaves/${documentId}`, {
+      headers: {
+        Cookie: CookieHeader || "",
+      },
+    });
+  },
+
+  approve(CookieHeader: string, data: ApproveRequest) {
+    return client.post("/approvals/approve", data, {
+      headers: {
+        Cookie: CookieHeader || "",
+      },
+    });
+  },
+
+  reject(CookieHeader: string, approvalId: number) {
+    return client.patch(`/approvals/${approvalId}/reject`, null, {
       headers: {
         Cookie: CookieHeader || "",
       },

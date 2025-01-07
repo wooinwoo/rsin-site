@@ -2,6 +2,7 @@ import type { ColumnDef } from "~/features/datatable/types/datatable";
 import { ProfileCell } from "~/features/datatable/components/cells/ProfileCell";
 import type { SearchField } from "~/features/datatable/types/datatable";
 import type { LeaveDocument } from "~/entities/leave/model";
+import { LEAVE_TYPE_OPTIONS } from "~/shared/constants/options";
 
 export const searchFields: SearchField[] = [
   {
@@ -38,6 +39,9 @@ export const pendingColumns: ColumnDef<LeaveDocument>[] = [
     id: "leaveType",
     header: "휴가 종류",
     accessorKey: "leave.type",
+    cell: ({ row }) => (
+      <span>{LEAVE_TYPE_OPTIONS.find((option) => option.value === row.leave.type)?.label}</span>
+    ),
   },
   {
     id: "period",

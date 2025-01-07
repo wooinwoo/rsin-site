@@ -80,6 +80,10 @@ export interface LeaveDetail {
   }>;
 }
 
+export interface ApproveRequest {
+  approvals: number[];
+}
+
 export type GetLeaveDetailResponse = LeaveDetail[];
 
 export interface GetLeavesParams {

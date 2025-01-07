@@ -16,12 +16,13 @@ export function DataTable<T extends Record<string, any>>({
   onSearch,
   enableSelection = false,
   enableSearch = false,
+  selectedRows = [], // 외부에서 받은 selectedRows 사용
+  onSelectedRowsChange, // 외부에서 받은 handler 사용
   pagination,
   onRowSelect,
   toolbarButtons,
 }: DataTableProps<T>) {
   console.log(pagination);
-  const [selectedRows, setSelectedRows] = useState<T[]>([]);
 
   const allSelected = enableSelection && data.length > 0 && selectedRows.length === data.length;
 
@@ -53,14 +54,13 @@ export function DataTable<T extends Record<string, any>>({
                     onClick={onRowClick}
                     selected={selectedRows.some((row) => row.id === item.id)}
                     onSelect={(selected) => {
-                      setSelectedRows((prev) => {
-                        if (selected) {
-                          return [...prev, item];
-                        } else {
-                          return prev.filter((row) => row.id !== item.id);
-                        }
-                      });
-                      onRowSelect?.([...selectedRows, item]);
+                      // 수정된 부분
+                      const newSelectedRows = selected
+                        ? [...selectedRows, item]
+                        : selectedRows.filter((row) => row.id !== item.id);
+
+                      onSelectedRowsChange?.(newSelectedRows);
+                      onRowSelect?.(newSelectedRows);
                     }}
                   />
                 ))}
@@ -80,7 +80,7 @@ export function DataTable<T extends Record<string, any>>({
                       enableSelection
                         ? (checked) => {
                             const newSelectedRows = checked ? data : [];
-                            setSelectedRows(newSelectedRows);
+                            onSelectedRowsChange?.(newSelectedRows);
                             onRowSelect?.(newSelectedRows);
                           }
                         : undefined
@@ -92,7 +92,7 @@ export function DataTable<T extends Record<string, any>>({
                     selectable={enableSelection}
                     selectedRows={selectedRows}
                     onRowSelect={(rows) => {
-                      setSelectedRows(rows);
+                      onSelectedRowsChange?.(rows);
                       onRowSelect?.(rows);
                     }}
                     onRowClick={onRowClick}

@@ -49,6 +49,8 @@ export interface DataTableProps<TData> {
   enableSearch?: boolean;
   pagination?: ServerPaginationOptions; // 변경
   onRowSelect?: (selectedRows: TData[]) => void;
+  selectedRows?: TData[];
+  onSelectedRowsChange?: (selectedRows: TData[]) => void;
   searchFields?: SearchField[];
   onSearch?: (params: Record<string, string>) => void;
   onRowClick?: (row: TData) => void;

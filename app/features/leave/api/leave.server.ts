@@ -27,6 +27,20 @@ export async function getLeaveDetail(request: Request, documentId: number) {
   });
 }
 
+export async function approveLeaves(request: Request, leaveIds: number[]) {
+  return withAuth(request, async (token) => {
+    const response = await leaveApi.approve(token, { approvals: leaveIds });
+    return response.data;
+  });
+}
+
+export async function rejectLeave(request: Request, leaveId: number) {
+  return withAuth(request, async (token) => {
+    const response = await leaveApi.reject(token, leaveId);
+    return response.data;
+  });
+}
+
 export async function getMyAnnual(request: Request) {
   return withAuth(request, async (token) => {
     const response = await leaveApi.getMyAnnual(token);

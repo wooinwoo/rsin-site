@@ -12,6 +12,7 @@ import { LeaveApprovalCard } from "~/features/leave/components/LeaveApprovalCard
 import { LeaveApprovalModal } from "~/features/leave/components/LeaveApprovalModal";
 import { pendingColumns, searchFields } from "~/features/leave/LeaveTable/pendingColumns";
 import { CheckIcon } from "~/shared/ui/icons/CheckIcon";
+
 type LoaderData =
   | {
       type: "list";
@@ -22,6 +23,7 @@ type LoaderData =
       type: "detail";
       detail: GetLeaveDetailResponse;
     };
+
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const documentId = url.searchParams.get("documentId");
@@ -51,11 +53,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
     page: Number(page),
     scope: scope as "self" | "all",
     type: type as "annual" | "annual_am" | "annual_pm",
+    approvalStatus: "pending",
   };
 
   try {
     const data = await getLeaves(request, params);
-    console.log("data", data.documents);
     return json({ type: "list", totalCount: data.totalCount, documents: data.documents });
   } catch (error) {
     throw json({ message: "휴가 신청 목록을 불러오는데 실패했습니다." }, { status: 500 });
@@ -67,6 +69,7 @@ export default function LeaveApprovalPage() {
   const [searchParams] = useSearchParams();
   const submit = useSubmit();
   const [selectedLeave, setSelectedLeave] = useState<LeaveDocument | null>(null);
+  const [selectedRows, setSelectedRows] = useState<LeaveDocument[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const currentPage = Number(searchParams.get("page")) || 1;
   const pageSize = Number(searchParams.get("size")) || 25;
@@ -74,9 +77,36 @@ export default function LeaveApprovalPage() {
 
   const handleRowClick = (row: LeaveDocument) => {
     setSelectedLeave(row);
-    // 상세 정보 조회
     fetcher.load(`/leaves/approval/pending?documentId=${row.id}`);
     setIsModalOpen(true);
+  };
+
+  const handleBulkApprove = () => {
+    if (selectedRows.length === 0) {
+      alert("선택된 항목이 없습니다.");
+      return;
+    }
+
+    // 선택된 문서의 ID를 사용
+    const approvalIds = selectedRows
+      .map((row) => row.id) // document의 id를 사용
+      .filter((id): id is number => id !== undefined);
+
+    if (approvalIds.length === 0) {
+      alert("승인 가능한 항목이 없습니다.");
+      return;
+    }
+
+    fetcher.submit(
+      {
+        status: "approved",
+        leaveId: JSON.stringify(approvalIds),
+      },
+      {
+        method: "post",
+        action: "/resources/leave-approval",
+      }
+    );
   };
 
   const leaveDetail = fetcher.data?.type === "detail" ? fetcher.data.detail[0] : undefined;
@@ -85,12 +115,17 @@ export default function LeaveApprovalPage() {
     <>
       <LeaveApprovalModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedLeave(null);
+        }}
         onApprove={() => {
           setIsModalOpen(false);
+          setSelectedLeave(null);
         }}
         onReject={() => {
           setIsModalOpen(false);
+          setSelectedLeave(null);
         }}
         leaveDetail={leaveDetail}
         isLoading={fetcher.state === "loading"}
@@ -110,7 +145,7 @@ export default function LeaveApprovalPage() {
               params.delete(key);
             }
           });
-          params.set("page", "1"); // 검색 시 첫 페이지로
+          params.set("page", "1");
           submit(params);
         }}
         pagination={{
@@ -124,15 +159,15 @@ export default function LeaveApprovalPage() {
             submit(params);
           },
         }}
-        onRowClick={(row) => {
-          handleRowClick(row);
-        }}
+        onRowClick={handleRowClick}
         enableSearch
         enableSelection
+        selectedRows={selectedRows}
+        onSelectedRowsChange={setSelectedRows}
         toolbarButtons={[
           {
-            label: "일괄승인",
-            onClick: () => {},
+            label: `일괄승인 ${selectedRows.length > 0 ? `(${selectedRows.length})` : ""}`,
+            onClick: handleBulkApprove,
             variant: "danger",
             icon: <CheckIcon />,
           },
