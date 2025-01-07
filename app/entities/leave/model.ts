@@ -59,6 +59,29 @@ export interface LeaveDocument {
   }>;
 }
 
+export interface LeaveDetail {
+  type: string;
+  startedAt: string;
+  endedAt: string;
+  reason: string;
+  submittedAt: string;
+  requester: {
+    id: number;
+    name: string;
+    departmentId: number;
+    position: string;
+    thumbnailPath: string;
+  };
+  approvals: Array<{
+    status: "pending" | "approved" | "rejected";
+    name: string;
+    departmentId: number;
+    position: string;
+  }>;
+}
+
+export type GetLeaveDetailResponse = LeaveDetail[];
+
 export interface GetLeavesParams {
   size?: number;
   page?: number;

@@ -60,7 +60,13 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
   };
 
   useEffect(() => {
-    if (fetcher.state === "idle" && fetcher.data) {
+    console.log("Fetcher state:", fetcher.state);
+    console.log("Fetcher data:", fetcher.data);
+
+    if (fetcher.state === "idle") {
+      if (fetcher.data) {
+        alert("휴가가 성공적으로 신청되었습니다.");
+      }
       onClose();
     }
   }, [fetcher.state, fetcher.data]);

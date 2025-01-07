@@ -20,6 +20,13 @@ export async function getLeaves(request: Request, params?: GetLeavesParams) {
   });
 }
 
+export async function getLeaveDetail(request: Request, documentId: number) {
+  return withAuth(request, async (token) => {
+    const response = await leaveApi.getLeaveDetail(token, documentId);
+    return response.data;
+  });
+}
+
 export async function getMyAnnual(request: Request) {
   return withAuth(request, async (token) => {
     const response = await leaveApi.getMyAnnual(token);

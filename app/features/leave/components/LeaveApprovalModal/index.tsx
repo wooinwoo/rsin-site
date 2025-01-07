@@ -1,35 +1,46 @@
+import type { LeaveDocument, LeaveDetail } from "~/entities/leave/model";
 import { Modal } from "~/shared/ui/components/Modal";
 import { Button } from "~/shared/ui/components/Button";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
-import { LeaveApprovalData, LeaveApprovalModalProps } from "./types";
+import {
+  DEPARTMENT_OPTIONS,
+  POSITION_OPTIONS,
+  LEAVE_TYPE_OPTIONS,
+} from "~/shared/constants/options";
+
+export interface LeaveApprovalModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onApprove: () => void;
+  onReject: () => void;
+  leaveDetail?: LeaveDetail;
+  selectedLeave?: LeaveDocument | null;
+  isLoading?: boolean;
+}
+
 export function LeaveApprovalModal({
   isOpen,
   onClose,
   onApprove,
   onReject,
+  leaveDetail,
+  selectedLeave,
+  isLoading,
 }: LeaveApprovalModalProps) {
-  // 예시 데이터
-  const data: LeaveApprovalData = {
-    applicant: {
-      name: "우인우",
-      department: "개발팀",
-      profileImage: "/images/profile.jpg",
-    },
-    appliedAt: "2024-11-06T14:08:00",
-    approvalSteps: [
-      { step: 1, approver: { name: "김태완", position: "매니저" }, status: "waiting" },
-      { step: 2, approver: { name: "이형진", position: "팀장" }, status: "pending" },
-      { step: 3, approver: { name: "김지해", position: "이사" }, status: "pending" },
-    ],
-    leaveType: "연차휴가",
-    period: {
-      startDate: "2024-11-10",
-      endDate: "2024-11-10",
-    },
-    duration: 1,
-    reason: "개인 사유로 인한 휴가 신청입니다.",
-  };
+  if (isLoading) {
+    return (
+      <Modal isOpen={isOpen} onClose={onClose} title="휴가 승인">
+        <div className="flex justify-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-2 border-red-500 border-t-transparent" />
+        </div>
+      </Modal>
+    );
+  }
+
+  if (!leaveDetail) {
+    return null;
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="휴가 승인">
@@ -38,22 +49,28 @@ export function LeaveApprovalModal({
         <div className="flex items-center justify-between mb-3">
           <span className="text-sm font-medium">신청자</span>
           <div className="text-sm text-gray-600">
-            {format(new Date(data.appliedAt), "yyyy.MM.dd(EEE) HH:mm", { locale: ko })}
+            {format(new Date(leaveDetail.submittedAt), "yyyy.MM.dd(EEE) HH:mm", { locale: ko })}
           </div>
         </div>
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-full bg-gray-200 overflow-hidden">
-            {data.applicant.profileImage && (
+            {leaveDetail.requester.thumbnailPath && (
               <img
-                src={data.applicant.profileImage}
-                alt={data.applicant.name}
+                src={leaveDetail.requester.thumbnailPath}
+                alt={leaveDetail.requester.name}
                 className="w-full h-full object-cover"
               />
             )}
           </div>
           <div>
-            <div className="">{data.applicant.name}</div>
-            <div className="text-sm text-gray-600">{data.applicant.department}</div>
+            <div className="">{leaveDetail.requester.name}</div>
+            <div className="text-sm text-gray-600">
+              {
+                DEPARTMENT_OPTIONS.find(
+                  (option) => option.value === leaveDetail.requester.departmentId
+                )?.label
+              }
+            </div>
           </div>
         </div>
       </div>
@@ -62,48 +79,42 @@ export function LeaveApprovalModal({
       <div className="mb-6">
         <div className="mb-3 text-sm font-medium">승인단계</div>
         <div className="space-y-2 mb-6">
-          {data.approvalSteps.map((step) => (
+          {leaveDetail.approvals.map((approval, index) => (
             <div
-              key={step.step}
+              key={index}
               className={`
-          rounded-lg p-4 flex items-center justify-between
-          ${
-            step.status === "waiting"
-              ? "border border-gray-200"
-              : "border border-gray-100 bg-gray-50" // 비활성화 시 배경색과 테두리 색상 변경
-          }
-        `}
+                rounded-lg p-4 flex items-center justify-between
+                ${
+                  approval.status === "pending"
+                    ? "border border-gray-200"
+                    : "border border-gray-100 bg-gray-50"
+                }
+              `}
             >
               <div className="flex items-center gap-3">
                 <div
                   className={`
-              w-6 h-6 rounded-full flex items-center justify-center text-sm
-              ${
-                step.status === "waiting" ? "bg-red-500 text-white" : "bg-gray-300 text-gray-500" // 비활성화 시 더 어두운 회색
-              }
-            `}
+                    w-6 h-6 rounded-full flex items-center justify-center text-sm
+                    ${
+                      approval.status === "pending"
+                        ? "bg-red-500 text-white"
+                        : "bg-gray-300 text-gray-500"
+                    }
+                  `}
                 >
-                  {step.step}
+                  {index + 1}
                 </div>
-                <div
-                  className={`
-              ${
-                step.status === "waiting" ? "text-gray-900" : "text-gray-400" // 비활성화 시 더 밝은 텍스트
-              }
-            `}
-                >
-                  {step.approver.name} {step.approver.position}
+                <div className={approval.status === "pending" ? "text-gray-900" : "text-gray-400"}>
+                  {approval.name}{" "}
+                  {POSITION_OPTIONS.find((option) => option.value === approval.position)?.label}
                 </div>
               </div>
               <div
-                className={`
-            text-sm
-            ${
-              step.status === "waiting" ? "text-red-500" : "text-gray-400" // 비활성화 시 더 밝은 텍스트
-            }
-          `}
+                className={`text-sm ${
+                  approval.status === "pending" ? "text-red-500" : "text-gray-400"
+                }`}
               >
-                {step.status === "waiting" ? "승인대기" : "대기중"}
+                {approval.status === "pending" ? "승인대기" : "대기중"}
               </div>
             </div>
           ))}
@@ -116,15 +127,25 @@ export function LeaveApprovalModal({
         <div className="border rounded-lg p-4">
           <div className="flex justify-between items-center">
             <div>
-              <div className=" mb-2">{data.leaveType}</div>
+              <div className="mb-2">
+                {LEAVE_TYPE_OPTIONS.find((option) => option.value === leaveDetail.type)?.label}
+              </div>
               <div className="text-sm text-gray-600">
-                {format(new Date(data.period.startDate), "yyyy.MM.dd(EEE)", { locale: ko })}
-                {data.period.startDate !== data.period.endDate &&
-                  ` - ${format(new Date(data.period.endDate), "yyyy.MM.dd(EEE)", { locale: ko })}`}
+                {format(new Date(leaveDetail.startedAt), "yyyy.MM.dd(EEE)", { locale: ko })}
+                {leaveDetail.startedAt !== leaveDetail.endedAt &&
+                  ` - ${format(new Date(leaveDetail.endedAt), "yyyy.MM.dd(EEE)", { locale: ko })}`}
               </div>
             </div>
             <div className="text-sm flex items-center gap-1">
-              <span className="text-red-500 text-xl ">{data.duration}</span>일
+              <span className="text-red-500 text-xl">
+                {Math.ceil(
+                  (new Date(leaveDetail.endedAt).getTime() -
+                    new Date(leaveDetail.startedAt).getTime()) /
+                    (1000 * 60 * 60 * 24) +
+                    1
+                )}
+              </span>
+              일
             </div>
           </div>
         </div>
@@ -132,9 +153,9 @@ export function LeaveApprovalModal({
 
       {/* 사유 */}
       <div className="mb-6">
-        <div className=" mb-3 text-sm font-medium">사유</div>
+        <div className="mb-3 text-sm font-medium">사유</div>
         <div className="border rounded-lg p-4">
-          <div className="text-sm text-gray-600 whitespace-pre-wrap">{data.reason}</div>
+          <div className="text-sm text-gray-600 whitespace-pre-wrap">{leaveDetail.reason}</div>
         </div>
       </div>
 

@@ -7,6 +7,7 @@ import type {
   GetMyAnnualResponse,
   CreateLeaveRequest,
   GetApproverLinesResponse,
+  GetLeaveDetailResponse,
 } from "./model";
 
 export const leaveApi = {
@@ -38,6 +39,14 @@ export const leaveApi = {
     if (params?.approvalStatus) searchParams.append("approvalStatus", params.approvalStatus);
 
     return client.get<GetLeavesResponse>(`/documents/leaves?${searchParams.toString()}`, {
+      headers: {
+        Cookie: CookieHeader || "",
+      },
+    });
+  },
+
+  getLeaveDetail(CookieHeader: string, documentId: number) {
+    return client.get<GetLeaveDetailResponse>(`/documents/leaves/${documentId}`, {
       headers: {
         Cookie: CookieHeader || "",
       },

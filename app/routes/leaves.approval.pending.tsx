@@ -1,20 +1,40 @@
 import { json, redirect, type LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useSearchParams, useSubmit } from "@remix-run/react";
+import { useFetcher, useLoaderData, useSearchParams, useSubmit } from "@remix-run/react";
 import { useState } from "react";
-import type { GetLeavesParams, LeaveDocument } from "~/entities/leave/model";
+import type {
+  GetLeavesParams,
+  LeaveDocument,
+  GetLeaveDetailResponse,
+} from "~/entities/leave/model";
 import { DataTable } from "~/features/datatable/components/DataTable";
-import { getLeaves } from "~/features/leave/api/leave.server";
+import { getLeaveDetail, getLeaves } from "~/features/leave/api/leave.server";
 import { LeaveApprovalCard } from "~/features/leave/components/LeaveApprovalCard";
 import { LeaveApprovalModal } from "~/features/leave/components/LeaveApprovalModal";
 import { pendingColumns, searchFields } from "~/features/leave/LeaveTable/pendingColumns";
 import { CheckIcon } from "~/shared/ui/icons/CheckIcon";
-
+type LoaderData =
+  | {
+      type: "list";
+      totalCount: number;
+      documents: LeaveDocument[];
+    }
+  | {
+      type: "detail";
+      detail: GetLeaveDetailResponse;
+    };
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
+  const documentId = url.searchParams.get("documentId");
   const page = url.searchParams.get("page");
   const size = url.searchParams.get("size");
   const scope = url.searchParams.get("scope");
   const type = url.searchParams.get("type");
+
+  if (documentId) {
+    // 상세 정보 조회
+    const detail = await getLeaveDetail(request, Number(documentId));
+    return json({ type: "detail", detail });
+  }
 
   if (!page || !size || !scope || !type) {
     const newUrl = new URL(request.url);
@@ -36,21 +56,30 @@ export async function loader({ request }: LoaderFunctionArgs) {
   try {
     const data = await getLeaves(request, params);
     console.log("data", data.documents);
-    return json(data);
+    return json({ type: "list", totalCount: data.totalCount, documents: data.documents });
   } catch (error) {
     throw json({ message: "휴가 신청 목록을 불러오는데 실패했습니다." }, { status: 500 });
   }
 }
 
 export default function LeaveApprovalPage() {
-  const { totalCount, documents } = useLoaderData<typeof loader>();
+  const loaderData = useLoaderData<LoaderData>();
   const [searchParams] = useSearchParams();
   const submit = useSubmit();
   const [selectedLeave, setSelectedLeave] = useState<LeaveDocument | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const currentPage = Number(searchParams.get("page")) || 1;
   const pageSize = Number(searchParams.get("size")) || 25;
+  const fetcher = useFetcher<LoaderData>();
+
+  const handleRowClick = (row: LeaveDocument) => {
+    setSelectedLeave(row);
+    // 상세 정보 조회
+    fetcher.load(`/leaves/approval/pending?documentId=${row.id}`);
+    setIsModalOpen(true);
+  };
+
+  const leaveDetail = fetcher.data?.type === "detail" ? fetcher.data.detail[0] : undefined;
 
   return (
     <>
@@ -63,9 +92,12 @@ export default function LeaveApprovalPage() {
         onReject={() => {
           setIsModalOpen(false);
         }}
+        leaveDetail={leaveDetail}
+        isLoading={fetcher.state === "loading"}
+        selectedLeave={selectedLeave}
       />
       <DataTable
-        data={documents}
+        data={loaderData.type === "list" ? loaderData.documents : []}
         columns={pendingColumns}
         mobileCard={LeaveApprovalCard}
         searchFields={searchFields}
@@ -84,7 +116,7 @@ export default function LeaveApprovalPage() {
         pagination={{
           currentPage,
           pageSize,
-          totalItems: totalCount,
+          totalItems: loaderData.type === "list" ? loaderData.totalCount : 0,
           onPageChange: (page, size) => {
             const params = new URLSearchParams(searchParams);
             params.set("page", page.toString());
@@ -93,8 +125,7 @@ export default function LeaveApprovalPage() {
           },
         }}
         onRowClick={(row) => {
-          setSelectedLeave(row);
-          setIsModalOpen(true);
+          handleRowClick(row);
         }}
         enableSearch
         enableSelection
