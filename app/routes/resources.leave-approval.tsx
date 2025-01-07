@@ -7,12 +7,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const action = formData.get("action");
 
   try {
-    const leaveId = Number(formData.get("leaveId"));
     const status = formData.get("status") as "approve" | "reject" | "approved";
     // 일괄 승인 처리
     console.log("#############");
-    console.log("leaveId : ", leaveId);
-    console.log("status : ,", status);
     if (status === "approved") {
       const approvalIdsString = formData.get("approvalIds") as string;
       const approvalIds = JSON.parse(approvalIdsString) as number[];
@@ -22,10 +19,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
 
     // 개별 승인/거절 처리
-
+    const leaveId = Number(formData.get("leaveId"));
+    console.log("leaveId : ", leaveId);
     if (status === "approve") {
-    } else if (status === "reject") {
       await approveLeaves(request, [leaveId]);
+    } else if (status === "reject") {
       await rejectLeave(request, leaveId);
     }
 

@@ -53,7 +53,7 @@ export function LeaveApprovalModal({
 
     fetcher.submit(
       {
-        status: "rejected",
+        status: "reject",
         leaveId: String(selectedLeave?.id),
       },
       {

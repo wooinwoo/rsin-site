@@ -100,7 +100,7 @@ export default function LeaveApprovalPage() {
     fetcher.submit(
       {
         status: "approved",
-        leaveId: JSON.stringify(approvalIds),
+        approvalIds: JSON.stringify(approvalIds),
       },
       {
         method: "post",
