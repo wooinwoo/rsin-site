@@ -22,6 +22,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     if (!size) newUrl.searchParams.set("size", "25");
     if (!scope) newUrl.searchParams.set("scope", "all");
     if (!type) newUrl.searchParams.set("type", "annual");
+    newUrl.searchParams.append("approvalStatus", "approved");
+    newUrl.searchParams.append("approvalStatus", "rejected");
     return redirect(newUrl.toString());
   }
 
