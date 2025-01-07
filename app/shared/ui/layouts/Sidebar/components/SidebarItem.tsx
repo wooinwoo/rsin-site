@@ -45,9 +45,7 @@ export function SidebarItem({
   return (
     <li data-sidebar="menu-item" className="group/menu-item relative">
       <NavLink
-        to={path}
-        onClick={handleClick}
-        data-sidebar="menu-button"
+        to={children?.length ? children[0].path : path}
         className={`
           relative flex w-full items-center gap-2 rounded-md p-2 
           text-left outline-none
