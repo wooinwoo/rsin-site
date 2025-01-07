@@ -24,15 +24,6 @@ export default function handleRequest(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
-  if (process.env.NODE_ENV === "production" && new URL(request.url).protocol === "http:") {
-    const httpsUrl = request.url.replace("http:", "https:");
-    return new Response(null, {
-      status: 301,
-      headers: {
-        Location: httpsUrl,
-      },
-    });
-  }
   return isbot(request.headers.get("user-agent") || "")
     ? handleBotRequest(request, responseStatusCode, responseHeaders, remixContext)
     : handleBrowserRequest(request, responseStatusCode, responseHeaders, remixContext);
