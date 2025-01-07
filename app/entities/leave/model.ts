@@ -75,3 +75,37 @@ export interface GetLeavesResponse {
   totalCount: number;
   documents: LeaveDocument[];
 }
+
+export interface MyAnnual {
+  total: number;
+  used: number;
+  remain: number;
+}
+
+export type GetMyAnnualResponse = MyAnnual;
+
+export interface CreateLeaveRequest {
+  document: {
+    type: "leave";
+  };
+  documentLeave: {
+    type: "annual";
+    startedAt: string;
+    endedAt: string;
+    reason: string;
+  };
+}
+
+export interface Department {
+  id: number;
+  name: string;
+}
+
+export interface Approver {
+  id: number;
+  name: string;
+  position: string;
+  department: Department;
+}
+
+export type GetApproverLinesResponse = Approver[];

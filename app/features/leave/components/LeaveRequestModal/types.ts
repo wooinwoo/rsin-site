@@ -1,18 +1,17 @@
+import type { MyAnnual, Approver } from "~/entities/leave/model";
+
+export interface LeaveModalResponse {
+  annualStatus: MyAnnual[];
+  approvers: Approver[];
+}
+
 export interface LeaveRequestModalProps {
-  /**
-   * 모달의 열림/닫힘 상태
-   */
   isOpen: boolean;
-
-  /**
-   * 모달이 닫힐 때 호출되는 함수
-   */
   onClose: () => void;
-
-  /**
-   * 휴가 신청 완료 시 호출되는 함수
-   */
-  onSubmit?: (data: LeaveRequestData) => void | Promise<void>;
+  initialData: {
+    annual: MyAnnual[] | undefined;
+    approverLines: Approver[] | undefined;
+  };
 }
 export interface LeaveRequestData {
   /**

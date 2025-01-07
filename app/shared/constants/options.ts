@@ -32,10 +32,11 @@ export const MBTI_OPTIONS = [
   { value: "ENTJ", label: "ENTJ" },
 ];
 
-export const LEAVE_TYPE_OPTIONS = [
+export const LEAVE_TYPE_OPTIONS: {
+  value: "annual" | "annual_am" | "annual_pm";
+  label: string;
+}[] = [
   { value: "annual", label: "연차" },
-  { value: "morning_half", label: "오전 반차" },
-  { value: "afternoon_half", label: "오후 반차" },
-  { value: "sick", label: "병가" },
-  { value: "military", label: "예비군" },
+  { value: "annual_am", label: "오전 반차" },
+  { value: "annual_pm", label: "오후 반차" },
 ];

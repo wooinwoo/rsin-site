@@ -4,6 +4,9 @@ import type {
   GetEmployeeAnnualResponse,
   GetLeavesParams,
   GetLeavesResponse,
+  GetMyAnnualResponse,
+  CreateLeaveRequest,
+  GetApproverLinesResponse,
 } from "./model";
 
 export const leaveApi = {
@@ -35,6 +38,30 @@ export const leaveApi = {
     if (params?.approvalStatus) searchParams.append("approvalStatus", params.approvalStatus);
 
     return client.get<GetLeavesResponse>(`/documents/leaves?${searchParams.toString()}`, {
+      headers: {
+        Cookie: CookieHeader || "",
+      },
+    });
+  },
+
+  getMyAnnual(CookieHeader?: string) {
+    return client.get<GetMyAnnualResponse>("/leaves/annual/self", {
+      headers: {
+        Cookie: CookieHeader || "",
+      },
+    });
+  },
+
+  createLeave(CookieHeader: string, data: CreateLeaveRequest) {
+    return client.post("/leaves", data, {
+      headers: {
+        Cookie: CookieHeader || "",
+      },
+    });
+  },
+
+  getApproverLines(CookieHeader?: string) {
+    return client.get<GetApproverLinesResponse>("/approvers/lines/self", {
       headers: {
         Cookie: CookieHeader || "",
       },

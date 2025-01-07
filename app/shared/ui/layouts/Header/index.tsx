@@ -4,9 +4,10 @@ import { Button } from "~/shared/ui/components/Button";
 import { Breadcrumb } from "~/shared/ui/layouts/Header/components/Breadcrumb";
 import { ReplayIcon } from "~/shared/ui/icons";
 import { BellIcon } from "~/shared/ui/icons/BellIcon";
+import { useFetcher } from "@remix-run/react";
 import { BellActiveIcon } from "~/shared/ui/icons/BellActiveIcon";
 import { NotificationDropdown } from "~/shared/ui/layouts/Header/components/NotificationDropdown";
-
+import { LeaveModalResponse } from "~/features/leave/components/LeaveRequestModal/types";
 export function Header() {
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
@@ -31,9 +32,16 @@ export function Header() {
   const hours = String(now.getHours()).padStart(2, "0");
   const minutes = String(now.getMinutes()).padStart(2, "0");
 
+  const annualFetcher = useFetcher<LeaveModalResponse>();
   const loadTime = `${year}.${month}.${day} (${weekday}) ${hours}:${minutes}`;
   const handleRefresh = () => {
     window.location.reload();
+  };
+
+  const handleLeaveModalOpen = () => {
+    // 모달 열기 전에 데이터 미리 조회
+    annualFetcher.load("/resources/leave-modal");
+    setIsLeaveModalOpen(true);
   };
 
   const handleNotificationClick = (e: React.MouseEvent) => {
@@ -80,11 +88,18 @@ export function Header() {
             />
           )}
         </div>
-        <Button variant="ghost" onClick={() => setIsLeaveModalOpen(true)}>
+        <Button variant="ghost" onClick={() => handleLeaveModalOpen()}>
           휴가신청
         </Button>
       </div>
-      <LeaveRequestModal isOpen={isLeaveModalOpen} onClose={() => setIsLeaveModalOpen(false)} />
+      <LeaveRequestModal
+        isOpen={isLeaveModalOpen}
+        onClose={() => setIsLeaveModalOpen(false)}
+        initialData={{
+          annual: annualFetcher.data?.annualStatus,
+          approverLines: annualFetcher.data?.approvers,
+        }}
+      />
     </header>
   );
 }
