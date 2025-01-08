@@ -6,7 +6,7 @@ import { DataTableToolbar } from "./DataTableToolbar";
 import { DataTableProps } from "../../types/datatable";
 import { Widget } from "~/shared/ui/widgets/widget";
 import { DataTableSearch } from "./DataTableSearch";
-
+import { DataTableEmptyState } from "./DataTableEmptyState";
 export function DataTable<T extends Record<string, any>>({
   data,
   columns,
@@ -47,23 +47,31 @@ export function DataTable<T extends Record<string, any>>({
           {MobileCardComponent && (
             <div className="block sm:hidden">
               <div className="divide-y divide-gray-200">
-                {data.map((item, index) => (
-                  <MobileCardComponent
-                    key={index}
-                    item={item}
-                    onClick={onRowClick}
-                    selected={selectedRows.some((row) => row.id === item.id)}
-                    onSelect={(selected) => {
-                      // 수정된 부분
-                      const newSelectedRows = selected
-                        ? [...selectedRows, item]
-                        : selectedRows.filter((row) => row.id !== item.id);
+                {data.length > 0 ? (
+                  data.map((item, index) => (
+                    <MobileCardComponent
+                      key={index}
+                      item={item}
+                      onClick={onRowClick}
+                      selected={selectedRows.some((row) => row.id === item.id)}
+                      onSelect={(selected) => {
+                        // 수정된 부분
+                        const newSelectedRows = selected
+                          ? [...selectedRows, item]
+                          : selectedRows.filter((row) => row.id !== item.id);
 
-                      onSelectedRowsChange?.(newSelectedRows);
-                      onRowSelect?.(newSelectedRows);
-                    }}
+                        onSelectedRowsChange?.(newSelectedRows);
+                        onRowSelect?.(newSelectedRows);
+                      }}
+                    />
+                  ))
+                ) : (
+                  <DataTableEmptyState
+                    enableSelection={enableSelection}
+                    columns={columns}
+                    isMobile={true}
                   />
-                ))}
+                )}
               </div>
             </div>
           )}
@@ -86,20 +94,24 @@ export function DataTable<T extends Record<string, any>>({
                         : undefined
                     }
                   />
-                  <DataTableBody
-                    data={data}
-                    columns={columns}
-                    selectable={enableSelection}
-                    selectedRows={selectedRows}
-                    onRowSelect={(rows) => {
-                      onSelectedRowsChange?.(rows);
-                      onRowSelect?.(rows);
-                    }}
-                    onRowClick={onRowClick}
-                    currentPage={pagination?.currentPage || 1}
-                    pageSize={pagination?.pageSize || data.length}
-                    totalItems={pagination?.totalItems || data.length}
-                  />
+                  {data.length > 0 ? (
+                    <DataTableBody
+                      data={data}
+                      columns={columns}
+                      selectable={enableSelection}
+                      selectedRows={selectedRows}
+                      onRowSelect={(rows) => {
+                        onSelectedRowsChange?.(rows);
+                        onRowSelect?.(rows);
+                      }}
+                      onRowClick={onRowClick}
+                      currentPage={pagination?.currentPage || 1}
+                      pageSize={pagination?.pageSize || data.length}
+                      totalItems={pagination?.totalItems || data.length}
+                    />
+                  ) : (
+                    <DataTableEmptyState enableSelection={enableSelection} columns={columns} />
+                  )}
                 </table>
               </div>
             </div>

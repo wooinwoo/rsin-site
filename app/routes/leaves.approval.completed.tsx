@@ -39,8 +39,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   try {
     const data = await getLeaves(request, params);
-    console.log("##########");
-    console.log(data.documents[0].approvals);
     return json(data);
   } catch (error) {
     throw json({ message: "휴가 신청 목록을 불러오는데 실패했습니다." }, { status: 500 });
