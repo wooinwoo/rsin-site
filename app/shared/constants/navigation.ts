@@ -26,6 +26,17 @@ export const MENU_GROUPS: MenuGroup[] = [
     ],
   },
   {
+    label: "팀원",
+    items: [
+      {
+        icon: ProfileIcon,
+        label: "팀원 관리",
+        path: "/team/management/list",
+        children: [],
+      },
+    ],
+  },
+  {
     label: "휴가",
     items: [
       {
@@ -49,17 +60,6 @@ export const MENU_GROUPS: MenuGroup[] = [
             path: "/leaves/approval/completed",
           },
         ],
-      },
-    ],
-  },
-  {
-    label: "팀원",
-    items: [
-      {
-        icon: ProfileIcon,
-        label: "팀원 관리",
-        path: "/team/management/list",
-        children: [],
       },
     ],
   },
