@@ -1,6 +1,7 @@
 import { ReactNode, useRef, useState } from "react";
-
+import { getFullImageUrl } from "~/shared/utils/imges";
 interface ImageUploadProps {
+  defaultImageUrl?: string;
   children?: ReactNode;
   onChange: (file: File) => void;
   accept?: string;
@@ -9,6 +10,7 @@ interface ImageUploadProps {
 }
 
 export function ImageUpload({
+  defaultImageUrl,
   onChange,
   accept = "image/*",
   className,
@@ -16,7 +18,7 @@ export function ImageUpload({
 }: ImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(defaultImageUrl ?? null);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();

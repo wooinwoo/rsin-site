@@ -5,6 +5,7 @@ import { ProfileEditModal } from "~/features/profile/components/ProfileEditModal
 import { useClickAway } from "~/shared/hooks/useClickAway";
 import { useAuthStore } from "~/shared/store";
 import { getFullImageUrl } from "~/shared/utils/imges";
+import { ProfileEditData } from "~/features/profile/components/ProfileEditModal/types";
 interface SidebarFooterProps {
   isCollapsed: boolean;
   setIsCollapsed: (value: boolean) => void;
@@ -152,7 +153,7 @@ export function SidebarFooter({
       <ProfileEditModal
         isOpen={isProfileEditModalOpen}
         onClose={() => setIsProfileEditModalOpen(false)}
-        initialData={user || undefined}
+        initialData={user as ProfileEditData | undefined}
         onSubmit={async (data) => {
           console.log("프로필 수정 데이터:", data);
           setIsProfileEditModalOpen(false);

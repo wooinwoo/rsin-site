@@ -55,3 +55,7 @@ export interface ResignEmployeeRequest {
 export interface GetEmployeesResponse {
   employees: Employee[];
 }
+
+export interface GetThumbnailUploadUrlResponse {
+  url: string;
+}

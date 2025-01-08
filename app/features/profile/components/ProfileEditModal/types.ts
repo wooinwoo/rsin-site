@@ -8,7 +8,7 @@ export interface ProfileEditData {
   birth: string;
   mbti: string | null;
   profileImage?: File;
-  profileImageUrl?: string;
+  thumbnailPath?: string;
 }
 
 export interface FormField {
@@ -23,7 +23,7 @@ export interface FormField {
     | "birth"
     | "mbti"
     | "profileImage"
-    | "profileImageUrl";
+    | "thumbnailPath";
   type: string;
   required?: boolean;
   placeholder?: string;

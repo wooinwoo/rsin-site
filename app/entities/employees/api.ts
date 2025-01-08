@@ -1,9 +1,10 @@
 import { client } from "~/shared/api";
 import type {
-  CreateEmployeeRequest,
-  UpdateEmployeeRequest,
   Employee,
+  CreateEmployeeRequest,
   GetEmployeesParams,
+  UpdateEmployeeRequest,
+  GetThumbnailUploadUrlResponse,
 } from "./model";
 
 interface ApiResponse<T> {
@@ -43,7 +44,22 @@ export const employeeApi = {
     return client.get<Employee>("/employees/self");
   },
 
-  updateSelf(id: number, data: UpdateEmployeeRequest) {
-    return client.patch<Employee>(`/employees/${id}`, data);
+  updateSelf(
+    cookieHeader: string,
+    data: { email?: string; phone?: string; birth?: string; mbti?: string }
+  ) {
+    return client.patch("/employees/self", data, {
+      headers: { Cookie: cookieHeader || "" },
+    });
+  },
+
+  // 썸네일 업로드 URL 발급
+  getThumbnailUploadUrl(cookieHeader: string, path: string) {
+    return client.get<GetThumbnailUploadUrlResponse>(
+      `/employees/self/thumbnail/upload-url?path=${path}`,
+      {
+        headers: { Cookie: cookieHeader || "" },
+      }
+    );
   },
 };
