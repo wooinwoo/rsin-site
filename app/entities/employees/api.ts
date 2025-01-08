@@ -10,8 +10,7 @@ interface ApiResponse<T> {
   data: T;
 }
 
-// 관리자용 API
-export const adminEmployeeApi = {
+export const employeeApi = {
   getEmployees(
     cookieHeader: string | null,
     params: GetEmployeesParams
@@ -40,9 +39,6 @@ export const adminEmployeeApi = {
       headers: { Cookie: cookieHeader || "" },
     });
   },
-};
-// 일반 직원용 API
-export const employeeApi = {
   getSelf() {
     return client.get<Employee>("/employees/self");
   },
