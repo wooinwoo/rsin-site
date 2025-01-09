@@ -76,20 +76,16 @@ export default function LeaveApprovalPage() {
   const showToast = useToastStore((state) => state.showToast);
   const submit = useSubmit();
 
-  // 2. Fetcher들
   const detailFetcher = useFetcher<LoaderData>(); // 상세정보 조회용
   const approvalFetcher = useFetcher<BulkApprovalResponse>(); // 승인/반려 처리용
 
-  // 3. 상태 관리
   const [selectedLeave, setSelectedLeave] = useState<LeaveDocument | null>(null);
   const [selectedRows, setSelectedRows] = useState<LeaveDocument[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // 4. 페이지네이션 값
   const currentPage = Number(searchParams.get("page")) || 1;
   const pageSize = Number(searchParams.get("size")) || 25;
 
-  // 5. 행 클릭 핸들러 (상세 모달 열기)
   const handleRowClick = (row: LeaveDocument) => {
     setSelectedLeave(row);
     detailFetcher.load(`/leaves/approval/pending?documentId=${row.id}`);
@@ -131,6 +127,7 @@ export default function LeaveApprovalPage() {
         showToast(approvalFetcher.data.error || "처리 중 오류가 발생했습니다.", "error");
       } else {
         showToast("선택한 휴가가 모두 승인되었습니다.", "success");
+        setSelectedRows([]);
       }
     }
   }, [approvalFetcher.state, approvalFetcher.data]);
@@ -192,7 +189,7 @@ export default function LeaveApprovalPage() {
         onSelectedRowsChange={setSelectedRows}
         toolbarButtons={[
           {
-            label: `일괄승인 ${selectedRows.length > 0 ? `(${selectedRows.length})` : ""}`,
+            label: `일괄승인 ${selectedRows.length > 0 ? `(${selectedRows.length})` : "(0)"}`,
             onClick: handleBulkApprove,
             variant: "danger",
             icon: <CheckIcon />,

@@ -8,9 +8,11 @@ import { useState, useEffect } from "react";
 import { LEAVE_TYPE_OPTIONS } from "~/shared/constants/options";
 import { useFetcher } from "@remix-run/react";
 import { useToastStore } from "~/shared/store/toast";
+import type { LeaveModalResponse } from "~/routes/resources.leave-modal";
+
 export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequestModalProps) {
   const { showToast } = useToastStore();
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<LeaveModalResponse>();
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
   const [startDate, endDate] = dateRange;
   const [leaveType, setLeaveType] = useState("full");
@@ -64,18 +66,18 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
   };
 
   useEffect(() => {
-    console.log("Fetcher state:", fetcher.state);
-    console.log("Fetcher data:", fetcher.data);
-
     if (fetcher.state === "idle" && fetcher.data) {
-      if (fetcher.data) {
+      console.log("Response:", fetcher.data); // 디버깅용
+
+      if (fetcher.data.success) {
         showToast("휴가가 성공적으로 신청되었습니다.", "success");
+        onClose();
       } else {
-        showToast("휴가 신청에 실패했습니다.", "error");
+        showToast(fetcher.data.error || "휴가 신청에 실패했습니다.", "error");
       }
-      onClose();
     }
   }, [fetcher.state, fetcher.data]);
+
   const leaveReasonOptions = [
     { value: "personal", label: "개인 사유" },
     { value: "family", label: "가족 행사" },
