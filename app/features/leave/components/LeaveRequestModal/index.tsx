@@ -7,8 +7,9 @@ import { LeaveRequestModalProps } from "./types";
 import { useState, useEffect } from "react";
 import { LEAVE_TYPE_OPTIONS } from "~/shared/constants/options";
 import { useFetcher } from "@remix-run/react";
-
+import { useToastStore } from "~/shared/store/toast";
 export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequestModalProps) {
+  const { showToast } = useToastStore();
   const fetcher = useFetcher();
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
   const [startDate, endDate] = dateRange;
@@ -16,7 +17,6 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
   const [reason, setReason] = useState("personal");
   const [detailReason, setDetailReason] = useState("");
 
-  // initialData에서 직접 데이터 사용
   const remainingLeave = initialData?.annual?.[0];
   const approvers = initialData?.approverLines ?? [];
 
@@ -31,12 +31,16 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
       setLeaveType("annual");
       setReason("personal");
       setDetailReason("");
+      fetcher.data = undefined;
     }
   }, [isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!startDate || !endDate) return;
+    if (!startDate || !endDate) {
+      showToast("사용일을 선택해주세요.", "error");
+      return;
+    }
 
     const data = {
       document: {
@@ -63,9 +67,11 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
     console.log("Fetcher state:", fetcher.state);
     console.log("Fetcher data:", fetcher.data);
 
-    if (fetcher.state === "idle") {
+    if (fetcher.state === "idle" && fetcher.data) {
       if (fetcher.data) {
-        alert("휴가가 성공적으로 신청되었습니다.");
+        showToast("휴가가 성공적으로 신청되었습니다.", "success");
+      } else {
+        showToast("휴가 신청에 실패했습니다.", "error");
       }
       onClose();
     }

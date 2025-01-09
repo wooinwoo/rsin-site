@@ -11,10 +11,11 @@ import { ImageUpload } from "~/shared/ui/components/ImageUpload";
 import { getFullImageUrl } from "~/shared/utils/imges";
 import { useAuthStore } from "~/shared/store/auth";
 import { generateHash } from "~/shared/utils/common";
-
+import { useToastStore } from "~/shared/store/toast";
 export function ProfileEditModal({ isOpen, onClose, initialData }: ProfileEditModalProps) {
   const fetcher = useFetcher();
   const { user } = useAuthStore();
+  const { showToast } = useToastStore();
   const [formData, setFormData] = useState<ProfileEditData>(
     initialData || {
       name: "",
@@ -28,7 +29,6 @@ export function ProfileEditModal({ isOpen, onClose, initialData }: ProfileEditMo
       thumbnailPath: "",
     }
   );
-  const [isImageUploaded, setIsImageUploaded] = useState(false);
 
   useEffect(() => {
     if (initialData) {
@@ -61,6 +61,7 @@ export function ProfileEditModal({ isOpen, onClose, initialData }: ProfileEditMo
       return null;
     } catch (error) {
       console.error("이미지 업로드 실패:", error);
+      showToast("이미지 업로드 중 오류가 발생했습니다.", "error");
       return null;
     }
   };
@@ -84,6 +85,9 @@ export function ProfileEditModal({ isOpen, onClose, initialData }: ProfileEditMo
     const responseData = fetcher.data as { error?: string };
     if (!responseData?.error) {
       onClose();
+      showToast("내 정보가 수정되었습니다.", "success");
+    } else {
+      showToast("내 정보 수정 실패", "error");
     }
   };
   const renderField = (field: FormField) => {
@@ -102,7 +106,6 @@ export function ProfileEditModal({ isOpen, onClose, initialData }: ProfileEditMo
                   profileImage: file,
                   thumbnailPath: uploadedUrl,
                 }));
-                setIsImageUploaded(true); // 업로드 완료 표시
               }
             }
           }}

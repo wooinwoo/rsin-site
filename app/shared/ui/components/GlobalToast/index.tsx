@@ -17,7 +17,7 @@ export function GlobalToast() {
   return (
     <div
       className={`
-        fixed bottom-4 left-1/2 -translate-x-1/2 z-[9994]
+        fixed bottom-4 left-1/2 -translate-x-1/2 z-[9995]
         flex items-center gap-3 px-4 py-3 
         rounded-lg shadow-lg
         animate-toast-in

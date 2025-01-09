@@ -1,6 +1,6 @@
 import { json, redirect, type LoaderFunctionArgs } from "@remix-run/node";
 import { useFetcher, useLoaderData, useSearchParams, useSubmit } from "@remix-run/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type {
   GetLeavesParams,
   LeaveDocument,
@@ -11,6 +11,7 @@ import { getLeaveDetail, getLeaves } from "~/features/leave/api/leave.server";
 import { LeaveApprovalCard } from "~/features/leave/components/LeaveApprovalCard";
 import { LeaveApprovalModal } from "~/features/leave/components/LeaveApprovalModal";
 import { pendingColumns, searchFields } from "~/features/leave/LeaveTable/pendingColumns";
+import { useToastStore } from "~/shared/store/toast";
 import { CheckIcon } from "~/shared/ui/icons/CheckIcon";
 
 type LoaderData =
@@ -23,6 +24,11 @@ type LoaderData =
       type: "detail";
       detail: GetLeaveDetailResponse;
     };
+
+interface BulkApprovalResponse {
+  success: boolean;
+  error?: string;
+}
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
@@ -65,25 +71,34 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function LeaveApprovalPage() {
-  const loaderData = useLoaderData<LoaderData>();
+  const loaderData = useLoaderData<LoaderData>(); // 테이블 목록 데이터
   const [searchParams] = useSearchParams();
+  const showToast = useToastStore((state) => state.showToast);
   const submit = useSubmit();
+
+  // 2. Fetcher들
+  const detailFetcher = useFetcher<LoaderData>(); // 상세정보 조회용
+  const approvalFetcher = useFetcher<BulkApprovalResponse>(); // 승인/반려 처리용
+
+  // 3. 상태 관리
   const [selectedLeave, setSelectedLeave] = useState<LeaveDocument | null>(null);
   const [selectedRows, setSelectedRows] = useState<LeaveDocument[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 4. 페이지네이션 값
   const currentPage = Number(searchParams.get("page")) || 1;
   const pageSize = Number(searchParams.get("size")) || 25;
-  const fetcher = useFetcher<LoaderData>();
 
+  // 5. 행 클릭 핸들러 (상세 모달 열기)
   const handleRowClick = (row: LeaveDocument) => {
     setSelectedLeave(row);
-    fetcher.load(`/leaves/approval/pending?documentId=${row.id}`);
+    detailFetcher.load(`/leaves/approval/pending?documentId=${row.id}`);
     setIsModalOpen(true);
   };
 
   const handleBulkApprove = () => {
     if (selectedRows.length === 0) {
-      alert("선택된 항목이 없습니다.");
+      showToast("선택된 항목이 없습니다.", "error");
       return;
     }
 
@@ -93,11 +108,11 @@ export default function LeaveApprovalPage() {
       .filter((id): id is number => id !== undefined);
 
     if (approvalIds.length === 0) {
-      alert("승인 가능한 항목이 없습니다.");
+      showToast("승인 가능한 항목이 없습니다.", "error");
       return;
     }
 
-    fetcher.submit(
+    approvalFetcher.submit(
       {
         status: "approved",
         approvalIds: JSON.stringify(approvalIds),
@@ -109,8 +124,19 @@ export default function LeaveApprovalPage() {
     );
   };
 
-  const leaveDetail = fetcher.data?.type === "detail" ? fetcher.data.detail[0] : undefined;
+  // fetcher 상태 처리 추가
+  useEffect(() => {
+    if (approvalFetcher.state === "idle" && approvalFetcher.data) {
+      if (!approvalFetcher.data.success || approvalFetcher.data.error) {
+        showToast(approvalFetcher.data.error || "처리 중 오류가 발생했습니다.", "error");
+      } else {
+        showToast("선택한 휴가가 모두 승인되었습니다.", "success");
+      }
+    }
+  }, [approvalFetcher.state, approvalFetcher.data]);
 
+  const leaveDetail =
+    detailFetcher.data?.type === "detail" ? detailFetcher.data.detail[0] : undefined;
   return (
     <>
       <LeaveApprovalModal
@@ -128,7 +154,7 @@ export default function LeaveApprovalPage() {
           setSelectedLeave(null);
         }}
         leaveDetail={leaveDetail}
-        isLoading={fetcher.state === "loading"}
+        isLoading={detailFetcher.state === "loading"}
         selectedLeave={selectedLeave}
       />
       <DataTable

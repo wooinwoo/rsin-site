@@ -10,6 +10,8 @@ import {
   POSITION_OPTIONS,
   LEAVE_TYPE_OPTIONS,
 } from "~/shared/constants/options";
+import { useToastStore } from "~/shared/store/toast";
+import type { LeaveApprovalResponse } from "./types";
 
 export interface LeaveApprovalModalProps {
   isOpen: boolean;
@@ -30,16 +32,25 @@ export function LeaveApprovalModal({
   selectedLeave,
   isLoading,
 }: LeaveApprovalModalProps) {
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<LeaveApprovalResponse>();
+  const { showToast } = useToastStore();
   const isProcessing = fetcher.state !== "idle";
+  useEffect(() => {
+    if (!isOpen) {
+      fetcher.data = undefined;
+    }
+  }, [isOpen]);
 
   const handleApprove = () => {
-    if (!leaveDetail || !leaveDetail.approvals[0]) return;
+    if (!leaveDetail || !selectedLeave?.id) {
+      showToast("처리할 휴가 정보가 없습니다.", "error");
+      return;
+    }
 
     fetcher.submit(
       {
         status: "approve",
-        leaveId: String(selectedLeave?.id),
+        leaveId: String(selectedLeave.id),
       },
       {
         method: "post",
@@ -49,12 +60,15 @@ export function LeaveApprovalModal({
   };
 
   const handleReject = () => {
-    if (!leaveDetail || !leaveDetail.approvals[0]) return;
+    if (!leaveDetail || !selectedLeave?.id) {
+      showToast("처리할 휴가 정보가 없습니다.", "error");
+      return;
+    }
 
     fetcher.submit(
       {
         status: "reject",
-        leaveId: String(selectedLeave?.id),
+        leaveId: String(selectedLeave.id),
       },
       {
         method: "post",
@@ -65,10 +79,15 @@ export function LeaveApprovalModal({
 
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data) {
-      onClose();
-      window.location.reload(); // 목록 새로고침
+      if (!fetcher.data.success || fetcher.data.error) {
+        showToast(fetcher.data.error || "처리 중 오류가 발생했습니다.", "error");
+      } else {
+        const action = fetcher.data.status === "approve" ? "승인" : "반려";
+        showToast(`휴가가 ${action}되었습니다.`, "success");
+        onClose();
+      }
     }
-  }, [fetcher.state, fetcher.data]);
+  }, [fetcher.state, fetcher.data, onClose, showToast]);
 
   if (isLoading || fetcher.state === "submitting") {
     return (

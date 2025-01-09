@@ -63,11 +63,15 @@ export const leaveApi = {
   },
 
   reject(CookieHeader: string, approvalId: number) {
-    return client.patch(`/approvals/${approvalId}/reject`, null, {
-      headers: {
-        Cookie: CookieHeader || "",
-      },
-    });
+    return client.patch(
+      `/approvals/${approvalId}/reject`,
+      { id: approvalId },
+      {
+        headers: {
+          Cookie: CookieHeader || "",
+        },
+      }
+    );
   },
 
   getMyAnnual(CookieHeader?: string) {

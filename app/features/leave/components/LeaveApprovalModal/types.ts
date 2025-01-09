@@ -30,3 +30,9 @@ export interface LeaveApprovalData {
   duration: number;
   reason: string;
 }
+
+export interface LeaveApprovalResponse {
+  status: "approve" | "reject";
+  success: boolean;
+  error?: string;
+}

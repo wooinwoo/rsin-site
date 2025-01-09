@@ -7,6 +7,7 @@ import { DatePicker } from "~/shared/ui/components/DatePicker";
 import { Toggle } from "~/shared/ui/components/Toggle";
 import { TeamMemberAddModalProps, TeamMemberAddData } from "./types";
 import { DEPARTMENT_OPTIONS, POSITION_OPTIONS, MBTI_OPTIONS } from "~/shared/constants/options";
+import { useToastStore } from "~/shared/store/toast";
 import { DeleteConfirmModal } from "../DeleteConfirmModal";
 export function TeamMemberAddModal({
   isOpen,
@@ -16,6 +17,7 @@ export function TeamMemberAddModal({
   initialData,
   onResign,
 }: TeamMemberAddModalProps) {
+  const { showToast } = useToastStore();
   const resetData: TeamMemberAddData = {
     name: "",
     phone: "",
@@ -48,9 +50,16 @@ export function TeamMemberAddModal({
             e.preventDefault();
             try {
               await onSubmit(formData);
+              showToast(
+                mode === "add" ? "팀원이 추가되었습니다." : "팀원 정보가 수정되었습니다.",
+                "success"
+              );
               onClose();
             } catch (error) {
-              console.error(error);
+              showToast(
+                mode === "add" ? "팀원 추가에 실패했습니다." : "팀원 정보 수정에 실패했습니다.",
+                "error"
+              );
             }
           }}
         >
@@ -200,11 +209,12 @@ export function TeamMemberAddModal({
           try {
             if (onResign) {
               await onResign();
+              showToast("퇴사 처리가 완료되었습니다.", "success");
             }
             setIsDeleteModalOpen(false);
             onClose();
           } catch (error) {
-            console.error(error);
+            showToast("퇴사 처리에 실패했습니다.", "error");
           }
         }}
         memberName={initialData?.name || ""}
