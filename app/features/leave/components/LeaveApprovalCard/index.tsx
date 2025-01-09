@@ -2,6 +2,10 @@ import { MobileCard } from "~/features/datatable/components/MobileCard";
 import { OptimizedImage } from "~/shared/ui/components/OptimizedImage";
 import { DataTableCheckbox } from "~/features/datatable/components/DataTableCheckbox";
 import type { LeaveApprovalCardProps } from "./types";
+import { format } from "date-fns";
+import { ko } from "date-fns/locale";
+import { LEAVE_TYPE_OPTIONS } from "~/shared/constants/options";
+
 export function LeaveApprovalCard({
   item,
   onClick,
@@ -26,23 +30,26 @@ export function LeaveApprovalCard({
             onClick={() => onClick?.(request)}
           >
             <OptimizedImage
-              src={request.profileUrl}
-              alt={request.employeeName}
+              src={request.requester.thumbnailPath || "/images/profile.jpg"}
+              alt={request.requester.name}
               className="rounded-full ring-1 ring-gray-200"
               width={36}
               height={36}
             />
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-2 mb-0.5">
-                <span className="font-medium text-gray-900 truncate">{request.employeeName}</span>
+                <span className="font-medium text-gray-900 truncate">{request.requester.name}</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="px-1.5 py-0.5 bg-[#f5f9ff] text-[#5a8dd6] rounded text-xs font-medium">
-                  {request.leaveType}
+                <span className="px-1.5 py-0.5 bg-[#f5f9ff] text-[#5a8dd6] rounded text-xs font-medium whitespace-nowrap">
+                  {LEAVE_TYPE_OPTIONS.find((option) => option.value === request.leave.type)?.label}
                 </span>
                 <span className="text-xs text-gray-600">
-                  {request.startDate}
-                  {request.startDate !== request.endDate && ` ~ ${request.endDate}`}
+                  {format(new Date(request.leave.startedAt), "yyyy.MM.dd(EEE)", { locale: ko })}
+                  {request.leave.startedAt !== request.leave.endedAt &&
+                    ` ~ ${format(new Date(request.leave.endedAt), "yyyy.MM.dd(EEE)", {
+                      locale: ko,
+                    })}`}
                 </span>
               </div>
             </div>
@@ -67,7 +74,9 @@ export function LeaveApprovalCard({
                 </svg>
                 <div>
                   <span className="text-gray-500">신청일</span>
-                  <div className="font-medium text-gray-900 mt-0.5">{request.requestDate}</div>
+                  <div className="font-medium text-gray-900 mt-0.5">
+                    {format(new Date(request.submittedAt), "yyyy.MM.dd", { locale: ko })}
+                  </div>
                 </div>
               </div>
               <div className="flex items-center gap-1.5">
@@ -86,7 +95,9 @@ export function LeaveApprovalCard({
                 </svg>
                 <div>
                   <span className="text-gray-500">결재자</span>
-                  <div className="font-medium text-gray-900 mt-0.5">{request.approver}</div>
+                  <div className="font-medium text-gray-900 mt-0.5">
+                    {request.approvals.find((a: any) => a.status === "pending")?.name || "-"}
+                  </div>
                 </div>
               </div>
             </div>
