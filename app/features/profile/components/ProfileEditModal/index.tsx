@@ -9,9 +9,12 @@ import { ProfileEditModalProps, ProfileEditData, FormField } from "./types";
 import { FORM_FIELDS } from "./constants";
 import { ImageUpload } from "~/shared/ui/components/ImageUpload";
 import { getFullImageUrl } from "~/shared/utils/imges";
-import { ApiError } from "~/shared/api/errors/ApiError";
+import { useAuthStore } from "~/shared/store/auth";
+import { generateHash } from "~/shared/utils/common";
+
 export function ProfileEditModal({ isOpen, onClose, initialData }: ProfileEditModalProps) {
   const fetcher = useFetcher();
+  const { user } = useAuthStore();
   const [formData, setFormData] = useState<ProfileEditData>(
     initialData || {
       name: "",
@@ -25,69 +28,64 @@ export function ProfileEditModal({ isOpen, onClose, initialData }: ProfileEditMo
       thumbnailPath: "",
     }
   );
+  const [isImageUploaded, setIsImageUploaded] = useState(false);
 
   useEffect(() => {
     if (initialData) {
       setFormData(initialData);
     }
   }, [initialData]);
+  const uploadImageToS3 = async (file: File): Promise<string | null> => {
+    try {
+      const urlFormData = new FormData();
+      urlFormData.append("action", "getUploadUrl");
+      urlFormData.append("path", `profile/thumbnail/${user?.sub}/${generateHash(file.name)}.jpg`);
 
+      // fetcher.submit 대신 fetch 직접 사용
+      const response = await fetch("/resources/profile", {
+        method: "POST",
+        body: urlFormData,
+      });
+      const { url } = await response.json();
+
+      if (url) {
+        await fetch(url, {
+          method: "PUT",
+          body: file,
+          headers: {
+            "Content-Type": file.type,
+          },
+        });
+        return url;
+      }
+      return null;
+    } catch (error) {
+      console.error("이미지 업로드 실패:", error);
+      return null;
+    }
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 기본 정보만 전송
-    const basicInfo = {
-      email: formData.email,
-      phone: formData.phone,
-      birth: formData.birth,
-      mbti: formData.mbti,
-    };
-
-    // 기본 정보 업데이트
     fetcher.submit(
-      { ...basicInfo, action: "updateProfile" },
+      {
+        email: formData.email,
+        phone: formData.phone,
+        birth: formData.birth,
+        mbti: formData.mbti,
+        action: "updateProfile",
+      },
       {
         method: "POST",
         action: "/resources/profile",
       }
     );
 
-    // 이미지가 변경되었다면 별도로 처리
-    if (formData.profileImage) {
-      try {
-        const urlFormData = new FormData();
-        urlFormData.append("action", "getUploadUrl");
-        urlFormData.append("path", formData.profileImage.name);
-
-        // 이미지 업로드 URL 요청
-        fetcher.submit(urlFormData, {
-          method: "POST",
-          action: "/resources/profile",
-        });
-
-        // fetcher.data 타입 단언 및 체크
-        const responseData = fetcher.data as { url?: string };
-        if (responseData?.url) {
-          await fetch(responseData.url, {
-            method: "PUT",
-            body: formData.profileImage,
-            headers: {
-              "Content-Type": formData.profileImage.type,
-            },
-          });
-        }
-      } catch (error) {
-        console.error("이미지 업로드 실패:", error);
-      }
-    }
-
-    // 에러가 없으면 모달 닫기
     const responseData = fetcher.data as { error?: string };
     if (!responseData?.error) {
       onClose();
     }
   };
-
   const renderField = (field: FormField) => {
     if (field.type === "image") {
       return (
@@ -97,34 +95,14 @@ export function ProfileEditModal({ isOpen, onClose, initialData }: ProfileEditMo
           }
           onChange={async (file) => {
             if (file) {
-              try {
-                const urlFormData = new FormData();
-                urlFormData.append("action", "getUploadUrl");
-                urlFormData.append("path", file.name);
-
-                fetcher.submit(urlFormData, {
-                  method: "POST",
-                  action: "/resources/profile",
-                });
-
-                const responseData = fetcher.data as { url?: string };
-                if (responseData?.url) {
-                  await fetch(responseData.url, {
-                    method: "PUT",
-                    body: file,
-                    headers: {
-                      "Content-Type": file.type,
-                    },
-                  });
-
-                  setFormData((prev) => ({
-                    ...prev,
-                    profileImage: file,
-                    thumbnailPath: responseData.url,
-                  }));
-                }
-              } catch (error) {
-                console.error("이미지 업로드 실패:", error);
+              const uploadedUrl = await uploadImageToS3(file);
+              if (uploadedUrl) {
+                setFormData((prev) => ({
+                  ...prev,
+                  profileImage: file,
+                  thumbnailPath: uploadedUrl,
+                }));
+                setIsImageUploaded(true); // 업로드 완료 표시
               }
             }
           }}

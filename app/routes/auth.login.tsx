@@ -1,11 +1,15 @@
-import { json, redirect, type ActionFunctionArgs } from "@remix-run/node";
-import { authApi } from "~/entities/auth/api";
-import { saveApiToken } from "~/cookies.server";
+import { json, type ActionFunctionArgs } from "@remix-run/node";
 import { Form, useActionData, useNavigate } from "@remix-run/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { saveApiToken } from "~/cookies.server";
+import { authApi } from "~/entities/auth/api";
+import { useAuthStore } from "~/shared/store/auth";
 import { Button } from "~/shared/ui/components/Button";
-import { LogoIcon } from "~/shared/ui/icons";
-import { EyeIcon, EyeOffIcon } from "~/shared/ui/icons";
+import { EyeIcon, EyeOffIcon, LogoIcon } from "~/shared/ui/icons";
+import type { SignInResponse } from "~/entities/auth/model";
+import { User } from "~/shared/store/auth/types";
+
+type ActionData = { user?: SignInResponse; error?: string };
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
@@ -20,11 +24,14 @@ export async function action({ request }: ActionFunctionArgs) {
 
     const cookieHeader = await saveApiToken(response?.headers["set-cookie"]?.[0] ?? "");
 
-    return redirect("/", {
-      headers: {
-        "Set-Cookie": cookieHeader,
-      },
-    });
+    return json(
+      { user: response.data, error: null },
+      {
+        headers: {
+          "Set-Cookie": cookieHeader,
+        },
+      }
+    );
   } catch (error) {
     console.error("Login Error:", error);
     return json({ error: "이메일 또는 비밀번호가 올바르지 않습니다." });
@@ -34,11 +41,19 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function LoginPage() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const actionData = useActionData<typeof action>();
+  const actionData = useActionData<ActionData>();
+  const { setUser } = useAuthStore();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  useEffect(() => {
+    if (actionData?.user) {
+      setUser(actionData.user as User);
+      navigate("/");
+    }
+  }, [actionData, setUser, navigate]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

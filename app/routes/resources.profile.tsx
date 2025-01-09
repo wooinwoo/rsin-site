@@ -6,7 +6,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const action = formData.get("action");
 
   if (action === "updateProfile") {
-    // 기본 정보만 업데이트
     const updateData = {
       email: formData.get("email") as string,
       phone: formData.get("phone") as string,
@@ -16,10 +15,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     try {
       const result = await updateProfile(request, updateData);
-      console.error("프로필수정22", result);
       return json(result);
     } catch (error) {
-      console.error("프로필수정", error);
       return json({ error: "프로필 수정에 실패했습니다." }, { status: 400 });
     }
   }

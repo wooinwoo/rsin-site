@@ -75,13 +75,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   }
 };
 
-function Document({
-  children,
-  title = "오류가 발생했습니다",
-}: {
-  children: React.ReactNode;
-  title?: string;
-}) {
+function Document({ children, title = "RSIN" }: { children: React.ReactNode; title?: string }) {
   return (
     <html lang="ko">
       <head>
