@@ -37,12 +37,31 @@ export function TeamMemberAddModal({
     setFormData(initialData || resetData);
   }, [initialData]);
 
+  const footer = (
+    <div className="flex justify-end gap-2 ">
+      {mode === "edit" && onResign && (
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setIsDeleteModalOpen(true)}
+          size="md"
+        >
+          퇴사처리
+        </Button>
+      )}
+      <Button type="submit" variant="red" size="md">
+        {mode === "add" ? "추가" : "수정"}
+      </Button>
+    </div>
+  );
+
   return (
     <>
       <Modal
         isOpen={isOpen}
         onClose={onClose}
         title={mode === "add" ? "팀원 추가" : "팀원 정보 수정"}
+        footer={footer}
       >
         <form
           className="space-y-4"
@@ -182,22 +201,6 @@ export function TeamMemberAddModal({
               value={formData.mbti || ""}
               onChange={(value) => setFormData((prev) => ({ ...prev, mbti: value }))}
             />
-          </div>
-
-          <div className="flex justify-end gap-2 pt-4 border-t border-gray-300">
-            {mode === "edit" && onResign && (
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setIsDeleteModalOpen(true)}
-                size="md"
-              >
-                퇴사처리
-              </Button>
-            )}
-            <Button type="submit" variant="red" size="md">
-              {mode === "add" ? "추가" : "수정"}
-            </Button>
           </div>
         </form>
       </Modal>

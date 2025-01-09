@@ -85,8 +85,16 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
     { value: "other", label: "기타" },
   ];
 
+  const footer = (
+    <div className="flex justify-end ">
+      <Button type="submit" variant="red" size="md" disabled={fetcher.state !== "idle"}>
+        {fetcher.state !== "idle" ? "처리 중..." : "신청"}
+      </Button>
+    </div>
+  );
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="휴가 신청">
+    <Modal isOpen={isOpen} onClose={onClose} title="휴가 신청" footer={footer}>
       <fetcher.Form onSubmit={handleSubmit} className="space-y-6">
         <div className="p-4 bg-gray-50 border border-gray-300 rounded-lg">
           {!remainingLeave ? (
@@ -210,12 +218,6 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
             onChange={(value) => setDetailReason(value)}
             disabled={reason !== "other"}
           />
-        </div>
-
-        <div className="flex justify-end gap-2 pt-4 border-t border-gray-300">
-          <Button type="submit" variant="red" size="md" disabled={fetcher.state !== "idle"}>
-            {fetcher.state !== "idle" ? "처리 중..." : "신청"}
-          </Button>
         </div>
       </fetcher.Form>
     </Modal>

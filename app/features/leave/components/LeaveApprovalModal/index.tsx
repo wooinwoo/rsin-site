@@ -102,9 +102,25 @@ export function LeaveApprovalModal({
   if (!leaveDetail) {
     return null;
   }
+  const footer = (
+    <div className="flex justify-end gap-2">
+      <Button
+        type="button"
+        variant="outline"
+        onClick={handleReject}
+        size="md"
+        disabled={isProcessing}
+      >
+        {isProcessing ? "처리 중..." : "반려"}
+      </Button>
+      <Button type="button" variant="red" onClick={handleApprove} size="md" disabled={isProcessing}>
+        {isProcessing ? "처리 중..." : "승인"}
+      </Button>
+    </div>
+  );
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="휴가 승인">
+    <Modal isOpen={isOpen} onClose={onClose} title="휴가 승인" footer={footer}>
       {/* 신청자 정보 */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
@@ -218,28 +234,6 @@ export function LeaveApprovalModal({
         <div className="border rounded-lg p-4">
           <div className="text-sm text-gray-600 whitespace-pre-wrap">{leaveDetail.reason}</div>
         </div>
-      </div>
-
-      {/* 버튼 그룹 */}
-      <div className="flex justify-end gap-2">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={handleReject}
-          size="md"
-          disabled={isProcessing}
-        >
-          {isProcessing ? "처리 중..." : "반려"}
-        </Button>
-        <Button
-          type="button"
-          variant="red"
-          onClick={handleApprove}
-          size="md"
-          disabled={isProcessing}
-        >
-          {isProcessing ? "처리 중..." : "승인"}
-        </Button>
       </div>
     </Modal>
   );

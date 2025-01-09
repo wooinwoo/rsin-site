@@ -164,8 +164,16 @@ export function ProfileEditModal({ isOpen, onClose, initialData }: ProfileEditMo
     );
   };
 
+  const footer = (
+    <div className="flex justify-end">
+      <Button type="submit" variant="red" size="md" disabled={fetcher.state === "submitting"}>
+        {fetcher.state === "submitting" ? "수정 중..." : "수정"}
+      </Button>
+    </div>
+  );
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="내 정보 수정">
+    <Modal isOpen={isOpen} onClose={onClose} title="내 정보 수정" footer={footer}>
       <fetcher.Form onSubmit={handleSubmit} className="space-y-4">
         {/* 상단 그룹: 프로필 이미지, 이름, 휴대폰 번호 */}
         <div className="flex gap-4">
@@ -205,12 +213,6 @@ export function ProfileEditModal({ isOpen, onClose, initialData }: ProfileEditMo
             </div>
           )
         )}
-
-        <div className="flex justify-end gap-2 pt-4 border-t border-gray-300">
-          <Button type="submit" variant="red" size="md" disabled={fetcher.state === "submitting"}>
-            {fetcher.state === "submitting" ? "수정 중..." : "수정"}
-          </Button>
-        </div>
       </fetcher.Form>
     </Modal>
   );

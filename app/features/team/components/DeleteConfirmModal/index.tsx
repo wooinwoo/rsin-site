@@ -35,6 +35,17 @@ export function DeleteConfirmModal({
 
   if (!isOpen) return null;
 
+  const footer = (
+    <div className="flex justify-end gap-2">
+      <Button variant="outline" size="md" onClick={onClose}>
+        취소
+      </Button>
+      <Button variant="red" size="md" disabled={deleteConfirmText !== "DELETE"} onClick={onConfirm}>
+        삭제
+      </Button>
+    </div>
+  );
+
   return (
     <Modal
       isOpen={isOpen}
@@ -42,6 +53,7 @@ export function DeleteConfirmModal({
       title="삭제(퇴사처리)하시겠습니까?"
       size="small"
       isOverlay={true}
+      footer={footer}
     >
       <div className="space-y-6">
         {/* 설명 텍스트 */}
@@ -94,16 +106,6 @@ export function DeleteConfirmModal({
             <svg className="w-5 h-5" /* 정보 아이콘 SVG */ />
             <span>'DELETE'을 입력하면 [삭제] 버튼이 활성화됩니다.</span>
           </div>
-        </div>
-
-        {/* 버튼 영역 */}
-        <div className="flex justify-end gap-2 pt-4 border-t border-gray-200">
-          <Button variant="outline" onClick={onClose}>
-            취소
-          </Button>
-          <Button variant="red" disabled={deleteConfirmText !== "DELETE"} onClick={onConfirm}>
-            삭제
-          </Button>
         </div>
       </div>
     </Modal>
