@@ -41,6 +41,9 @@ export const completedColumns: ColumnDef<LeaveDocument>[] = [
     id: "leaveType",
     header: "휴가 종류",
     accessorKey: "leave.type",
+    cell: ({ row }) => (
+      <span>{LEAVE_TYPE_OPTIONS.find((option) => option.value === row.leave.type)?.label}</span>
+    ),
   },
   {
     id: "period",
