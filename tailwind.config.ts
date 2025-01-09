@@ -68,10 +68,15 @@ export default {
           "0%": { transform: "translate(-50%, -50%) scale(0.95)" },
           "100%": { transform: "translate(-50%, -50%) scale(1)" },
         },
+        "toast-in": {
+          "0%": { transform: "translate(-50%, 100%)", opacity: "0" },
+          "100%": { transform: "translate(-50%, 0)", opacity: "1" },
+        },
       },
       animation: {
         "fade-in": "fade-in 150ms ease-out",
         "scale-in": "scale-in 150ms ease-out",
+        "toast-in": "toast-in 0.3s ease-out",
       },
     },
   },
