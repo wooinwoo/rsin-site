@@ -22,6 +22,8 @@ export interface Employee {
 export interface GetEmployeesParams {
   size?: number;
   page?: number;
+  departmentId?: number;
+  employeeName?: string;
 }
 
 export interface CreateEmployeeRequest {

@@ -9,7 +9,7 @@ import type {
 } from "~/entities/employees/model";
 import { DataTable } from "~/features/datatable/components/DataTable";
 import * as EmployeeAPI from "~/features/team/api/employees.server";
-import { employeeColumns } from "~/features/team/components/EmployeesTable/columns";
+import { employeeColumns, searchFields } from "~/features/team/components/EmployeesTable/columns";
 import { TeamMemberAddModal } from "~/features/team/components/TeamMemberAddModal";
 import { TeamMemberCard } from "~/features/team/components/TeamMemberCard";
 import type {
@@ -37,6 +37,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const params: GetEmployeesParams = {
     size: Number(size),
     page: Number(page),
+    departmentId: url.searchParams.get("departmentId")
+      ? Number(url.searchParams.get("departmentId"))
+      : undefined,
+    employeeName: url.searchParams.get("employeeName") || undefined,
   };
 
   try {
@@ -185,6 +189,19 @@ export default function TeamManagementListPage() {
         columns={employeeColumns}
         onRowClick={user?.role === "admin" ? handleRowClick : undefined}
         enableSearch
+        searchFields={searchFields}
+        onSearch={(values) => {
+          const params = new URLSearchParams(searchParams);
+          Object.entries(values).forEach(([key, value]) => {
+            if (value) {
+              params.set(key, value);
+            } else {
+              params.delete(key);
+            }
+          });
+          params.set("page", "1"); // 검색 시 첫 페이지로
+          submit(params);
+        }}
         mobileCard={TeamMemberCard}
         pagination={{
           currentPage,
