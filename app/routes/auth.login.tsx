@@ -8,7 +8,7 @@ import { Button } from "~/shared/ui/components/Button";
 import { EyeIcon, EyeOffIcon, LogoIcon } from "~/shared/ui/icons";
 import type { SignInResponse } from "~/entities/auth/model";
 import { User } from "~/shared/store/auth/types";
-
+import { saveUserInfo } from "~/cookies.server";
 type ActionData = { user?: SignInResponse; error?: string };
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -21,14 +21,16 @@ export async function action({ request }: ActionFunctionArgs) {
       email: email as string,
       password: password as string,
     });
+    console.log("Login Response:", response.data); // 응답 데이터 확인
 
     const cookieHeader = await saveApiToken(response?.headers["set-cookie"]?.[0] ?? "");
+    const userInfoHeader = await saveUserInfo(response.data);
 
     return json(
       { user: response.data, error: null },
       {
         headers: {
-          "Set-Cookie": cookieHeader,
+          "Set-Cookie": [cookieHeader, userInfoHeader].join(", "),
         },
       }
     );
