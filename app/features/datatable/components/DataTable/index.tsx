@@ -22,8 +22,6 @@ export function DataTable<T extends Record<string, any>>({
   onRowSelect,
   toolbarButtons,
 }: DataTableProps<T>) {
-  console.log(pagination);
-
   const allSelected = enableSelection && data.length > 0 && selectedRows.length === data.length;
 
   return (

@@ -67,8 +67,6 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
 
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data) {
-      console.log("Response:", fetcher.data); // 디버깅용
-
       if (fetcher.data.success) {
         showToast("휴가가 성공적으로 신청되었습니다.", "success");
         onClose();

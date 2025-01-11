@@ -50,7 +50,6 @@ export async function getMyAnnual(request: Request) {
 
 export async function createLeave(request: Request, data: CreateLeaveRequest) {
   return withAuth(request, async (token) => {
-    console.log("data,data,", data);
     const response = await leaveApi.createLeave(token, data);
     return response.data;
   });
