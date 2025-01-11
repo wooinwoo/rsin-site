@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { LEAVE_TYPE_OPTIONS } from "~/shared/constants/options";
 import { useFetcher } from "@remix-run/react";
 import { useToastStore } from "~/shared/store/toast";
+import { POSITION_OPTIONS } from "~/shared/constants/options";
 import type { LeaveModalResponse } from "~/routes/resources.leave-modal";
 
 export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequestModalProps) {
@@ -19,8 +20,9 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
   const [reason, setReason] = useState("personal");
   const [detailReason, setDetailReason] = useState("");
 
-  const remainingLeave = initialData?.annual?.[0];
   const approvers = initialData?.approverLines ?? [];
+  const remainingLeave = initialData?.annual?.[0];
+  const hasNoLeave = !remainingLeave || remainingLeave?.remain === 0;
 
   const getProgressWidth = () => {
     if (!remainingLeave?.total) return "0%";
@@ -91,7 +93,7 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
         type="submit"
         variant="red"
         size="md"
-        disabled={fetcher.state !== "idle"}
+        disabled={fetcher.state !== "idle" || hasNoLeave}
         form={formId}
       >
         {fetcher.state !== "idle" ? "처리 중..." : "신청"}
@@ -140,6 +142,7 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
             options={LEAVE_TYPE_OPTIONS}
             value={leaveType}
             onChange={(value) => setLeaveType(value)}
+            disabled={hasNoLeave}
           />
         </div>
 
@@ -158,7 +161,12 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
                     </div>
                     <div className="text-sm">
                       <span className="font-medium text-gray-900">{approver.name}</span>
-                      <span className="text-gray-500 ml-1">{approver.position}</span>
+                      <span className="text-gray-500 ml-1">
+                        {
+                          POSITION_OPTIONS.find((option) => option.value === approver.position)
+                            ?.label
+                        }
+                      </span>
                       <span className="text-gray-400 mx-1">·</span>
                       <span className="text-gray-500">{approver.department.name}</span>
                     </div>
@@ -183,6 +191,7 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
               isRange={true}
               onChange={(dates) => setDateRange(dates as [Date | null, Date | null])}
               className=""
+              disabled={hasNoLeave}
             />
             {dateRange[0] && dateRange[1] ? (
               <span className="text-sm text-gray-600 whitespace-nowrap">
@@ -215,6 +224,7 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
                 setDetailReason("");
               }
             }}
+            disabled={hasNoLeave}
           />
           <TextArea
             placeholder="상세 사유를 입력해주세요"
