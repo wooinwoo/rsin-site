@@ -155,7 +155,6 @@ export function SidebarFooter({
         onClose={() => setIsProfileEditModalOpen(false)}
         initialData={user as ProfileEditData | undefined}
         onSubmit={async (data) => {
-          console.log("프로필 수정 데이터:", data);
           setIsProfileEditModalOpen(false);
         }}
       />

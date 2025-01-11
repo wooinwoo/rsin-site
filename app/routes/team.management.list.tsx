@@ -110,7 +110,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function TeamManagementListPage() {
   const { employees, totalCount } = useLoaderData<typeof loader>(); // totalCount 추가
-  console.log(totalCount, employees.length);
   const [searchParams] = useSearchParams();
   const actionData = useActionData<typeof action>();
   const submit = useSubmit();
@@ -132,7 +131,6 @@ export default function TeamManagementListPage() {
   }, [actionData]);
 
   const handleRowClick = (member: Employee) => {
-    console.log("handleRowClick", member);
     setSelectedMember(member);
     setIsModalOpen(true);
   };
@@ -149,7 +147,6 @@ export default function TeamManagementListPage() {
         initialData={selectedMember ? getInitialModalData(selectedMember) : undefined}
         onSubmit={async (data) => {
           // async 추가
-          console.log(data);
           const formData = new FormData();
 
           if (selectedMember) {

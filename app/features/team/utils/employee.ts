@@ -2,10 +2,7 @@ import type { Employee } from "~/entities/employees/model";
 import type { TeamMemberAddData } from "~/features/team/components/TeamMemberAddModal/types";
 
 export function getInitialModalData(member: Employee | null): TeamMemberAddData | undefined {
-  console.log("getInitialModalData", member);
-
   if (!member) {
-    console.log("member is null");
     return;
   }
 
