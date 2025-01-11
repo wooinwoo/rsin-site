@@ -49,13 +49,28 @@ export function ProfileEditModal({ isOpen, onClose, initialData }: ProfileEditMo
       const { url } = await response.json();
 
       if (url) {
-        await fetch(url, {
-          method: "PUT",
-          body: file,
-          headers: {
-            "Content-Type": file.type,
-          },
-        });
+        try {
+          const response = await fetch(url, {
+            method: "PUT",
+            body: file,
+            headers: {
+              "Content-Type": file.type,
+            },
+          });
+
+          console.log("Response content-type:", response.headers.get("content-type"));
+
+          const text = await response.text();
+          console.log("Response status:", response.status);
+          console.log("Response text:", text);
+
+          if (response.headers.get("content-type")?.includes("application/json")) {
+            const data = JSON.parse(text);
+            console.log("Response data:", data);
+          }
+        } catch (error) {
+          console.error("Error details:", error);
+        }
         return url;
       }
       return null;
@@ -164,9 +179,16 @@ export function ProfileEditModal({ isOpen, onClose, initialData }: ProfileEditMo
     );
   };
 
+  const formId = "profile-edit-form"; // 고유한 form ID
   const footer = (
     <div className="flex justify-end">
-      <Button type="submit" variant="red" size="md" disabled={fetcher.state === "submitting"}>
+      <Button
+        type="submit"
+        variant="red"
+        size="md"
+        disabled={fetcher.state === "submitting"}
+        form={formId}
+      >
         {fetcher.state === "submitting" ? "수정 중..." : "수정"}
       </Button>
     </div>
@@ -174,7 +196,7 @@ export function ProfileEditModal({ isOpen, onClose, initialData }: ProfileEditMo
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="내 정보 수정" footer={footer}>
-      <fetcher.Form onSubmit={handleSubmit} className="space-y-4">
+      <fetcher.Form onSubmit={handleSubmit} className="space-y-4" id={formId}>
         {/* 상단 그룹: 프로필 이미지, 이름, 휴대폰 번호 */}
         <div className="flex gap-4">
           {/* 프로필 이미지 */}

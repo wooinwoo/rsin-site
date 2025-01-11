@@ -37,6 +37,7 @@ export function TeamMemberAddModal({
     setFormData(initialData || resetData);
   }, [initialData]);
 
+  const formId = "team-member-add-form";
   const footer = (
     <div className="flex justify-end gap-2 ">
       {mode === "edit" && onResign && (
@@ -45,11 +46,12 @@ export function TeamMemberAddModal({
           variant="outline"
           onClick={() => setIsDeleteModalOpen(true)}
           size="md"
+          form={formId}
         >
           퇴사처리
         </Button>
       )}
-      <Button type="submit" variant="red" size="md">
+      <Button type="submit" variant="red" size="md" form={formId}>
         {mode === "add" ? "추가" : "수정"}
       </Button>
     </div>
@@ -65,6 +67,7 @@ export function TeamMemberAddModal({
       >
         <form
           className="space-y-4"
+          id={formId}
           onSubmit={async (e) => {
             e.preventDefault();
             try {
