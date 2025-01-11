@@ -3,8 +3,8 @@ import { ProfileCell } from "~/features/datatable/components/cells/ProfileCell";
 import type { SearchField } from "~/features/datatable/types/datatable";
 import type { LeaveDocument } from "~/entities/leave/model";
 import { LEAVE_TYPE_OPTIONS } from "~/shared/constants/options";
-
-export const searchFields: SearchField[] = [
+import { useAuthStore } from "~/shared/store/auth";
+const baseSearchFields: SearchField[] = [
   {
     id: "applicant",
     type: "text",
@@ -12,18 +12,24 @@ export const searchFields: SearchField[] = [
     placeholder: "이름을 입력하세요",
     width: "200px",
   },
-  {
-    id: "scope",
-    type: "select",
-    label: "결재 구분",
-    options: [
-      { value: "self", label: "내 승인대기" },
-      { value: "all", label: "결재선 전체" },
-    ],
-    width: "150px",
-    defaultValue: "self",
-    showAllOption: false,
-  },
+];
+
+const adminSearchField: SearchField = {
+  id: "scope",
+  type: "select", // 명시적으로 "select" 타입 지정
+  label: "결재 구분",
+  options: [
+    { value: "self", label: "내 승인대기" },
+    { value: "all", label: "결재선 전체" },
+  ],
+  width: "150px",
+  defaultValue: useAuthStore.getState().user?.role === "admin" ? "self" : "all",
+  showAllOption: false,
+} as const; // 타입 추론을 위한 const assertion
+
+export const searchFields: SearchField[] = [
+  ...baseSearchFields,
+  ...(useAuthStore.getState().user?.role === "admin" ? [adminSearchField] : []),
 ];
 
 export const pendingColumns: ColumnDef<LeaveDocument>[] = [

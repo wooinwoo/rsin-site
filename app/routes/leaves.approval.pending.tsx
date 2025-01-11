@@ -1,6 +1,7 @@
 import { json, redirect, type LoaderFunctionArgs } from "@remix-run/node";
 import { useFetcher, useLoaderData, useSearchParams, useSubmit } from "@remix-run/react";
 import { useEffect, useState } from "react";
+import { useAuthStore } from "~/shared/store/auth";
 import type {
   GetLeavesParams,
   LeaveDocument,
@@ -32,6 +33,7 @@ interface BulkApprovalResponse {
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
+  const user = useAuthStore.getState().user;
   const documentId = url.searchParams.get("documentId");
   const page = url.searchParams.get("page");
   const size = url.searchParams.get("size");
@@ -48,7 +50,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const newUrl = new URL(request.url);
     if (!page) newUrl.searchParams.set("page", "1");
     if (!size) newUrl.searchParams.set("size", "25");
-    if (!scope) newUrl.searchParams.set("scope", "self");
+    if (!scope) newUrl.searchParams.set("scope", user?.role === "admin" ? "self" : "all");
     if (!type) newUrl.searchParams.set("type", "annual");
     newUrl.searchParams.set("approvalStatus", "pending");
     return redirect(newUrl.toString());
@@ -73,6 +75,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function LeaveApprovalPage() {
   const loaderData = useLoaderData<LoaderData>(); // 테이블 목록 데이터
   const [searchParams] = useSearchParams();
+  const user = useAuthStore((state) => state.user);
   const showToast = useToastStore((state) => state.showToast);
   const submit = useSubmit();
 
@@ -184,17 +187,21 @@ export default function LeaveApprovalPage() {
         }}
         onRowClick={handleRowClick}
         enableSearch
-        enableSelection
+        enableSelection={user?.role === "admin"}
         selectedRows={selectedRows}
         onSelectedRowsChange={setSelectedRows}
-        toolbarButtons={[
-          {
-            label: `일괄승인 ${selectedRows.length > 0 ? `(${selectedRows.length})` : "(0)"}`,
-            onClick: handleBulkApprove,
-            variant: "danger",
-            icon: <CheckIcon />,
-          },
-        ]}
+        toolbarButtons={
+          user?.role === "admin"
+            ? [
+                {
+                  label: `일괄승인 ${selectedRows.length > 0 ? `(${selectedRows.length})` : "(0)"}`,
+                  onClick: handleBulkApprove,
+                  variant: "danger",
+                  icon: <CheckIcon />,
+                },
+              ]
+            : []
+        }
       />
     </>
   );

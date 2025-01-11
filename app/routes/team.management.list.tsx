@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type {
   CreateEmployeeRequest,
   Employee,
+  GetEmployeesParams,
   UpdateEmployeeRequest,
 } from "~/entities/employees/model";
 import { DataTable } from "~/features/datatable/components/DataTable";
@@ -16,8 +17,8 @@ import type {
   TeamManagementLoaderData,
 } from "~/features/team/types/employeesManagement";
 import { getInitialModalData } from "~/features/team/utils/employee";
+import { useAuthStore } from "~/shared/store/auth";
 import { PlusIcon } from "~/shared/ui/icons/PlusIcon";
-import type { GetEmployeesParams } from "~/entities/employees/model";
 // Loader
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
@@ -115,6 +116,7 @@ export default function TeamManagementListPage() {
   const submit = useSubmit();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<Employee | null>(null);
+  const user = useAuthStore((state) => state.user);
 
   const currentPage = Number(searchParams.get("page")) || 1;
   const pageSize = Number(searchParams.get("size")) || 25;
@@ -181,7 +183,7 @@ export default function TeamManagementListPage() {
       <DataTable
         data={employees}
         columns={employeeColumns}
-        onRowClick={handleRowClick}
+        onRowClick={user?.role === "admin" ? handleRowClick : undefined}
         enableSearch
         mobileCard={TeamMemberCard}
         pagination={{
@@ -195,17 +197,21 @@ export default function TeamManagementListPage() {
             submit(params);
           },
         }}
-        toolbarButtons={[
-          {
-            label: "팀원추가",
-            onClick: () => {
-              setSelectedMember(null);
-              setIsModalOpen(true);
-            },
-            variant: "primary",
-            icon: <PlusIcon />,
-          },
-        ]}
+        toolbarButtons={
+          user?.role === "admin"
+            ? [
+                {
+                  label: "팀원추가",
+                  onClick: () => {
+                    setSelectedMember(null);
+                    setIsModalOpen(true);
+                  },
+                  variant: "primary",
+                  icon: <PlusIcon />,
+                },
+              ]
+            : []
+        }
       />
     </>
   );

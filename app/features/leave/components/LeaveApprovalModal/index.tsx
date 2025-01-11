@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useFetcher } from "@remix-run/react";
 import type { LeaveDocument, LeaveDetail } from "~/entities/leave/model";
+import { useAuthStore } from "~/shared/store/auth";
 import { Modal } from "~/shared/ui/components/Modal";
 import { Button } from "~/shared/ui/components/Button";
 import { format } from "date-fns";
@@ -35,6 +36,8 @@ export function LeaveApprovalModal({
   const fetcher = useFetcher<LeaveApprovalResponse>();
   const { showToast } = useToastStore();
   const isProcessing = fetcher.state !== "idle";
+  const user = useAuthStore((state) => state.user);
+
   useEffect(() => {
     if (!isOpen) {
       fetcher.data = undefined;
@@ -102,7 +105,7 @@ export function LeaveApprovalModal({
   if (!leaveDetail) {
     return null;
   }
-  const footer = (
+  const footer = user?.role === "admin" && (
     <div className="flex justify-end gap-2">
       <Button
         type="button"

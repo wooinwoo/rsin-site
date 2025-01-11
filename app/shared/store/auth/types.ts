@@ -9,7 +9,7 @@ export interface User {
   birth: string;
   mbti: string;
   thumbnailPath: string | null;
-  role?: string;
+  role?: "admin" | "employee";
   sub?: number;
 }
 
