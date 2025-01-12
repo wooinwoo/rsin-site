@@ -45,20 +45,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const isAuthPage = url.pathname.startsWith("/auth");
 
-  if (
-    process.env.NODE_ENV === "production" &&
-    url.protocol === "http:" &&
-    !url.hostname.includes("localhost")
-  ) {
-    const secureUrl = request.url.replace("http:", "https:");
-    return redirect(secureUrl, {
-      status: 301,
-      headers: {
-        "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
-      },
-    });
-  }
-
   try {
     const token = await getApiToken(request);
 
