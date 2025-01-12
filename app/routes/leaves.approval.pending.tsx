@@ -2,19 +2,15 @@ import { json, redirect, type LoaderFunctionArgs } from "@remix-run/node";
 import { useFetcher, useLoaderData, useSearchParams, useSubmit } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "~/shared/store/auth";
-import type {
-  GetLeavesParams,
-  LeaveDocument,
-  GetLeaveDetailResponse,
-} from "~/entities/leave/model";
+import type { LeaveDocument, GetLeaveDetailResponse } from "~/entities/leave/model";
 import { DataTable } from "~/features/datatable/components/DataTable";
-import { getLeaveDetail, getLeaves } from "~/features/leave/api/leave.server";
+import { getLeaveDetail, getLeavesPending } from "~/features/leave/api/leave.server";
 import { LeaveApprovalCard } from "~/features/leave/components/LeaveApprovalCard";
 import { LeaveApprovalModal } from "~/features/leave/components/LeaveApprovalModal";
 import { pendingColumns, searchFields } from "~/features/leave/LeaveTable/pendingColumns";
 import { useToastStore } from "~/shared/store/toast";
 import { CheckIcon } from "~/shared/ui/icons/CheckIcon";
-
+import { getUserInfo } from "~/cookies.server";
 type LoaderData =
   | {
       type: "list";
@@ -33,39 +29,36 @@ interface BulkApprovalResponse {
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
-  const user = useAuthStore.getState().user;
+  const user = await getUserInfo(request);
+  const isAdmin = user?.role === "admin";
   const documentId = url.searchParams.get("documentId");
   const page = url.searchParams.get("page");
   const size = url.searchParams.get("size");
   const scope = url.searchParams.get("scope");
-  const type = url.searchParams.get("type");
-
+  const startDate = url.searchParams.get("startDate");
+  const endDate = url.searchParams.get("endDate");
+  const applicant = url.searchParams.get("applicant");
   if (documentId) {
-    // 상세 정보 조회
     const detail = await getLeaveDetail(request, Number(documentId));
     return json({ type: "detail", detail });
   }
 
-  if (!page || !size || !scope || !type) {
+  if (!page || !size || (isAdmin && !scope)) {
     const newUrl = new URL(request.url);
     if (!page) newUrl.searchParams.set("page", "1");
     if (!size) newUrl.searchParams.set("size", "25");
-    if (!scope) newUrl.searchParams.set("scope", user?.role === "admin" ? "self" : "all");
-    if (!type) newUrl.searchParams.set("type", "annual");
-    newUrl.searchParams.set("approvalStatus", "pending");
+    if (!scope && isAdmin) newUrl.searchParams.set("scope", "self");
     return redirect(newUrl.toString());
   }
-
-  const params: GetLeavesParams = {
-    size: Number(size),
-    page: Number(page),
-    scope: scope as "self" | "all",
-    type: type as "annual" | "annual_am" | "annual_pm",
-    approvalStatus: "pending",
-  };
-
+  const params = new URLSearchParams();
+  params.append("size", size);
+  params.append("page", page);
+  if (isAdmin && scope) params.append("scope", scope);
+  if (startDate) params.append("startDate", startDate);
+  if (endDate) params.append("endDate", endDate);
+  if (applicant) params.append("applicant", applicant);
   try {
-    const data = await getLeaves(request, params);
+    const data = await getLeavesPending(request, params);
     return json({ type: "list", totalCount: data.totalCount, documents: data.documents });
   } catch (error) {
     throw json({ message: "휴가 신청 목록을 불러오는데 실패했습니다." }, { status: 500 });
@@ -101,9 +94,12 @@ export default function LeaveApprovalPage() {
       return;
     }
 
-    // 선택된 문서의 ID를 사용
     const approvalIds = selectedRows
-      .map((row) => row.id) // document의 id를 사용
+      .map((row) => {
+        const myApproval = row.approvals.find((approval) => approval.approverId === user?.sub);
+
+        return myApproval?.id;
+      })
       .filter((id): id is number => id !== undefined);
 
     if (approvalIds.length === 0) {

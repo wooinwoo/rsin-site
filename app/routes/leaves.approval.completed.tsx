@@ -1,44 +1,36 @@
 import { json, redirect, type LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData, useSearchParams, useSubmit } from "@remix-run/react";
-import type { GetLeavesParams } from "~/entities/leave/model";
 import { DataTable } from "~/features/datatable/components/DataTable";
-import { getLeaves } from "~/features/leave/api/leave.server";
+import { getLeavesDone } from "~/features/leave/api/leave.server";
 import { LeaveCompletedCard } from "~/features/leave/components/LeaveCompletedCard";
 import { completedColumns, searchFields } from "~/features/leave/LeaveTable/completedColumns";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
-  const page = url.searchParams.get("page");
-  const size = url.searchParams.get("size");
-  const scope = url.searchParams.get("scope");
+  const page = url.searchParams.get("page") || "1";
+  const size = url.searchParams.get("size") || "25";
   const type = url.searchParams.get("type");
   const applicant = url.searchParams.get("applicant");
   const startDate = url.searchParams.get("startDate");
   const endDate = url.searchParams.get("endDate");
 
-  if (!page || !size || !scope || !type) {
+  if (!page || !size) {
     const newUrl = new URL(request.url);
     if (!page) newUrl.searchParams.set("page", "1");
     if (!size) newUrl.searchParams.set("size", "25");
-    if (!scope) newUrl.searchParams.set("scope", "all");
-    if (!type) newUrl.searchParams.set("type", "annual");
-    newUrl.searchParams.append("approvalStatus", "approved");
-    newUrl.searchParams.append("approvalStatus", "rejected");
     return redirect(newUrl.toString());
   }
 
-  const params: GetLeavesParams = {
-    size: Number(size),
-    page: Number(page),
-    scope: scope as "self" | "all",
-    type: type as "annual" | "annual_am" | "annual_pm",
-    ...(applicant ? { applicant } : {}),
-    ...(startDate ? { startDate } : {}),
-    ...(endDate ? { endDate } : {}),
-  };
+  const params = new URLSearchParams();
+  params.append("size", size);
+  params.append("page", page);
+  if (type) params.append("type", type);
+  if (applicant) params.append("applicant", applicant);
+  if (startDate) params.append("startDate", startDate);
+  if (endDate) params.append("endDate", endDate);
 
   try {
-    const data = await getLeaves(request, params);
+    const data = await getLeavesDone(request, params);
     return json(data);
   } catch (error) {
     throw json({ message: "휴가 신청 목록을 불러오는데 실패했습니다." }, { status: 500 });

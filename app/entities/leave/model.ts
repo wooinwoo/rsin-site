@@ -35,6 +35,7 @@ export interface GetEmployeeAnnualParams {
 export interface LeaveDocument {
   id: number;
   submittedAt: string;
+  status?: "pending" | "approved" | "rejected";
   leave: {
     type: "annual" | "annual_am" | "annual_pm";
     startedAt: string;
@@ -49,9 +50,11 @@ export interface LeaveDocument {
     thumbnailPath: string;
   };
   approvals: Array<{
+    id: number;
     name: string;
     departmentId: number;
     position: string;
+    approverId: number;
     thumbnailPath: string;
     step: number;
     status: "pending" | "approved" | "rejected";

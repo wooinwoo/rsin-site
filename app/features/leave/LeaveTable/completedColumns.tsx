@@ -58,11 +58,9 @@ export const completedColumns: ColumnDef<LeaveDocument>[] = [
   {
     id: "status",
     header: "상태",
-    accessorKey: "approvals.status",
+    accessorKey: "status",
     cell: ({ row }) => {
-      const approvals = row.approvals || [];
-      if (!approvals.length) return "-";
-      return <ApprovalStatusBadge status={approvals[approvals.length - 1].status} />;
+      return <ApprovalStatusBadge status={row.status || "pending"} />;
     },
   },
   {

@@ -13,9 +13,16 @@ export async function getAnnualStatus(request: Request, params?: GetEmployeeAnnu
   });
 }
 
-export async function getLeaves(request: Request, params?: GetLeavesParams) {
+export async function getLeavesPending(request: Request, params?: GetLeavesParams) {
   return withAuth(request, async (token) => {
-    const response = await leaveApi.getLeaves(token, params);
+    const response = await leaveApi.getLeavesPending(token, params);
+    return response.data;
+  });
+}
+
+export async function getLeavesDone(request: Request, params?: GetLeavesParams) {
+  return withAuth(request, async (token) => {
+    const response = await leaveApi.getLeavesDone(token, params);
     return response.data;
   });
 }
