@@ -36,16 +36,15 @@ export function SidebarItem({
   const isActive = isPathInGroup(location.pathname);
 
   const handleClick = (e: React.MouseEvent) => {
-    if (children && children.length > 0) {
-      e.preventDefault();
-      navigate(children[0].path);
-    }
+    e.preventDefault();
+    const targetPath = children?.length ? children[0].path : path;
+    navigate(targetPath);
   };
 
   return (
     <li data-sidebar="menu-item" className="group/menu-item relative">
-      <NavLink
-        to={children?.length ? children[0].path : path}
+      <button
+        onClick={handleClick}
         className={`
           relative flex w-full items-center gap-2 rounded-md p-2 
           text-left outline-none
@@ -79,13 +78,12 @@ export function SidebarItem({
           `}
         >
           {label}
-          {/* 툴팁 화살표 */}
           <div
             className="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 
             border-4 border-transparent border-r-gray-900"
           />
         </div>
-      </NavLink>
+      </button>
     </li>
   );
 }
