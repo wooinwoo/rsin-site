@@ -38,6 +38,10 @@ export function LeaveApprovalModal({
   const isProcessing = fetcher.state !== "idle";
   const user = useAuthStore((state) => state.user);
 
+  const isPendingApprover = selectedLeave?.approvals.some(
+    (approval) => approval.approverId === user?.sub && approval.status === "pending"
+  );
+
   useEffect(() => {
     if (!isOpen) {
       fetcher.data = undefined;
@@ -50,10 +54,18 @@ export function LeaveApprovalModal({
       return;
     }
 
+    // 내 승인 ID 찾기
+    const myApproval = selectedLeave.approvals.find(
+      (approval) => approval.approverId === user?.sub && approval.status === "pending"
+    );
+    if (!myApproval?.id) {
+      showToast("승인 권한이 없습니다.", "error");
+      return;
+    }
     fetcher.submit(
       {
         status: "approve",
-        leaveId: String(selectedLeave.id),
+        approvalId: String(myApproval.id),
       },
       {
         method: "post",
@@ -68,10 +80,20 @@ export function LeaveApprovalModal({
       return;
     }
 
+    // 내 승인 ID 찾기
+    const myApproval = selectedLeave.approvals.find(
+      (approval) => approval.approverId === user?.sub && approval.status === "pending"
+    );
+
+    if (!myApproval?.id) {
+      showToast("승인 권한이 없습니다.", "error");
+      return;
+    }
+
     fetcher.submit(
       {
         status: "reject",
-        leaveId: String(selectedLeave.id),
+        approvalId: String(myApproval.id),
       },
       {
         method: "post",
@@ -105,7 +127,7 @@ export function LeaveApprovalModal({
   if (!leaveDetail) {
     return null;
   }
-  const footer = user?.role === "admin" && (
+  const footer = user?.role === "admin" && isPendingApprover && (
     <div className="flex justify-end gap-2">
       <Button
         type="button"
@@ -154,53 +176,46 @@ export function LeaveApprovalModal({
           </div>
         </div>
       </div>
-
       {/* 승인 단계 */}
       <div className="mb-6">
         <div className="mb-3 text-sm font-medium">승인단계</div>
         <div className="space-y-2 mb-6">
-          {leaveDetail.approvals.map((approval, index) => (
-            <div
-              key={index}
-              className={`
-                rounded-lg p-4 flex items-center justify-between
-                ${
-                  approval.status === "pending"
-                    ? "border border-gray-200"
-                    : "border border-gray-100 bg-gray-50"
-                }
-              `}
-            >
-              <div className="flex items-center gap-3">
-                <div
-                  className={`
-                    w-6 h-6 rounded-full flex items-center justify-center text-sm
-                    ${
-                      approval.status === "pending"
-                        ? "bg-red-500 text-white"
-                        : "bg-gray-300 text-gray-500"
-                    }
-                  `}
-                >
-                  {index + 1}
-                </div>
-                <div className={approval.status === "pending" ? "text-gray-900" : "text-gray-400"}>
-                  {approval.name}{" "}
-                  {POSITION_OPTIONS.find((option) => option.value === approval.position)?.label}
-                </div>
-              </div>
+          {leaveDetail.approvals.map((approval, index) => {
+            const prevAllApproved = leaveDetail.approvals
+              .slice(0, index)
+              .every((a) => a.status === "approved");
+            const isMyTurn = prevAllApproved && approval.status === "pending";
+
+            const colorStyle = isMyTurn
+              ? "border-blue-200 bg-blue-50 text-blue-500"
+              : "border-gray-100 bg-gray-50 text-gray-400";
+
+            const circleStyle = isMyTurn ? "bg-blue-500" : "bg-gray-300";
+
+            return (
               <div
-                className={`text-sm ${
-                  approval.status === "pending" ? "text-red-500" : "text-gray-400"
-                }`}
+                key={index}
+                className={`rounded-lg p-4 flex items-center justify-between border ${colorStyle}`}
               >
-                {approval.status === "pending" ? "승인대기" : "대기중"}
+                <div className="flex items-center gap-3">
+                  <div
+                    className={`w-6 h-6 rounded-full flex items-center justify-center text-sm text-white ${circleStyle}`}
+                  >
+                    {index + 1}
+                  </div>
+                  <div>
+                    {approval.name}{" "}
+                    {POSITION_OPTIONS.find((option) => option.value === approval.position)?.label}
+                  </div>
+                </div>
+                <div className="text-sm">
+                  {approval.status === "approved" ? "승인됨" : isMyTurn ? "승인대기" : "대기중"}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
-
       {/* 상세 내용 */}
       <div className="mb-6">
         <div className="mb-3 text-sm font-medium">상세내용</div>
@@ -230,7 +245,6 @@ export function LeaveApprovalModal({
           </div>
         </div>
       </div>
-
       {/* 사유 */}
       <div className="mb-6">
         <div className="mb-3 text-sm font-medium">사유</div>

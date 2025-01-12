@@ -6,7 +6,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   try {
     const status = formData.get("status") as "approve" | "reject" | "approved";
-    const leaveId = Number(formData.get("leaveId"));
+    const approvalId = Number(formData.get("approvalId"));
 
     if (status === "approved") {
       const approvalIdsString = formData.get("approvalIds") as string;
@@ -16,12 +16,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
 
     if (status === "approve") {
-      await approveLeaves(request, [leaveId]);
+      await approveLeaves(request, [approvalId]);
       return json({ status: "approve", success: true });
     }
 
     if (status === "reject") {
-      await rejectLeave(request, leaveId);
+      await rejectLeave(request, approvalId);
       return json({ status: "reject", success: true });
     }
 

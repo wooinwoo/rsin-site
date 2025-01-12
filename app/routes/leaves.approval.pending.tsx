@@ -96,8 +96,9 @@ export default function LeaveApprovalPage() {
 
     const approvalIds = selectedRows
       .map((row) => {
-        const myApproval = row.approvals.find((approval) => approval.approverId === user?.sub);
-
+        const myApproval = row.approvals.find(
+          (approval) => approval.approverId === user?.sub && approval.status === "pending"
+        );
         return myApproval?.id;
       })
       .filter((id): id is number => id !== undefined);
