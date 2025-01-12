@@ -1,7 +1,6 @@
 import { NavLink, useNavigate } from "@remix-run/react";
 import { useLocation } from "@remix-run/react";
 import type { MenuItem } from "~/shared/constants/navigation"; // MenuItem 타입 import 추가
-import { getFullPath } from "~/shared/utils/url";
 
 // SidebarItemProps 타입 수정
 export interface SidebarItemProps extends MenuItem {
@@ -46,7 +45,7 @@ export function SidebarItem({
   return (
     <li data-sidebar="menu-item" className="group/menu-item relative">
       <NavLink
-        to={children?.length ? getFullPath(children[0].path) : getFullPath(path)}
+        to={children?.length ? children[0].path : path}
         className={`
           relative flex w-full items-center gap-2 rounded-md p-2 
           text-left outline-none
