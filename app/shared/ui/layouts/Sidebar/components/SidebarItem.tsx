@@ -38,6 +38,9 @@ export function SidebarItem({
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     const targetPath = children?.length ? children[0].path : path;
+
+    if (location.pathname === targetPath) return;
+
     navigate(targetPath);
   };
 
