@@ -13,13 +13,15 @@ export const ProfileCell = memo(function ProfileCell({
 }: ProfileCellProps) {
   return (
     <div className="flex items-center gap-2">
-      <OptimizedImage
-        src={getFullImageUrl(profileUrl)}
-        alt={employeeName}
-        className="rounded-full"
-        width={32}
-        height={32}
-      />
+      <div className="rounded-full ring-1 ring-gray-300 shadow-[0_0_0_1px_rgba(0,0,0,0.05)]">
+        <OptimizedImage
+          src={getFullImageUrl(profileUrl)}
+          alt={employeeName}
+          className="rounded-full"
+          width={32}
+          height={32}
+        />
+      </div>
       <span>{employeeName}</span>
     </div>
   );
