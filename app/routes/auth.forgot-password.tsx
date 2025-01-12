@@ -4,8 +4,7 @@ import { Input } from "~/shared/ui/components/Input";
 import { Button } from "~/shared/ui/components/Button";
 import { ERROR_MESSAGES } from "~/shared/constants/auth";
 import { useNavigate } from "@remix-run/react";
-import { LogoIcon } from "~/shared/ui/icons";
-
+import { accountApi } from "~/entities/account/api";
 export default function ForgotPassword() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -18,8 +17,7 @@ export default function ForgotPassword() {
     setIsLoading(true);
 
     try {
-      // API 호출
-      // await sendResetPasswordEmail(email);
+      await accountApi.requestPasswordReset({ email });
       navigate("/auth/forgot-password/sent");
     } catch (error) {
       setError(ERROR_MESSAGES.invalidEmail);
