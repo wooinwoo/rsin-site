@@ -4,8 +4,9 @@ import { authApi } from "~/entities/auth/api";
 import { ProfileEditModal } from "~/features/profile/components/ProfileEditModal";
 import { useClickAway } from "~/shared/hooks/useClickAway";
 import { useAuthStore } from "~/shared/store";
-import { getFullImageUrl } from "~/shared/utils/imges";
 import { ProfileEditData } from "~/features/profile/components/ProfileEditModal/types";
+import { ProfileCell } from "~/features/datatable/components/cells/ProfileCell";
+
 interface SidebarFooterProps {
   isCollapsed: boolean;
   setIsCollapsed: (value: boolean) => void;
@@ -55,10 +56,10 @@ export function SidebarFooter({
         >
           <div className={`p-2 flex w-full items-center gap-2`}>
             <span className="relative flex shrink-0 overflow-hidden h-8 w-8 rounded-lg">
-              <img
-                className="aspect-square h-full w-full"
-                alt="프로필"
-                src={getFullImageUrl(user?.thumbnailPath)}
+              <ProfileCell
+                profileUrl={user?.thumbnailPath ?? ""}
+                employeeName={user?.name || ""}
+                withBorder={false}
               />
             </span>
             <div className="grid flex-1 text-left text-sm leading-tight">
