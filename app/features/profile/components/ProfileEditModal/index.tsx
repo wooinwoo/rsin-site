@@ -58,15 +58,10 @@ export function ProfileEditModal({ isOpen, onClose, initialData }: ProfileEditMo
             },
           });
 
-          console.log("Response content-type:", response.headers.get("content-type"));
-
           const text = await response.text();
-          console.log("Response status:", response.status);
-          console.log("Response text:", text);
 
           if (response.headers.get("content-type")?.includes("application/json")) {
             const data = JSON.parse(text);
-            console.log("Response data:", data);
           }
         } catch (error) {
           console.error("Error details:", error);

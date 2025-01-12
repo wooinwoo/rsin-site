@@ -21,7 +21,6 @@ export async function action({ request }: ActionFunctionArgs) {
       email: email as string,
       password: password as string,
     });
-    console.log("Login Response:", response.data); // 응답 데이터 확인
 
     const cookieHeader = await saveApiToken(response?.headers["set-cookie"]?.[0] ?? "");
     const userInfoHeader = await saveUserInfo(response.data);

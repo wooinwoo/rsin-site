@@ -7,7 +7,6 @@ export const accountApi = {
   },
 
   resetPassword(accessToken: string, data: ResetPasswordRequest) {
-    console.log("/accounts/password-reset?accessToken=" + accessToken, data);
     return client.post("/accounts/password-reset?accessToken=" + accessToken, data);
   },
 };
