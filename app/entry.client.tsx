@@ -1,9 +1,3 @@
-/**
- * By default, Remix will handle hydrating your app on the client for you.
- * You are free to delete this file if you'd like to, but if you ever want it revealed again, you can run `npx remix reveal` ✨
- * For more information, see https://remix.run/file-conventions/entry.client
- */
-
 import { RemixBrowser } from "@remix-run/react";
 import { startTransition } from "react";
 import { hydrateRoot } from "react-dom/client";
@@ -15,6 +9,37 @@ if ("serviceWorker" in navigator) {
       registration.unregister();
     }
   });
+}
+
+// HTTPS 강제 처리
+if (typeof window !== "undefined") {
+  // pushState 수정
+  const originalPushState = window.history.pushState;
+  window.history.pushState = function (state, title, url) {
+    try {
+      if (url && typeof url === "string" && url.startsWith("http:")) {
+        url = url.replace("http:", "https:");
+      }
+      return originalPushState.call(this, state, title, url);
+    } catch (error) {
+      console.error("Navigation error:", error);
+      return originalPushState.call(this, state, title, url);
+    }
+  };
+
+  // replaceState 수정 (추가 안전장치)
+  const originalReplaceState = window.history.replaceState;
+  window.history.replaceState = function (state, title, url) {
+    try {
+      if (url && typeof url === "string" && url.startsWith("http:")) {
+        url = url.replace("http:", "https:");
+      }
+      return originalReplaceState.call(this, state, title, url);
+    } catch (error) {
+      console.error("Navigation error:", error);
+      return originalReplaceState.call(this, state, title, url);
+    }
+  };
 }
 
 startTransition(() => {
