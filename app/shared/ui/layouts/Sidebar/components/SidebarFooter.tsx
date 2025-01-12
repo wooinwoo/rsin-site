@@ -88,10 +88,15 @@ export function SidebarFooter({
           <div
             ref={contextMenuRef}
             className={`
-            absolute bottom-full mb-2 w-48 rounded-lg bg-white shadow-lg border border-gray-200 py-1
-            ${isCollapsed ? "left-16" : "left-[230px]"}
-            ${isMobileOpen ? "left-[130px]" : ""}
-          `}
+              absolute bottom-full mb-2 w-48 rounded-lg bg-white shadow-lg border border-gray-200 py-1
+             ${
+               isMobileOpen
+                 ? "left-0 translate-x-4"
+                 : isCollapsed
+                 ? "left-0 translate-x-16"
+                 : "left-0 translate-x-40"
+             }
+            `}
           >
             <button
               onClick={() => {
