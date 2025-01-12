@@ -41,6 +41,8 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
   return defaultShouldRevalidate;
 };
 
+const CACHE_DURATION = 5 * 60 * 1000;
+let cachedUser: { data: User | null; timestamp: number } | null = null;
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const isAuthPage = url.pathname.startsWith("/auth");
@@ -52,12 +54,15 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       return redirect("/auth/login");
     }
     if (token) {
+      const now = Date.now();
+      if (cachedUser && now - cachedUser.timestamp < CACHE_DURATION) {
+        return json<LoaderData>({ user: cachedUser.data });
+      }
+
       const response = await authApi.getMyProfile(token);
       const userData = response.data as User;
 
-      if (isAuthPage) {
-        return json<LoaderData>({ user: userData });
-      }
+      cachedUser = { data: userData, timestamp: now };
 
       return json<LoaderData>({ user: userData });
     }
