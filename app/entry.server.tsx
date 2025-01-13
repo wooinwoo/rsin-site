@@ -41,6 +41,15 @@ export default function handleRequest(
     )
   );
 
+  const url = new URL(request.url);
+  if (url.protocol === "http:") {
+    url.protocol = "https:";
+    return new Response(null, {
+      status: 301,
+      headers: { Location: url.toString() },
+    });
+  }
+
   responseHeaders.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
 
   return isbot(request.headers.get("user-agent") || "")
