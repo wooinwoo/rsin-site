@@ -128,7 +128,6 @@ export default function TeamManagementListPage() {
   // 액션 결과 처리
   useEffect(() => {
     if (actionData) {
-      alert(actionData.message);
       if (actionData.success) {
         setIsModalOpen(false);
         setSelectedMember(null);
