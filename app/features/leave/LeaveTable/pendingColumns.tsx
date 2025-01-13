@@ -5,33 +5,33 @@ import type { LeaveDocument } from "~/entities/leave/model";
 import { LEAVE_TYPE_OPTIONS } from "~/shared/constants/options";
 import { useAuthStore } from "~/shared/store/auth";
 import { POSITION_OPTIONS } from "~/shared/constants/options";
-const baseSearchFields: SearchField[] = [
-  {
-    id: "applicant",
-    type: "text",
-    label: "신청자",
-    placeholder: "이름을 입력하세요",
-    width: "200px",
-  },
-];
 
-const adminSearchField: SearchField = {
-  id: "scope",
-  type: "select",
-  label: "결재 구분",
-  options: [
-    { value: "self", label: "내 승인대기" },
-    { value: "all", label: "결재선 전체" },
-  ],
-  width: "150px",
-  defaultValue: useAuthStore.getState().user?.role === "admin" ? "self" : "all",
-  showAllOption: false,
-} as const; // 타입 추론을 위한 const assertion
+export const getSearchFields = (userRole?: string): SearchField[] => {
+  const baseSearchFields: SearchField[] = [
+    {
+      id: "applicant",
+      type: "text",
+      label: "신청자",
+      placeholder: "이름을 입력하세요",
+      width: "200px",
+    },
+  ];
 
-export const searchFields: SearchField[] = [
-  ...baseSearchFields,
-  ...(useAuthStore.getState().user?.role === "admin" ? [adminSearchField] : []),
-];
+  const adminSearchField: SearchField = {
+    id: "scope",
+    type: "select",
+    label: "결재 구분",
+    options: [
+      { value: "self", label: "내 승인대기" },
+      { value: "all", label: "결재선 전체" },
+    ],
+    width: "150px",
+    defaultValue: "self",
+    showAllOption: false,
+  };
+
+  return userRole === "admin" ? [...baseSearchFields, adminSearchField] : baseSearchFields;
+};
 
 export const pendingColumns: ColumnDef<LeaveDocument>[] = [
   {

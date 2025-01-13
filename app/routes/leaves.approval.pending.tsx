@@ -7,7 +7,7 @@ import { DataTable } from "~/features/datatable/components/DataTable";
 import { getLeaveDetail, getLeavesPending } from "~/features/leave/api/leave.server";
 import { LeaveApprovalCard } from "~/features/leave/components/LeaveApprovalCard";
 import { LeaveApprovalModal } from "~/features/leave/components/LeaveApprovalModal";
-import { pendingColumns, searchFields } from "~/features/leave/LeaveTable/pendingColumns";
+import { pendingColumns, getSearchFields } from "~/features/leave/LeaveTable/pendingColumns";
 import { useToastStore } from "~/shared/store/toast";
 import { CheckIcon } from "~/shared/ui/icons/CheckIcon";
 import { getUserInfo } from "~/cookies.server";
@@ -158,7 +158,7 @@ export default function LeaveApprovalPage() {
         data={loaderData.type === "list" ? loaderData.documents : []}
         columns={pendingColumns}
         mobileCard={LeaveApprovalCard}
-        searchFields={searchFields}
+        searchFields={getSearchFields(user?.role)}
         onSearch={(values) => {
           const params = new URLSearchParams(searchParams);
           Object.entries(values).forEach(([key, value]) => {
