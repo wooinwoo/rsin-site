@@ -1,11 +1,11 @@
-import { Form, useNavigate } from "@remix-run/react";
+import { useRevalidator } from "@remix-run/react";
+import { Form } from "@remix-run/react";
 import { useRef, useState } from "react";
-import { authApi } from "~/entities/auth/api";
+import { ProfileCell } from "~/features/datatable/components/cells/ProfileCell";
 import { ProfileEditModal } from "~/features/profile/components/ProfileEditModal";
+import { ProfileEditData } from "~/features/profile/components/ProfileEditModal/types";
 import { useClickAway } from "~/shared/hooks/useClickAway";
 import { useAuthStore } from "~/shared/store";
-import { ProfileEditData } from "~/features/profile/components/ProfileEditModal/types";
-import { ProfileCell } from "~/features/datatable/components/cells/ProfileCell";
 
 interface SidebarFooterProps {
   isCollapsed: boolean;
@@ -20,26 +20,12 @@ export function SidebarFooter({
   isMobileOpen,
   setIsMobileOpen,
 }: SidebarFooterProps) {
-  const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
-  const clearUser = useAuthStore((state) => state.clearUser);
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
   const [isProfileEditModalOpen, setIsProfileEditModalOpen] = useState(false);
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
-
-  const handleLogout = async () => {
-    try {
-      await authApi.signOut();
-      clearUser(); // zustand store 초기화
-      navigate("/auth/login");
-    } catch (error) {
-      console.error("로그아웃 실패:", error);
-      // 에러가 발생해도 일단 로그아웃 처리
-      clearUser();
-      navigate("/auth/login");
-    }
-  };
+  const revalidator = useRevalidator();
 
   useClickAway([contextMenuRef, buttonRef], () => {
     setIsContextMenuOpen(false);
@@ -123,15 +109,9 @@ export function SidebarFooter({
               </svg>
               내 정보 수정
             </button>
-            <Form
-              action="/auth/logout"
-              method="post"
-              onSubmit={() => {
-                clearUser(); // zustand store 초기화
-              }}
-            >
+            <Form action="/auth/logout" method="post">
               <button
-                onClick={handleLogout}
+                type="submit"
                 className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100 flex items-center gap-2"
               >
                 <svg
@@ -162,6 +142,7 @@ export function SidebarFooter({
         initialData={user as ProfileEditData | undefined}
         onSubmit={async (data) => {
           setIsProfileEditModalOpen(false);
+          revalidator.revalidate();
         }}
       />
     </>

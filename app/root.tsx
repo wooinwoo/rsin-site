@@ -6,9 +6,11 @@ import {
   ScrollRestoration,
   useRouteError,
   isRouteErrorResponse,
+  LiveReload,
+  useLocation,
+  useLoaderData,
 } from "@remix-run/react";
 import { json, redirect, type LoaderFunctionArgs } from "@remix-run/node";
-import { useLocation, useLoaderData } from "react-router-dom";
 import { getApiToken } from "~/cookies.server";
 import { authApi } from "./entities/auth/api";
 import { Header } from "./shared/ui/layouts/Header";
@@ -16,10 +18,11 @@ import { Sidebar } from "./shared/ui/layouts/Sidebar";
 import { GlobalLoadingIndicator } from "./shared/ui/components/GlobalLoadingIndicator";
 import { useAuthStore } from "./shared/store/auth";
 import { useEffect } from "react";
-import "./tailwind.css";
+import "../public/tailwind.css";
 import { User } from "./shared/store/auth/types";
 import { ShouldRevalidateFunction } from "@remix-run/react";
 import { GlobalToast } from "./shared/ui/components/GlobalToast";
+
 export type LoaderData = {
   user: User | null;
 };
@@ -34,99 +37,116 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
     return false;
   }
 
-  if (!formAction?.includes("/auth")) {
-    return false;
+  if (formAction?.includes("/auth") || formAction?.includes("/profile")) {
+    return true;
+  }
+
+  if (currentUrl.pathname.includes("/profile") && !nextUrl.pathname.includes("/profile")) {
+    return true;
   }
 
   return defaultShouldRevalidate;
 };
 
-const CACHE_DURATION = 5 * 60 * 1000;
-let cachedUser: { data: User | null; timestamp: number } | null = null;
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const isAuthPage = url.pathname.startsWith("/auth");
 
   try {
     const token = await getApiToken(request);
+    console.log("token", token);
 
     if (!token && !isAuthPage) {
       return redirect("/auth/login");
     }
+
     if (token) {
-      const now = Date.now();
-      if (cachedUser && now - cachedUser.timestamp < CACHE_DURATION) {
-        return json<LoaderData>({ user: cachedUser.data });
+      try {
+        const response = await authApi.getMyProfile(token);
+        const userData = response.data as User;
+
+        if (isAuthPage) {
+          return redirect("/");
+        }
+
+        return json<LoaderData>({ user: userData });
+      } catch (error) {
+        // API 호출 실패 시 (토큰 만료 등)
+        if (!isAuthPage) {
+          return redirect("/auth/login");
+        }
+        return json<LoaderData>({ user: null });
       }
-
-      const response = await authApi.getMyProfile(token);
-      const userData = response.data as User;
-
-      cachedUser = { data: userData, timestamp: now };
-
-      return json<LoaderData>({ user: userData });
+    }
+    if (isAuthPage) {
+      return json<LoaderData>({ user: null });
     }
 
-    if (!isAuthPage) {
-      return redirect("/auth/login");
-    }
-
-    return json<LoaderData>({ user: null });
+    return redirect("/auth/login");
   } catch (error) {
+    console.error("Loader Error:", error);
     if (!isAuthPage) {
       return redirect("/auth/login");
     }
     return json<LoaderData>({ user: null });
   }
 };
-
-function Document({ children, title = "RSIN" }: { children: React.ReactNode; title?: string }) {
+function Document({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>{title}</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
         <Links />
       </head>
-      <body className="bg-gray-200 text-gray-800">
-        <GlobalLoadingIndicator />
+      <body>
         {children}
         <ScrollRestoration />
         <Scripts />
+        <LiveReload />
       </body>
     </html>
+  );
+}
+
+function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <GlobalLoadingIndicator />
+      <GlobalToast />
+      <div className="min-h-screen flex">
+        <Sidebar />
+        <div className="flex-1 flex flex-col min-w-0">
+          <Header />
+          <main className="flex-1 p-2 sm:p-4 min-w-0">{children}</main>
+        </div>
+      </div>
+    </>
   );
 }
 
 export default function App() {
   const location = useLocation();
   const isAuthPage = location.pathname.startsWith("/auth");
-  const { user } = useLoaderData() as LoaderData;
-  const updateUser = useAuthStore((state) => state.updateUser);
-
+  const { user } = useLoaderData<LoaderData>();
+  const { updateUser, clearUser } = useAuthStore();
   useEffect(() => {
-    updateUser(user || {});
-  }, [user, updateUser]);
+    if (user) {
+      updateUser(user);
+    } else {
+      clearUser();
+    }
+  }, [user, updateUser, clearUser]);
 
   return (
     <Document>
       {isAuthPage ? (
         <Outlet />
       ) : (
-        <>
-          <GlobalToast />
-          <div className="min-h-screen flex">
-            <Sidebar />
-            <div className="flex-1 flex flex-col min-w-0">
-              <Header />
-              <main className="flex-1 p-2 sm:p-4 min-w-0 ">
-                <Outlet />
-              </main>
-            </div>
-          </div>
-        </>
+        <Layout>
+          <Outlet />
+        </Layout>
       )}
     </Document>
   );
@@ -139,25 +159,23 @@ export function ErrorBoundary() {
 
   return (
     <Document>
-      {isAuthPage ? (
-        <div className="min-h-screen flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
-            <ErrorContent error={error} />
+      <div className={isAuthPage ? "min-h-screen" : ""}>
+        {isAuthPage ? (
+          <div className="flex items-center justify-center p-4 min-h-screen">
+            <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full mx-auto">
+              <ErrorContent error={error} />
+            </div>
           </div>
-        </div>
-      ) : (
-        <div className="min-h-screen flex">
-          <Sidebar />
-          <div className="flex-1 flex flex-col min-w-0">
-            <Header />
-            <main className="flex-1 p-2 sm:p-4 min-w-0">
-              <div className="bg-white rounded-lg shadow-lg p-8 max-w-md mx-auto mt-8 text-center">
+        ) : (
+          <Layout>
+            <div className="h-full flex items-center justify-center">
+              <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full mx-auto">
                 <ErrorContent error={error} />
               </div>
-            </main>
-          </div>
-        </div>
-      )}
+            </div>
+          </Layout>
+        )}
+      </div>
     </Document>
   );
 }
@@ -208,5 +226,5 @@ function ErrorContent({ error }: { error: unknown }) {
 }
 
 export function links() {
-  return [{ rel: "stylesheet", href: "/app/tailwind.css" }];
+  return [{ rel: "stylesheet", href: "tailwind.css" }];
 }
