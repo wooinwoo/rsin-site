@@ -77,6 +77,11 @@ export function ProfileEditModal({ isOpen, onClose, initialData }: ProfileEditMo
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const cleanThumbnailPath = formData.thumbnailPath
+      ? formData.thumbnailPath.startsWith("http")
+        ? new URL(formData.thumbnailPath).pathname
+        : formData.thumbnailPath
+      : "";
 
     fetcher.submit(
       {
@@ -84,6 +89,7 @@ export function ProfileEditModal({ isOpen, onClose, initialData }: ProfileEditMo
         phone: formData.phone,
         birth: formData.birth,
         mbti: formData.mbti,
+        thumbnailPath: cleanThumbnailPath,
         action: "updateProfile",
       },
       {

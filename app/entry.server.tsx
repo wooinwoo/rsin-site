@@ -41,8 +41,6 @@ export default function handleRequest(
   //   )
   // );
 
-  responseHeaders.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
-
   return isbot(request.headers.get("user-agent") || "")
     ? handleBotRequest(request, responseStatusCode, responseHeaders, remixContext)
     : handleBrowserRequest(request, responseStatusCode, responseHeaders, remixContext);

@@ -6,7 +6,6 @@ import {
   ScrollRestoration,
   useRouteError,
   isRouteErrorResponse,
-  LiveReload,
   useLocation,
   useLoaderData,
 } from "@remix-run/react";
@@ -104,7 +103,6 @@ function Document({ children }: { children: React.ReactNode }) {
         {children}
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
       </body>
     </html>
   );
