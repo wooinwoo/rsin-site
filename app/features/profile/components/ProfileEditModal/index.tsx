@@ -31,10 +31,22 @@ export function ProfileEditModal({ isOpen, onClose, initialData }: ProfileEditMo
   );
 
   useEffect(() => {
-    if (initialData) {
-      setFormData(initialData);
+    if (!isOpen) {
+      setFormData(
+        initialData || {
+          name: "",
+          departmentId: 1,
+          position: "staff",
+          joinedAt: "",
+          email: "",
+          phone: "",
+          birth: "",
+          mbti: null,
+          thumbnailPath: "",
+        }
+      );
     }
-  }, [initialData]);
+  }, [initialData, isOpen]);
   const uploadImageToS3 = async (file: File): Promise<string | null> => {
     try {
       const urlFormData = new FormData();
