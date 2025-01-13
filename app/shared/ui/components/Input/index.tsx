@@ -1,4 +1,5 @@
 import { InputProps } from "./types";
+import { useEffect } from "react";
 
 export function Input({
   value,
@@ -59,6 +60,28 @@ export function Input({
     return "";
   };
 
+  const formatPhoneNumber = (value: string) => {
+    const cleaned = value.replace(/\D/g, "");
+    if (cleaned.length >= 7) {
+      return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 7)}-${cleaned.slice(7)}`;
+    } else if (cleaned.length >= 3) {
+      return `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`;
+    }
+    return cleaned;
+  };
+
+  useEffect(() => {
+    if (type === "tel" && value && typeof value === "string") {
+      const formattedValue = formatPhoneNumber(value);
+      if (formattedValue !== value) {
+        const e = {
+          target: { value: formattedValue },
+        } as React.ChangeEvent<HTMLInputElement>;
+        onChange(e);
+      }
+    }
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let newValue = e.target.value;
 
@@ -69,14 +92,7 @@ export function Input({
 
     // tel 타입일 경우 자동으로 하이픈 추가
     if (type === "tel") {
-      const cleaned = newValue.replace(/\D/g, "");
-      if (cleaned.length >= 7) {
-        newValue = `${cleaned.slice(0, 3)}-${cleaned.slice(3, 7)}-${cleaned.slice(7)}`;
-      } else if (cleaned.length >= 3) {
-        newValue = `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`;
-      } else {
-        newValue = cleaned;
-      }
+      newValue = formatPhoneNumber(newValue);
       e.target.value = newValue;
     }
 
