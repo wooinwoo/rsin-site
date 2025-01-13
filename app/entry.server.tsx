@@ -24,16 +24,22 @@ export default function handleRequest(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
-  const forwardedProto = request.headers.get("x-forwarded-proto");
-  console.log("forwardedProto", forwardedProto);
-  if (forwardedProto === "http") {
-    const url = new URL(request.url);
-    url.protocol = "https:";
-    return new Response(null, {
-      status: 301,
-      headers: { Location: url.toString() },
-    });
-  }
+  console.log(
+    "DEBUG:",
+    JSON.stringify(
+      {
+        url: request.url,
+        protocol: new URL(request.url).protocol,
+        forwardedProto: request.headers.get("x-forwarded-proto"),
+        headers: Object.fromEntries(request.headers.entries()),
+        method: request.method,
+        responseStatus: responseStatusCode,
+        responseHeaders: Object.fromEntries(responseHeaders.entries()),
+      },
+      null,
+      0
+    )
+  );
 
   responseHeaders.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
 
