@@ -24,6 +24,19 @@ export default function handleRequest(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
+  const forwardedProto = request.headers.get("x-forwarded-proto");
+  console.log("forwardedProto", forwardedProto);
+  if (forwardedProto === "http") {
+    const url = new URL(request.url);
+    url.protocol = "https:";
+    return new Response(null, {
+      status: 301,
+      headers: { Location: url.toString() },
+    });
+  }
+
+  responseHeaders.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+
   return isbot(request.headers.get("user-agent") || "")
     ? handleBotRequest(request, responseStatusCode, responseHeaders, remixContext)
     : handleBrowserRequest(request, responseStatusCode, responseHeaders, remixContext);
