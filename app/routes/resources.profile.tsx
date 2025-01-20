@@ -11,6 +11,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       phone: formData.get("phone") as string,
       birth: formData.get("birth") as string,
       mbti: formData.get("mbti") as string,
+      thumbnailPath: formData.get("thumbnailPath") as string,
     };
 
     try {

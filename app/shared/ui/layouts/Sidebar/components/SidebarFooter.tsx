@@ -31,6 +31,7 @@ export function SidebarFooter({
     setIsContextMenuOpen(false);
   });
 
+  console.log("user", user);
   return (
     <>
       <div className="relative border-t border-gray-800">
