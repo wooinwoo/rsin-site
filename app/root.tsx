@@ -117,7 +117,7 @@ function Layout({ children }: { children: React.ReactNode }) {
         <Sidebar />
         <div className="flex-1 flex flex-col min-w-0">
           <Header />
-          <main className="flex-1 p-2 sm:p-4 min-w-0">{children}</main>
+          <main className="flex-1 p-2 sm:p-4 min-w-0 bg-gray-200">{children}</main>
         </div>
       </div>
     </>
