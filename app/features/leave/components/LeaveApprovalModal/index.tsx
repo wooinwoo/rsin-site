@@ -219,7 +219,7 @@ export function LeaveApprovalModal({
       {/* 상세 내용 */}
       <div className="mb-6">
         <div className="mb-3 text-sm font-medium">상세내용</div>
-        <div className="border rounded-lg p-4">
+        <div className="border rounded-lg p-4 space-y-4">
           <div className="flex justify-between items-center">
             <div>
               <div className="mb-2">
@@ -243,13 +243,9 @@ export function LeaveApprovalModal({
               일
             </div>
           </div>
-        </div>
-      </div>
-      {/* 사유 */}
-      <div className="mb-6">
-        <div className="mb-3 text-sm font-medium">사유</div>
-        <div className="border rounded-lg p-4">
-          <div className="text-sm text-gray-600 whitespace-pre-wrap">{leaveDetail.reason}</div>
+          <div className="pt-4 border-t">
+            <div className="text-sm text-gray-600 whitespace-pre-wrap">{leaveDetail.reason}</div>
+          </div>
         </div>
       </div>
     </Modal>
