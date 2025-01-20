@@ -3,7 +3,7 @@ import { TeamMemberCardProps } from "./types";
 import { OptimizedImage } from "~/shared/ui/components/OptimizedImage";
 import { LogoIcon } from "~/shared/ui/icons";
 import { POSITION_OPTIONS } from "~/shared/constants/options";
-
+import { getFullImageUrl } from "~/shared/utils/imges";
 export function TeamMemberCard({ item, onClick }: TeamMemberCardProps) {
   const getPositionLabel = (positionCode: string) => {
     const position = POSITION_OPTIONS.find((pos) => pos.value === positionCode);
@@ -25,7 +25,7 @@ export function TeamMemberCard({ item, onClick }: TeamMemberCardProps) {
           {/* 프로필 섹션 */}
           <div className="flex items-center gap-3 mb-3">
             <OptimizedImage
-              src={employee.profileUrl}
+              src={getFullImageUrl(employee.thumbnailPath)}
               alt={employee.name}
               className="rounded-full ring-2 ring-white shadow-sm"
               width={48}
@@ -49,7 +49,7 @@ export function TeamMemberCard({ item, onClick }: TeamMemberCardProps) {
           <div className="border-t border-red-100 my-2" />
 
           {/* 상세 정보 */}
-          <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
+          <div className="grid grid-cols-1 gap-y-1.5 text-xs">
             <div className="flex items-center justify-between">
               <span className="text-gray-500">사번</span>
               <span className="font-medium text-gray-900">{employee.empNo}</span>
@@ -66,7 +66,7 @@ export function TeamMemberCard({ item, onClick }: TeamMemberCardProps) {
               <span className="text-gray-500">MBTI</span>
               <span className="font-medium text-gray-900">{employee.mbti}</span>
             </div>
-            <div className="col-span-2 flex items-center justify-between">
+            <div className="flex items-center justify-between">
               <span className="text-gray-500">이메일</span>
               <span className="font-medium text-gray-900">{employee.email}</span>
             </div>
