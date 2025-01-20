@@ -89,6 +89,12 @@ export function ProfileEditModal({ isOpen, onClose, initialData }: ProfileEditMo
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!formData.birth) {
+      showToast("생년월일을 입력해주세요.", "error");
+      return;
+    }
+
     const cleanThumbnailPath = formData.thumbnailPath
       ? formData.thumbnailPath.startsWith("http")
         ? new URL(formData.thumbnailPath).pathname

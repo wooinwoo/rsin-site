@@ -70,6 +70,11 @@ export function TeamMemberAddModal({
           id={formId}
           onSubmit={async (e) => {
             e.preventDefault();
+
+            if (!formData.birth) {
+              showToast("생년월일을 입력해주세요.", "error");
+              return;
+            }
             try {
               await onSubmit(formData);
               showToast(
