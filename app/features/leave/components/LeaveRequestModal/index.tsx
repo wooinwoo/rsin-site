@@ -1,7 +1,7 @@
 import { Modal } from "~/shared/ui/components/Modal";
 import { Select } from "~/shared/ui/components/Select";
 import { DatePicker } from "~/shared/ui/components/DatePicker";
-import { TextArea } from "~/shared/ui/components/TextArea";
+import { Toggle } from "~/shared/ui/components/Toggle";
 import { Button } from "~/shared/ui/components/Button";
 import { LeaveRequestModalProps } from "./types";
 import { useState, useEffect } from "react";
@@ -16,28 +16,57 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
   const fetcher = useFetcher<LeaveModalResponse>();
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
   const [startDate, endDate] = dateRange;
+  const [isRangeMode, setIsRangeMode] = useState(false);
+  const [singleDate, setSingleDate] = useState<Date | null>(null);
   const [leaveType, setLeaveType] = useState("full");
 
   const approvers = initialData?.approverLines ?? [];
   const remainingLeave = initialData?.annual?.[0];
   const hasNoLeave = !remainingLeave || remainingLeave?.remain === 0;
 
-  const getProgressWidth = () => {
-    if (!remainingLeave?.total) return "0%";
-    return `${Math.min((remainingLeave.used / remainingLeave.total) * 100, 100)}%`;
-  };
-
   useEffect(() => {
     if (!isOpen) {
       setDateRange([null, null]);
       setLeaveType("annual");
       fetcher.data = undefined;
+      setIsRangeMode(false);
     }
   }, [isOpen]);
 
+  const getWorkDays = (start: Date, end: Date) => {
+    let count = 0;
+    const current = new Date(start);
+
+    while (current <= end) {
+      const day = current.getDay();
+      if (day !== 0 && day !== 6) {
+        count++;
+      }
+      current.setDate(current.getDate() + 1);
+    }
+    return count;
+  };
+
+  const getProgressWidth = () => {
+    if (!remainingLeave?.total) return "0%";
+    return `${Math.min((remainingLeave.used / remainingLeave.total) * 100, 100)}%`;
+  };
+
+  const handleLeaveTypeChange = (value: string) => {
+    setLeaveType(value);
+    if (value === "annual_am" || value === "annual_pm") {
+      setIsRangeMode(false);
+      setSingleDate(new Date());
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!startDate || !endDate) {
+    if (isRangeMode && (!startDate || !endDate)) {
+      showToast("사용일을 선택해주세요.", "error");
+      return;
+    }
+    if (!isRangeMode && !singleDate) {
       showToast("사용일을 선택해주세요.", "error");
       return;
     }
@@ -48,8 +77,12 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
       },
       documentLeave: {
         type: leaveType,
-        startedAt: startDate.toISOString().split("T")[0],
-        endedAt: endDate.toISOString().split("T")[0],
+        startedAt: isRangeMode
+          ? startDate!.toISOString().split("T")[0]
+          : singleDate!.toISOString().split("T")[0],
+        endedAt: isRangeMode
+          ? endDate!.toISOString().split("T")[0]
+          : singleDate!.toISOString().split("T")[0],
       },
     };
 
@@ -91,7 +124,7 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="휴가 신청" footer={footer}>
-      <fetcher.Form onSubmit={handleSubmit} className="space-y-6" id={formId}>
+      <fetcher.Form onSubmit={handleSubmit} className="space-y-8" id={formId}>
         <div className="p-4 bg-gray-50 border border-gray-300 rounded-lg">
           {!remainingLeave ? (
             <div className="flex justify-center py-4">
@@ -129,9 +162,58 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
             required
             options={LEAVE_TYPE_OPTIONS}
             value={leaveType}
-            onChange={(value) => setLeaveType(value)}
+            onChange={handleLeaveTypeChange}
             disabled={hasNoLeave}
           />
+        </div>
+
+        <div className="space-y-1">
+          <div className="flex items-center justify-between mb-2">
+            <label className="block text-sm font-medium">
+              사용일 <span className="text-red-500">*</span>
+            </label>
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm text-gray-800">기간</span>
+              <Toggle
+                label=""
+                isOn={isRangeMode}
+                onToggle={() => setIsRangeMode(!isRangeMode)}
+                activeColor="bg-red-500"
+                disabled={leaveType === "annual_am" || leaveType === "annual_pm"}
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <DatePicker
+              isRange={isRangeMode}
+              onChange={
+                isRangeMode
+                  ? (dates) => setDateRange(dates as [Date | null, Date | null])
+                  : (date) => setSingleDate(date as Date)
+              }
+              value={isRangeMode ? dateRange : singleDate}
+              disabled={hasNoLeave}
+              minDate={new Date()}
+              filterDate={(date) => {
+                const day = date.getDay();
+                return day !== 0 && day !== 6;
+              }}
+              excludeWeekends
+            />
+            <span className="text-sm text-gray-600 whitespace-nowrap">
+              <span className="text-red-500 text-lg">
+                {isRangeMode
+                  ? dateRange[0] && dateRange[1]
+                    ? getWorkDays(dateRange[0], dateRange[1])
+                    : 0
+                  : singleDate
+                  ? 1
+                  : 0}
+              </span>
+              일
+            </span>
+          </div>
         </div>
 
         <div className="space-y-1">
@@ -144,9 +226,11 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
                   className="rounded-lg p-3 flex items-center justify-between border border-gray-200 hover:border-gray-300 transition-colors"
                 >
                   <div className="flex items-center gap-2.5">
-                    <div className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-red-500 text-white">
-                      {index + 1}
-                    </div>
+                    {approvers.length > 1 && (
+                      <div className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-medium bg-red-500 text-white">
+                        {index + 1}
+                      </div>
+                    )}
                     <div className="text-sm">
                       <span className="font-medium text-gray-900">{approver.name}</span>
                       <span className="text-gray-500 ml-1">
@@ -168,34 +252,6 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
               결재자 정보를 불러오는 중...
             </div>
           )}
-        </div>
-
-        <div className="space-y-1">
-          <label className="block text-sm font-medium">
-            사용일 <span className="text-red-500">*</span>
-          </label>
-          <div className="flex items-center gap-4">
-            <DatePicker
-              isRange={true}
-              onChange={(dates) => setDateRange(dates as [Date | null, Date | null])}
-              className=""
-              disabled={hasNoLeave}
-            />
-            {dateRange[0] && dateRange[1] ? (
-              <span className="text-sm text-gray-600 whitespace-nowrap">
-                <span className="text-red-500 text-lg">
-                  {Math.ceil(
-                    (dateRange[1].getTime() - dateRange[0].getTime()) / (1000 * 60 * 60 * 24) + 1
-                  )}
-                </span>
-                일
-              </span>
-            ) : (
-              <span className="text-sm text-gray-600 whitespace-nowrap">
-                <span className="text-red-500 text-lg">0</span>일
-              </span>
-            )}
-          </div>
         </div>
       </fetcher.Form>
     </Modal>

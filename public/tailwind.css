@@ -127,4 +127,5 @@ body {
 
 .react-datepicker__close-icon::after {
   background-color: #8ea9fb !important;
+  font-size: 14px;
 }

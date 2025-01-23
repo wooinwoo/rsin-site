@@ -3,18 +3,31 @@ interface ToggleProps {
   isOn: boolean;
   onToggle: () => void;
   activeColor?: string;
+  disabled?: boolean;
 }
 
-export function Toggle({ label, isOn, onToggle, activeColor = "bg-blue-600" }: ToggleProps) {
+export function Toggle({
+  label,
+  isOn,
+  onToggle,
+  activeColor = "bg-blue-600",
+  disabled = false,
+}: ToggleProps) {
   return (
-    <div className="flex items-center gap-2">
+    <div
+      className={`flex items-center ${label ? "gap-2" : ""} ${
+        disabled ? "opacity-50 cursor-not-allowed" : ""
+      }`}
+    >
       <button
         type="button"
-        onClick={onToggle}
+        onClick={disabled ? undefined : onToggle}
+        disabled={disabled}
         className={`
           relative h-6 w-12 rounded-full 
           transition-all duration-300 ease-in-out
           ${isOn ? activeColor : "bg-gray-200"}
+          ${disabled ? "cursor-not-allowed" : "cursor-pointer"}
         `}
       >
         <span
