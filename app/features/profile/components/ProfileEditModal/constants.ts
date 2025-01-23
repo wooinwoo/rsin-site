@@ -27,7 +27,7 @@ export const FORM_FIELDS: FormField[] = [
     label: "이메일",
     name: "email",
     type: "email",
-    required: true,
+    disabled: true,
     placeholder: "email@rs-team.com",
   },
   {
