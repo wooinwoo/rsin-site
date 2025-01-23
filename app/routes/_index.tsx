@@ -12,7 +12,6 @@ import { useCalendarEvents } from "~/features/calendar/hooks/useCalendarEvents";
 import type { CalendarEvent, LeaveStatus, LeaveType } from "~/features/calendar/types/event";
 import type { BarChartData } from "~/features/chart/components/BarChart";
 import { BarChart } from "~/features/chart/components/BarChart";
-import { useCalendar } from "~/features/calendar/hooks/useCalendar";
 import {
   getDashboardBirthdays,
   getDashboardHolidays,
@@ -21,16 +20,38 @@ import {
 import { CalendarIcon, ChartIcon, FilterIcon } from "~/shared/ui/icons";
 import { Widget } from "~/shared/ui/widgets/widget";
 
-// 서버에서 데이터를 가져오는 loader 함수
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const dateParam = url.searchParams.get("date");
   const baseDate = dateParam ? new Date(dateParam) : new Date();
+  const prevDateParam = url.searchParams.get("prevDate");
 
-  // 현재 달의 이전 달 1일부터
-  const startDate = new Date(baseDate.getFullYear(), baseDate.getMonth() - 1, 1);
-  // 현재 달의 다음 달 말일까지
-  const endDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + 2, 0);
+  // 이전 날짜가 있고, 한 달만 차이나는 경우에는 한 달치 데이터만 추가로 가져옴
+  let startDate, endDate;
+
+  if (prevDateParam) {
+    const prevDate = new Date(prevDateParam);
+    const monthDiff =
+      baseDate.getMonth() +
+      12 * baseDate.getFullYear() -
+      (prevDate.getMonth() + 12 * prevDate.getFullYear());
+
+    if (Math.abs(monthDiff) === 1) {
+      if (monthDiff > 0) {
+        startDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + 1, 1);
+        endDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + 2, 0);
+      } else {
+        startDate = new Date(baseDate.getFullYear(), baseDate.getMonth() - 1, 1);
+        endDate = new Date(baseDate.getFullYear(), baseDate.getMonth(), 0);
+      }
+    } else {
+      startDate = new Date(baseDate.getFullYear(), baseDate.getMonth() - 1, 1);
+      endDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + 2, 0);
+    }
+  } else {
+    startDate = new Date(baseDate.getFullYear(), baseDate.getMonth() - 1, 1);
+    endDate = new Date(baseDate.getFullYear(), baseDate.getMonth() + 2, 0);
+  }
 
   const params = {
     startDate: startDate.toISOString().split("T")[0],
@@ -52,37 +73,35 @@ export async function loader({ request }: LoaderFunctionArgs) {
       status: "holiday" as LeaveStatus,
       isHoliday: true,
     })),
-    ...(birthdays?.map(
-      (birthday: DashboardBirthday) => {
-        const currentYear = baseDate.getFullYear();
-        const [month, day] = birthday.birth.split("-").map(Number);
-        const birthDate = new Date(currentYear, month - 1, day);
+    ...birthdays?.map((birthday: DashboardBirthday) => {
+      const currentYear = baseDate.getFullYear();
+      const [month, day] = birthday.birth.split("-").map(Number);
+      const birthDate = new Date(currentYear, month - 1, day);
 
-        return {
-          id: `birthday-${birthday.id}`,
-          title: `${birthday.name} 생일`,
-          date: birthDate,
-          profileUrl: birthday.thumbnailPath || "",
-          employeeName: birthday.name,
-          department: birthday.department.name,
-          status: "holiday" as LeaveStatus,
-          isBirthday: true,
-        };
-      },
-      ...leaves.map((leave: DashboardLeave) => ({
-        id: leave.leave.id.toString(),
-        title: leave.requester.name,
-        date: new Date(leave.leave.startedAt),
-        profileUrl: leave.requester.thumbnailPath || "",
-        employeeId: leave.requester.id.toString(),
-        employeeName: leave.requester.name,
-        department: leave.requester.departmentId.toString(),
-        leaveType: leave.leave.type as LeaveType,
-        status: "scheduled" as LeaveStatus,
-        description: "",
-        requestDate: new Date(leave.leave.startedAt),
-      }))
-    ) || []),
+      return {
+        id: `birthday-${birthday.id}`,
+        title: `${birthday.name} 생일`,
+        date: birthDate,
+        profileUrl: birthday.thumbnailPath || "",
+        employeeName: birthday.name,
+        department: birthday.department.name,
+        status: "holiday" as LeaveStatus,
+        isBirthday: true,
+      };
+    }),
+    ...leaves.map((leave: DashboardLeave) => ({
+      id: leave.leave.id.toString(),
+      title: leave.requester.name,
+      date: new Date(leave.leave.startedAt),
+      profileUrl: leave.requester.thumbnailPath || "",
+      employeeId: leave.requester.id.toString(),
+      employeeName: leave.requester.name,
+      department: leave.requester.departmentId.toString(),
+      leaveType: leave.leave.type as LeaveType,
+      status: "scheduled" as LeaveStatus,
+      description: "",
+      requestDate: new Date(leave.leave.startedAt),
+    })),
   ];
 
   const totalEmployees = 20;
