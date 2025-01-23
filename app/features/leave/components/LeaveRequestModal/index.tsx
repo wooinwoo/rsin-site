@@ -17,8 +17,6 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
   const [startDate, endDate] = dateRange;
   const [leaveType, setLeaveType] = useState("full");
-  const [reason, setReason] = useState("personal");
-  const [detailReason, setDetailReason] = useState("");
 
   const approvers = initialData?.approverLines ?? [];
   const remainingLeave = initialData?.annual?.[0];
@@ -33,8 +31,6 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
     if (!isOpen) {
       setDateRange([null, null]);
       setLeaveType("annual");
-      setReason("personal");
-      setDetailReason("");
       fetcher.data = undefined;
     }
   }, [isOpen]);
@@ -54,7 +50,6 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
         type: leaveType,
         startedAt: startDate.toISOString().split("T")[0],
         endedAt: endDate.toISOString().split("T")[0],
-        reason: reason === "other" ? detailReason : reason,
       },
     };
 
@@ -77,13 +72,6 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
       }
     }
   }, [fetcher.state, fetcher.data]);
-
-  const leaveReasonOptions = [
-    { value: "personal", label: "개인 사유" },
-    { value: "family", label: "가족 행사" },
-    { value: "health", label: "병가" },
-    { value: "other", label: "기타" },
-  ];
 
   const formId = "leave-request-form";
 
@@ -208,32 +196,6 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
               </span>
             )}
           </div>
-        </div>
-
-        <div className="space-y-2">
-          <label className="block text-sm font-medium">
-            사유 <span className="text-red-500">*</span>
-          </label>
-          <Select
-            required
-            options={leaveReasonOptions}
-            value={reason}
-            onChange={(value) => {
-              setReason(value);
-              if (value !== "other") {
-                setDetailReason("");
-              }
-            }}
-            disabled={hasNoLeave}
-          />
-          <TextArea
-            placeholder="상세 사유를 입력해주세요"
-            required
-            className="h-24"
-            value={detailReason}
-            onChange={(value) => setDetailReason(value)}
-            disabled={reason !== "other"}
-          />
         </div>
       </fetcher.Form>
     </Modal>

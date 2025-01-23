@@ -243,9 +243,6 @@ export function LeaveApprovalModal({
               일
             </div>
           </div>
-          <div className="pt-4 border-t">
-            <div className="text-sm text-gray-600 whitespace-pre-wrap">{leaveDetail.reason}</div>
-          </div>
         </div>
       </div>
     </Modal>
