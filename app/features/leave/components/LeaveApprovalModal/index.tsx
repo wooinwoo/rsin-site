@@ -17,11 +17,12 @@ import type { LeaveApprovalResponse } from "./types";
 export interface LeaveApprovalModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onApprove: () => void;
-  onReject: () => void;
+  onApprove?: () => void;
+  onReject?: () => void;
   leaveDetail?: LeaveDetail;
   selectedLeave?: LeaveDocument | null;
   isLoading?: boolean;
+  readOnly?: boolean;
 }
 
 export function LeaveApprovalModal({
@@ -32,6 +33,7 @@ export function LeaveApprovalModal({
   leaveDetail,
   selectedLeave,
   isLoading,
+  readOnly = false,
 }: LeaveApprovalModalProps) {
   const fetcher = useFetcher<LeaveApprovalResponse>();
   const { showToast } = useToastStore();
@@ -127,7 +129,7 @@ export function LeaveApprovalModal({
   if (!leaveDetail) {
     return null;
   }
-  const footer = user?.role === "admin" && isPendingApprover && (
+  const footer = !readOnly && user?.role === "admin" && isPendingApprover && (
     <div className="flex justify-end gap-2">
       <Button
         type="button"
@@ -185,12 +187,18 @@ export function LeaveApprovalModal({
               .slice(0, index)
               .every((a) => a.status === "approved");
             const isMyTurn = prevAllApproved && approval.status === "pending";
-
-            const colorStyle = isMyTurn
+            const isApproved = approval.status === "approved";
+            const colorStyle = isApproved
+              ? "border-gray-200 bg-gray-50 text-gray-600"
+              : isMyTurn
               ? "border-blue-200 bg-blue-50 text-blue-500"
               : "border-gray-100 bg-gray-50 text-gray-400";
 
-            const circleStyle = isMyTurn ? "bg-blue-500" : "bg-gray-300";
+            const circleStyle = isApproved
+              ? "bg-gray-500"
+              : isMyTurn
+              ? "bg-blue-500"
+              : "bg-gray-300";
 
             return (
               <div
@@ -201,7 +209,23 @@ export function LeaveApprovalModal({
                   <div
                     className={`w-6 h-6 rounded-full flex items-center justify-center text-sm text-white ${circleStyle}`}
                   >
-                    {index + 1}
+                    {isApproved ? (
+                      <svg
+                        className="w-4 h-4"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    ) : (
+                      index + 1
+                    )}
                   </div>
                   <div>
                     {approval.name}{" "}
@@ -209,7 +233,7 @@ export function LeaveApprovalModal({
                   </div>
                 </div>
                 <div className="text-sm">
-                  {approval.status === "approved" ? "승인됨" : isMyTurn ? "승인대기" : "대기중"}
+                  {isApproved ? <span>승인완료</span> : isMyTurn ? "승인대기" : "대기중"}
                 </div>
               </div>
             );
