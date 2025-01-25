@@ -1,16 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Modal } from "~/shared/ui/components/Modal";
-
-interface Notification {
-  id: string;
-  employeeId: string;
-  type: "approved" | "rejected" | "requested";
-  message: string;
-  isRead: boolean;
-  readAt: string | null;
-  redirectUri: string;
-  createdAt: string;
-}
+import { useNavigate, useFetcher } from "@remix-run/react";
+import { Notification } from "~/entities/notification/model";
 
 interface NotificationDropdownProps {
   notifications: Notification[];
@@ -20,6 +11,8 @@ interface NotificationDropdownProps {
 export function NotificationDropdown({ notifications, onClose }: NotificationDropdownProps) {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
+  const readFetcher = useFetcher();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!isMobile) {
@@ -37,12 +30,29 @@ export function NotificationDropdown({ notifications, onClose }: NotificationDro
     }
   }, [onClose, isMobile]);
 
+  const handleNotificationClick = (notification: Notification) => {
+    onClose();
+    readFetcher.submit(
+      {
+        intent: "read",
+        ids: JSON.stringify([notification.id]),
+      },
+      {
+        method: "post",
+        action: "/resources/notification",
+      }
+    );
+
+    navigate(notification.redirectUri);
+  };
+
   const NotificationList = () => (
     <div className="max-h-[400px] overflow-y-auto">
       {notifications.length > 0 ? (
         notifications.map((notification) => (
           <div
             key={notification.id}
+            onClick={() => handleNotificationClick(notification)}
             className={`p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer ${
               !notification.isRead ? "bg-blue-50" : ""
             }`}

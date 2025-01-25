@@ -34,6 +34,10 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
   formAction,
   defaultShouldRevalidate,
 }) => {
+  if (formAction?.includes("/resources/notifications/read")) {
+    return true;
+  }
+
   if (currentUrl.pathname === nextUrl.pathname && currentUrl.search !== nextUrl.search) {
     return false;
   }
@@ -75,7 +79,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
         return json<LoaderData>({
           user: userData,
-          notifications: notificationsResponse.items,
+          notifications: notificationsResponse.notifications,
         });
       } catch (error) {
         if (!isAuthPage) {

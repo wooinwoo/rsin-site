@@ -1,7 +1,9 @@
+export type NotificationType = "approved" | "rejected" | "requested";
+
 export interface Notification {
-  id: string;
-  employeeId: string;
-  type: "approved" | "rejected" | "requested";
+  id: number;
+  employeeId: number;
+  type: NotificationType;
   message: string;
   isRead: boolean;
   readAt: string | null;
@@ -9,9 +11,9 @@ export interface Notification {
   createdAt: string;
 }
 
-export interface GetNotificationsResponse {
+export interface NotificationResponse {
   totalCount: number;
-  items: Notification[];
+  notifications: Notification[];
 }
 
 export interface ReadNotificationsRequest {
