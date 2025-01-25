@@ -1,9 +1,9 @@
 import { client } from "~/shared/api";
-import type { GetNotificationsResponse, ReadNotificationsRequest } from "./model";
+import type { NotificationResponse, ReadNotificationsRequest } from "./model";
 
 export const notificationApi = {
   getSelf(CookieHeader?: string) {
-    return client.get<GetNotificationsResponse>("/notifications/self", {
+    return client.get<NotificationResponse>("/notifications/self", {
       headers: {
         Cookie: CookieHeader || "",
       },
@@ -19,7 +19,7 @@ export const notificationApi = {
   },
 
   readAll(CookieHeader: string) {
-    return client.patch("/notifications/read/all", null, {
+    return client.patch("/notifications/read/all", undefined, {
       headers: {
         Cookie: CookieHeader || "",
       },
