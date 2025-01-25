@@ -9,6 +9,8 @@ import type {
   GetApproverLinesResponse,
   GetLeaveDetailResponse,
   ApproveRequest,
+  ProrateSimulationResponse,
+  AnnualSimulationResponse,
 } from "./model";
 
 export const leaveApi = {
@@ -93,5 +95,16 @@ export const leaveApi = {
         Cookie: CookieHeader || "",
       },
     });
+  },
+  getProrateSimulation(joinedAt: string) {
+    return client.get<ProrateSimulationResponse>(
+      `/leaves/annual/simulations/prorate?joinedAt=${joinedAt}`
+    );
+  },
+
+  getAnnualSimulation(joinedAt: string) {
+    return client.get<AnnualSimulationResponse[]>(
+      `/leaves/annual/simulations/annual?joinedAt=${joinedAt}`
+    );
   },
 };

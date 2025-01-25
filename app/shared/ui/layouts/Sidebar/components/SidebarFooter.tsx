@@ -6,7 +6,7 @@ import { ProfileEditModal } from "~/features/profile/components/ProfileEditModal
 import { ProfileEditData } from "~/features/profile/components/ProfileEditModal/types";
 import { useClickAway } from "~/shared/hooks/useClickAway";
 import { useAuthStore } from "~/shared/store";
-
+import { LeaveSimulatorModal } from "~/features/leave/components/LeaveSimulatorModal";
 interface SidebarFooterProps {
   isCollapsed: boolean;
   setIsCollapsed: (value: boolean) => void;
@@ -23,6 +23,7 @@ export function SidebarFooter({
   const user = useAuthStore((state) => state.user);
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
   const [isProfileEditModalOpen, setIsProfileEditModalOpen] = useState(false);
+  const [isSimulatorOpen, setIsSimulatorOpen] = useState(false);
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const revalidator = useRevalidator();
@@ -88,6 +89,28 @@ export function SidebarFooter({
           >
             <button
               onClick={() => {
+                setIsSimulatorOpen(true);
+                setIsContextMenuOpen(false);
+              }}
+              className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 flex items-center gap-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 0 1 9-9" />
+              </svg>
+              연차 시뮬레이터
+            </button>
+            <button
+              onClick={() => {
                 setIsProfileEditModalOpen(true);
                 setIsContextMenuOpen(false);
               }}
@@ -145,6 +168,11 @@ export function SidebarFooter({
           setIsProfileEditModalOpen(false);
           revalidator.revalidate();
         }}
+      />
+      <LeaveSimulatorModal
+        isOpen={isSimulatorOpen}
+        onClose={() => setIsSimulatorOpen(false)}
+        joinedAt={user?.joinedAt}
       />
     </>
   );

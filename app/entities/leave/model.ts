@@ -139,3 +139,19 @@ export interface Approver {
 }
 
 export type GetApproverLinesResponse = Approver[];
+
+export interface ProrateSimulationResponse {
+  attendanceRate: number;
+  offset: number;
+  amount: number;
+  grantAt: string;
+  joinedYearWorkdays: number;
+  nextYearWorkdays: number;
+}
+
+export interface AnnualSimulationItem {
+  grantAt: string;
+  amount: number;
+}
+
+export type AnnualSimulationResponse = AnnualSimulationItem[];
