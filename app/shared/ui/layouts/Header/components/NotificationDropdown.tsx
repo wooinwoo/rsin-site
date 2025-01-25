@@ -2,11 +2,14 @@ import { useEffect, useRef } from "react";
 import { Modal } from "~/shared/ui/components/Modal";
 
 interface Notification {
-  id: number;
-  title: string;
+  id: string;
+  employeeId: string;
+  type: "approved" | "rejected" | "requested";
   message: string;
-  date: string;
   isRead: boolean;
+  readAt: string | null;
+  redirectUri: string;
+  createdAt: string;
 }
 
 interface NotificationDropdownProps {
@@ -46,12 +49,20 @@ export function NotificationDropdown({ notifications, onClose }: NotificationDro
           >
             <div className="flex justify-between items-start">
               <div>
-                <h4 className="font-medium text-sm">{notification.title}</h4>
-                <p className="text-sm text-gray-600 mt-1">{notification.message}</p>
+                <p className="text-sm text-gray-600">{notification.message}</p>
               </div>
               {!notification.isRead && <span className="w-2 h-2 bg-blue-500 rounded-full" />}
             </div>
-            <p className="text-xs text-gray-400 mt-2">{notification.date}</p>
+            <p className="text-xs text-gray-400 mt-2">
+              {new Date(notification.createdAt).toLocaleString("ko-KR", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              })}
+            </p>
           </div>
         ))
       ) : (

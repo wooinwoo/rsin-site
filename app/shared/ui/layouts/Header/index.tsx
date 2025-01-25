@@ -1,26 +1,20 @@
+import { useFetcher, useRouteLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import { LeaveRequestModal } from "~/features/leave/components/LeaveRequestModal";
-import { Button } from "~/shared/ui/components/Button";
-import { Breadcrumb } from "~/shared/ui/layouts/Header/components/Breadcrumb";
-import { ReplayIcon } from "~/shared/ui/icons";
-import { BellIcon } from "~/shared/ui/icons/BellIcon";
-import { useFetcher } from "@remix-run/react";
-import { BellActiveIcon } from "~/shared/ui/icons/BellActiveIcon";
-import { NotificationDropdown } from "~/shared/ui/layouts/Header/components/NotificationDropdown";
 import { LeaveModalResponse } from "~/features/leave/components/LeaveRequestModal/types";
+import type { LoaderData } from "~/root";
+import { Button } from "~/shared/ui/components/Button";
+import { ReplayIcon } from "~/shared/ui/icons";
+import { BellActiveIcon } from "~/shared/ui/icons/BellActiveIcon";
+import { BellIcon } from "~/shared/ui/icons/BellIcon";
+import { Breadcrumb } from "~/shared/ui/layouts/Header/components/Breadcrumb";
+import { NotificationDropdown } from "~/shared/ui/layouts/Header/components/NotificationDropdown";
 export function Header() {
+  const data = useRouteLoaderData("root") as LoaderData;
+  const notifications = data?.notifications ?? [];
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  const hasNotifications = true; // 알림 여부
-  const notifications = [
-    {
-      id: 1,
-      title: "휴가 승인",
-      message: "신청하신 휴가가 승인되었습니다.",
-      date: "2024.03.19 13:00",
-      isRead: false,
-    },
-  ];
+  const hasUnreadNotifications = notifications.some((n) => !n.isRead);
 
   const now = new Date();
   const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
@@ -72,7 +66,7 @@ export function Header() {
             onClick={handleNotificationClick}
             className="flex items-center justify-center bg-white w-8 h-8 border border-[#eaeaea] rounded-[6px] transition-colors hover:bg-gray-100"
           >
-            {hasNotifications ? (
+            {hasUnreadNotifications ? (
               <div className="relative">
                 <BellActiveIcon className="w-5 h-5" />
                 <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />

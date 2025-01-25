@@ -21,11 +21,13 @@ import "../public/tailwind.css";
 import { User } from "./shared/store/auth/types";
 import { ShouldRevalidateFunction } from "@remix-run/react";
 import { GlobalToast } from "./shared/ui/components/GlobalToast";
+import { getNotifications } from "~/features/notification/api/notification.server";
+import type { Notification } from "~/entities/notification/model";
 
 export type LoaderData = {
   user: User | null;
+  notifications: Notification[];
 };
-
 export const shouldRevalidate: ShouldRevalidateFunction = ({
   currentUrl,
   nextUrl,
@@ -53,7 +55,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   try {
     const token = await getApiToken(request);
-    console.log("token", token);
 
     if (!token && !isAuthPage) {
       return redirect("/auth/login");
@@ -61,24 +62,31 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
     if (token) {
       try {
-        const response = await authApi.getMyProfile(token);
-        const userData = response.data as User;
+        const [userResponse, notificationsResponse] = await Promise.all([
+          authApi.getMyProfile(token),
+          getNotifications(request),
+        ]);
+
+        const userData = userResponse.data as User;
 
         if (isAuthPage) {
           return redirect("/");
         }
 
-        return json<LoaderData>({ user: userData });
+        return json<LoaderData>({
+          user: userData,
+          notifications: notificationsResponse.items,
+        });
       } catch (error) {
-        // API 호출 실패 시 (토큰 만료 등)
         if (!isAuthPage) {
           return redirect("/auth/login");
         }
-        return json<LoaderData>({ user: null });
+        return json<LoaderData>({ user: null, notifications: [] });
       }
     }
+
     if (isAuthPage) {
-      return json<LoaderData>({ user: null });
+      return json<LoaderData>({ user: null, notifications: [] });
     }
 
     return redirect("/auth/login");
@@ -87,7 +95,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     if (!isAuthPage) {
       return redirect("/auth/login");
     }
-    return json<LoaderData>({ user: null });
+    return json<LoaderData>({ user: null, notifications: [] });
   }
 };
 function Document({ children }: { children: React.ReactNode }) {
