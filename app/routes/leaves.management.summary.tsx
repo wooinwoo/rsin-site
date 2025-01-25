@@ -61,15 +61,17 @@ export default function LeaveManagementSummaryPage() {
       enableSearch
       searchFields={searchFields}
       onSearch={(values) => {
-        const params = new URLSearchParams(searchParams);
+        const params = new URLSearchParams();
+        params.set("page", "1");
+        params.set("size", pageSize.toString());
+
         Object.entries(values).forEach(([key, value]) => {
           if (value) {
             params.set(key, value);
-          } else {
-            params.delete(key);
           }
         });
-        params.set("page", "1"); // 검색 시 첫 페이지로
+
+        // 검색 실행
         submit(params);
       }}
       mobileCard={LeaveEmployeeCard}

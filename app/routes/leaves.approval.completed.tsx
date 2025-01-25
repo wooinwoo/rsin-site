@@ -98,15 +98,16 @@ export default function LeaveApprovalCompletedPage() {
         mobileCard={LeaveCompletedCard}
         searchFields={searchFields}
         onSearch={(values) => {
-          const params = new URLSearchParams(searchParams);
+          const params = new URLSearchParams();
+          params.set("page", "1");
+          params.set("size", pageSize.toString());
+
           Object.entries(values).forEach(([key, value]) => {
             if (value) {
               params.set(key, value);
-            } else {
-              params.delete(key);
             }
           });
-          params.set("page", "1");
+
           submit(params);
         }}
         pagination={{

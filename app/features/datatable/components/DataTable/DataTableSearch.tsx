@@ -50,16 +50,20 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
       ...(end ? { endDate: end.toISOString().split("T")[0] } : {}),
     }));
   };
-
   const handleSearch = () => {
     const newParams = new URLSearchParams();
+
+    newParams.set("page", "1");
+    newParams.set("size", "25");
+
     Object.entries(searchValues).forEach(([key, value]) => {
-      if (value) newParams.set(key, value);
+      if (value) {
+        newParams.set(key, value);
+      }
     });
-    setSearchParams(newParams);
+
     onSearch(searchValues);
   };
-
   const handleReset = () => {
     const defaultValues: Record<string, string> = {};
     const newParams = new URLSearchParams();
@@ -69,14 +73,10 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
         defaultValues[field.id] = field.defaultValue;
         newParams.set(field.id, field.defaultValue);
       }
-      if (field.type === "daterange") {
-        defaultValues.startDate = "";
-        defaultValues.endDate = "";
-      }
     });
 
     setSearchValues(defaultValues);
-    setSearchParams(newParams);
+    setSearchParams(newParams, { replace: true });
     onSearch(defaultValues);
   };
 
