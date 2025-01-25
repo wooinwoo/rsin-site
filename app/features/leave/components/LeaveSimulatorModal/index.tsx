@@ -20,6 +20,9 @@ function calculateMonthlyLeave(
   let startDate = new Date(joinedDate);
   startDate.setFullYear(startDate.getFullYear() - 1);
 
+  // 비례연차 부여일 파싱
+  const prorateGrantDate = new Date(prorateData.grantAt);
+
   for (let i = 1; i <= 12; i++) {
     const baseDate = addMonths(startDate, i);
     const daysInMonth = getDaysInMonth(baseDate);
@@ -28,7 +31,7 @@ function calculateMonthlyLeave(
     const grantDate = setDate(baseDate, grantDay);
 
     monthlyLeaves.push({
-      grantAt: grantDate.toISOString().split("T")[0],
+      grantAt: i === 12 ? prorateData.grantAt : grantDate.toISOString().split("T")[0],
       granted: true,
       isMonthly: i < 12,
       amount: i === 12 ? prorateData.amount : 1,
@@ -102,13 +105,33 @@ export function LeaveSimulatorModal({ isOpen, onClose, joinedAt }: LeaveSimulato
         <div className="space-y-4">
           {/* 비례연차 요약 */}
           {prorateSimFetcher.data && (
-            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-              <div className="text-sm font-medium mb-2">비례연차 부여 예정</div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">{prorateSimFetcher.data.grantAt} 기준</span>
-                <span className="text-lg font-semibold text-blue-600">
-                  {prorateSimFetcher.data.amount}일
-                </span>
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 space-y-3">
+              <div className="text-sm font-medium">비례연차 부여 예정</div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="text-sm text-gray-600">부여 예정일</div>
+                  <div className="font-medium">{prorateSimFetcher.data.grantAt}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-600">부여 일수</div>
+                  <div className="font-medium text-blue-600">{prorateSimFetcher.data.amount}일</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-600">출근율</div>
+                  <div className="font-medium">{prorateSimFetcher.data.attendanceRate}%</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-600">조정 일수</div>
+                  <div className="font-medium">{prorateSimFetcher.data.offset}일</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-600">입사년도 근무일수</div>
+                  <div className="font-medium">{prorateSimFetcher.data.joinedYearWorkdays}일</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-600">다음년도 근무일수</div>
+                  <div className="font-medium">{prorateSimFetcher.data.nextYearWorkdays}일</div>
+                </div>
               </div>
             </div>
           )}
