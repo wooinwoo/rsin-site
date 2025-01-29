@@ -1,4 +1,4 @@
-import { useNavigation } from "@remix-run/react";
+import { useNavigation, type Navigation } from "@remix-run/react";
 import { useRef, useEffect, useState } from "react";
 
 export function GlobalLoadingIndicator() {
@@ -7,31 +7,44 @@ export function GlobalLoadingIndicator() {
   const timerRef = useRef<NodeJS.Timeout>();
   const startTimeRef = useRef<number>();
 
-  const MINIMUM_DELAY = 600;
-  const SHOW_DELAY = 200;
+  const MINIMUM_DELAY = 400;
+  const SHOW_DELAY = 400;
 
   useEffect(() => {
-    if (navigation.state === "loading" || navigation.state === "submitting") {
-      if (startTimeRef.current) return;
+    const state = navigation.state;
+    const isLoading = state === "loading" || state === "submitting";
+
+    if (isLoading) {
+      if (timerRef.current) return;
+
       startTimeRef.current = Date.now();
+
       timerRef.current = setTimeout(() => {
-        setShow(true);
+        const currentState = navigation.state;
+        if (currentState === "loading" || currentState === "submitting") {
+          setShow(true);
+        }
       }, SHOW_DELAY);
     }
 
-    if (navigation.state === "idle" && show) {
-      const totalTime = Date.now() - (startTimeRef.current || Date.now());
-      const remainingTime = Math.max(MINIMUM_DELAY - totalTime, 0);
+    if (state === "idle" && show) {
+      const elapsedTime = Date.now() - (startTimeRef.current || Date.now());
+      const remainingTime = Math.max(MINIMUM_DELAY - elapsedTime, 0);
 
       setTimeout(() => {
         setShow(false);
         startTimeRef.current = undefined;
+        if (timerRef.current) {
+          clearTimeout(timerRef.current);
+          timerRef.current = undefined;
+        }
       }, remainingTime);
     }
 
     return () => {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
+        timerRef.current = undefined;
       }
     };
   }, [navigation.state, show]);
@@ -40,7 +53,7 @@ export function GlobalLoadingIndicator() {
 
   return (
     <div className="fixed inset-0 bg-slate-900/10 backdrop-blur-[2px] z-[9999] flex items-center justify-center">
-      <div className="relative bg-white rounded-lg shadow-xl p-8 min-w-[320px] transform scale-95 animate-in fade-in zoom-in duration-200">
+      <div className="relative bg-white rounded-lg shadow-xl p-8 min-w-[320px] transform scale-95 animate-in fade-in zoom-in duration-300">
         {/* 상단 로고 또는 아이콘 */}
         <div className="flex justify-center mb-6">
           <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center">
