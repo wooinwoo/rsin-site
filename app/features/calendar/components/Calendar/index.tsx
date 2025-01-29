@@ -17,10 +17,9 @@ export function Calendar({ events = [], filters }: CalendarProps) {
   const [viewMode, setViewMode] = useState<ViewMode>("calendar");
 
   const filteredEvents = events.filter((event) => {
-    if (event.isHoliday) return true;
-    if (event.status === "used" && !filters.showUsed) return false;
-    if (event.status === "scheduled" && !filters.showScheduled) return false;
-    if (event.status === "pending" && !filters.showPending) return false;
+    if (event.isHoliday && !filters.showHoliday) return false;
+    if (event.isBirthday && !filters.showBirthday) return false;
+    if (!event.isHoliday && !event.isBirthday && !filters.showLeave) return false;
     return true;
   });
 

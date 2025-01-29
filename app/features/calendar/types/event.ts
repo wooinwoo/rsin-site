@@ -11,7 +11,7 @@ export interface CalendarEvent {
   profileUrl?: string;
   employeeId?: string;
   employeeName?: string;
-  department?: string;
+  departmentId?: string;
   leaveType?: LeaveType;
   status: LeaveStatus;
   description?: string;

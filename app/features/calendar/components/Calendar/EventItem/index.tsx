@@ -47,53 +47,48 @@ export function EventItem({ event, variant = "calendar", isOtherMonth = false }:
   if (event.isHoliday || event.isBirthday) {
     return (
       <div
-        className={`px-1.5 py-0.5 text-sm flex items-center gap-1.5 overflow-hidden ${opacityClass} ${
-          event.isHoliday ? "text-red-500" : "text-gray-700 flex items-center"
-        }`}
+        className={`
+          px-1 py-0.5 text-xs flex items-center gap-1
+          ${opacityClass} 
+          ${event.isHoliday ? "text-red-500" : "text-gray-700"}
+        `}
       >
-        {event.isBirthday ? (
-          <>
-            <div className="flex items-center gap-1.5">
-              <span className="shrink-0 text-[10px] text-amber-500">✦</span>
-              <span className="font-medium truncate">{event.title}</span>
-            </div>
-          </>
-        ) : (
-          <div className="flex items-center w-full">
-            <span className="truncate w-full">{event.title}</span>
-          </div>
-        )}
+        {event.isBirthday && <span className="shrink-0 text-amber-500">★</span>}
+        <span className="truncate">{event.title}</span>
       </div>
     );
   }
 
   if (variant === "calendar") {
     return (
-      <div className={`px-1.5 py-0.5 text-sm flex items-center overflow-hidden ${opacityClass}`}>
-        <div className={`${style.background} w-2 h-2 rounded-full shrink-0 mr-1`}></div>
+      <div className={`px-1 py-0.5 text-xs flex items-center ${opacityClass}`}>
+        <div className={`${style.background} w-1.5 h-1.5 rounded-full shrink-0 mr-1`} />
         <span className="truncate">
-          {event.title} {event.leaveType && LEAVE_TYPE_LABELS[event.leaveType]}
+          {event.title} {leaveTypeLabel && `(${leaveTypeLabel})`}
         </span>
       </div>
     );
   }
 
+  // 리스트 뷰용 이벤트 아이템
   return (
-    <div className={`px-3 py-1.5 first:pt-2 last:pb-2 ${opacityClass}`}>
+    <div className={`px-2 py-1 first:pt-1.5 last:pb-1.5 ${opacityClass}`}>
       <div className="flex items-center gap-2 text-sm">
         <div className="flex items-center gap-1.5">
           <div className={`${style.background} w-1.5 h-1.5 rounded-full`} />
-          <span className="text-gray-600 mr-2">{leaveTypeLabel}</span>
+          <span className="text-gray-600">{leaveTypeLabel}</span>
         </div>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1">
           <span className="font-medium">{event.title}</span>
-          <span className="text-gray-500 text-xs">{event.department}</span>
         </div>
 
-        <span className="text-gray-400 text-xs mx-1">•</span>
-
-        <div className="text-gray-600 truncate">{event.description || "연차 휴가"}</div>
+        {event.description && (
+          <>
+            <span className="text-gray-400 text-xs">•</span>
+            <div className="text-gray-600 truncate">{event.description}</div>
+          </>
+        )}
       </div>
     </div>
   );

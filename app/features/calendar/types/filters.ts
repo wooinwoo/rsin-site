@@ -1,5 +1,5 @@
-export type CalendarFilters = {
-  showUsed: boolean;
-  showScheduled: boolean;
-  showPending: boolean;
-};
+export interface CalendarFilters {
+  showLeave: boolean; // 연차
+  showBirthday: boolean; // 생일
+  showHoliday: boolean; // 공휴일
+}

@@ -153,9 +153,9 @@ export default function Index() {
   const events = useCalendarEvents();
 
   const [filters, setFilters] = useState({
-    showUsed: true,
-    showScheduled: true,
-    showPending: true,
+    showLeave: true,
+    showBirthday: true,
+    showHoliday: true,
   });
 
   const handleFilterChange = (filterName: keyof typeof filters) => {
@@ -176,7 +176,7 @@ export default function Index() {
             </h2>
             <Calendar events={events} filters={filters} />
           </div>
-          <div className="flex flex-row xl:flex-col xl:w-64 gap-4">
+          <div className="grid grid-cols-2 xl:flex xl:flex-col gap-4 xl:w-64">
             <div>
               <h2 className="text-base flex items-center gap-2">
                 <FilterIcon />
@@ -184,7 +184,7 @@ export default function Index() {
               </h2>
               <CalendarFilters filters={filters} onFilterChange={handleFilterChange} />
             </div>
-            <div className="flex-1 sm:px-4 xl:p-0">
+            <div>
               <div className="flex justify-start items-center mb-6">
                 <h2 className="text-base flex items-center gap-2 mr-2">
                   <ChartIcon />

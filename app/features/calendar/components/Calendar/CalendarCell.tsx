@@ -27,33 +27,44 @@ export function CalendarCell({ day, events = [], isWeekend }: CalendarCellProps)
       <div
         onClick={handleCellClick}
         className={`
+          min-h-[70px] lg:min-h-[100px] 
+          border border-gray-200 
+          rounded-md cursor-pointer
           overflow-hidden
-          min-h-[70px] lg:min-h-[100px] py-2 border border-gray-400 rounded-md cursor-pointer
-          ${day.isCurrentMonth ? (isWeekend ? "bg-[#F6F6F6]" : "bg-white") : "bg-white"}
+          ${day.isCurrentMonth ? (isWeekend ? "bg-gray-50" : "bg-white") : "bg-white"}
           ${day.isToday ? "border-blue-500" : ""}
         `}
       >
-        <span
-          className={`
-            inline-flex w-6 h-6 items-center justify-center text-xs mx-1 sm:mx-2
-            ${day.isToday ? "bg-[#282828] text-white rounded-md" : ""}
-            ${!day.isCurrentMonth ? "text-gray-400" : ""}
-          `}
-        >
-          {day.formattedDate}
-        </span>
-        <div className="hidden lg:flex mt-1 gap-1.5 xl:px-1 flex-wrap flex-col">
-          {dayEvents.map((event) => (
-            <EventItem key={event.id} event={event} isOtherMonth={!day.isCurrentMonth} />
-          ))}
+        {/* 날짜 표시 - 패딩 축소 */}
+        <div className="px-2 py-1">
+          <span
+            className={`
+              inline-flex w-6 h-6 items-center justify-center text-xs
+              ${day.isToday ? "bg-blue-500 text-white rounded-full" : ""}
+              ${!day.isCurrentMonth ? "text-gray-400" : ""}
+            `}
+          >
+            {day.formattedDate}
+          </span>
         </div>
-        {dayEvents.length > 0 && (
-          <div className="flex lg:hidden justify-center">
-            <button className="w-6 h-6 rounded-full bg-gray-600 text-white text-sm flex items-center justify-center">
-              {dayEvents.length}
-            </button>
+
+        {/* 이벤트 목록 - 패딩 축소 */}
+        <div className="px-1.5">
+          <div className="hidden lg:flex flex-col gap-0.5">
+            {dayEvents.map((event) => (
+              <EventItem key={event.id} event={event} isOtherMonth={!day.isCurrentMonth} />
+            ))}
           </div>
-        )}
+
+          {/* 모바일용 이벤트 카운트 */}
+          {dayEvents.length > 0 && (
+            <div className="flex lg:hidden justify-start">
+              <div className="w-4 h-4 rounded-full bg-gray-600 text-white text-xs flex items-center justify-center">
+                {dayEvents.length}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* 모바일용 이벤트 목록 모달 */}
