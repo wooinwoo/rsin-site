@@ -107,9 +107,10 @@ export interface GetLeavesResponse {
 }
 
 export interface MyAnnual {
-  total: number;
   used: number;
   remain: number;
+  granted: number;
+  pending: number;
 }
 
 export type GetMyAnnualResponse = MyAnnual;

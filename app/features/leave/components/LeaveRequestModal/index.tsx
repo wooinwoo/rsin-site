@@ -21,8 +21,10 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
   const [leaveType, setLeaveType] = useState("full");
 
   const approvers = initialData?.approverLines ?? [];
-  const remainingLeave = initialData?.annual?.[0];
-  const hasNoLeave = !remainingLeave || remainingLeave?.remain === 0;
+  const remainingLeave = initialData?.annual;
+  const hasNoLeave = Boolean(
+    !remainingLeave || remainingLeave.remain <= remainingLeave.used + remainingLeave.pending
+  );
 
   useEffect(() => {
     if (!isOpen) {
@@ -48,8 +50,9 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
   };
 
   const getProgressWidth = () => {
-    if (!remainingLeave?.total) return "0%";
-    return `${Math.min((remainingLeave.used / remainingLeave.total) * 100, 100)}%`;
+    if (!remainingLeave?.granted) return "0%";
+    const usedPercentage = (remainingLeave.used / remainingLeave.granted) * 100;
+    return `${Math.min(usedPercentage, 100)}%`;
   };
 
   const handleLeaveTypeChange = (value: string) => {
@@ -109,7 +112,7 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
   const formId = "leave-request-form";
 
   const footer = (
-    <div className="flex justify-end ">
+    <div className="flex justify-end">
       <Button
         type="submit"
         variant="red"
@@ -136,19 +139,20 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
                 <span className="text-sm font-medium text-gray-700">남은 연차</span>
                 <div className="text-sm space-x-1">
                   <span className="text-lg font-bold text-red-600">{remainingLeave.remain}</span>
-                  <span className="text-gray-500">/ {remainingLeave.total}일</span>
+                  <span className="text-gray-500">/ {remainingLeave.granted}일</span>
                 </div>
               </div>
               <div className="w-full bg-gray-300 rounded-full h-2.5">
                 <div
                   className="bg-red-500 h-2.5 rounded-full transition-all duration-300"
-                  style={{
-                    width: getProgressWidth(),
-                  }}
+                  style={{ width: getProgressWidth() }}
                 />
               </div>
-              <div className="mt-2 text-xs text-gray-500 text-right">
-                사용: {remainingLeave.used}일
+              <div className="mt-2 text-xs text-gray-500 text-right space-x-2">
+                <span>사용: {remainingLeave.used}일</span>
+                {remainingLeave.pending > 0 && (
+                  <span className="text-yellow-600">· 대기: {remainingLeave.pending}일</span>
+                )}
               </div>
             </>
           )}

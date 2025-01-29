@@ -1,15 +1,15 @@
 import type { MyAnnual, Approver } from "~/entities/leave/model";
 
 export interface LeaveModalResponse {
-  annualStatus: MyAnnual[];
-  approvers: Approver[];
+  annualStatus: MyAnnual | undefined;
+  approvers: Approver[] | undefined;
 }
 
 export interface LeaveRequestModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialData: {
-    annual: MyAnnual[] | undefined;
+    annual: MyAnnual | undefined;
     approverLines: Approver[] | undefined;
   };
 }
