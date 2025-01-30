@@ -1,7 +1,8 @@
 export interface Leave {
-  total: number;
+  granted: number;
   used: number;
   remain: number;
+  pending: number;
 }
 export interface Department {
   id: number;

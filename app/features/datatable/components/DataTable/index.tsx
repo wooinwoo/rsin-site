@@ -51,16 +51,19 @@ export function DataTable<T extends Record<string, any>>({
                       key={index}
                       item={item}
                       onClick={onRowClick}
-                      selected={selectedRows.some((row) => row.id === item.id)}
-                      onSelect={(selected) => {
-                        // 수정된 부분
-                        const newSelectedRows = selected
-                          ? [...selectedRows, item]
-                          : selectedRows.filter((row) => row.id !== item.id);
+                      {...(enableSelection
+                        ? {
+                            selected: selectedRows.some((row) => row.id === item.id),
+                            onSelect: (selected) => {
+                              const newSelectedRows = selected
+                                ? [...selectedRows, item]
+                                : selectedRows.filter((row) => row.id !== item.id);
 
-                        onSelectedRowsChange?.(newSelectedRows);
-                        onRowSelect?.(newSelectedRows);
-                      }}
+                              onSelectedRowsChange?.(newSelectedRows);
+                              onRowSelect?.(newSelectedRows);
+                            },
+                          }
+                        : {})}
                     />
                   ))
                 ) : (

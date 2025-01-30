@@ -1,9 +1,9 @@
-import type { LeaveRequest } from "~/routes/leaves.approval.pending";
+import type { LeaveDocument } from "~/entities/leave/model";
 
-export interface LeaveApprovalCardProps<T = LeaveRequest> {
+export interface LeaveApprovalCardProps {
   key?: number;
-  item: T;
-  onClick?: (row: T) => void;
+  item: LeaveDocument;
+  onClick?: (row: LeaveDocument) => void;
   onSelect?: (selected: boolean) => void;
   selected?: boolean;
 }

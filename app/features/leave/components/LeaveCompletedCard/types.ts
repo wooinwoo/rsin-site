@@ -1,5 +1,5 @@
-import { LeaveRequest } from "~/routes/leaves.approval.completed";
+import type { LeaveDocument } from "~/entities/leave/model";
 
 export interface LeaveCompletedCardProps {
-  item: LeaveRequest;
+  item: LeaveDocument;
 }
