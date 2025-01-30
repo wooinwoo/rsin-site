@@ -1,5 +1,5 @@
 import { json, type ActionFunctionArgs } from "@remix-run/node";
-import { Form, useActionData, useNavigate } from "@remix-run/react";
+import { Form, useActionData, useNavigate, useSubmit } from "@remix-run/react";
 import { useState, useEffect } from "react";
 import { saveApiToken } from "~/cookies.server";
 import { authApi } from "~/entities/auth/api";
@@ -42,19 +42,14 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function LoginPage() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const submit = useSubmit();
   const actionData = useActionData<ActionData>();
   const { setUser } = useAuthStore();
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
-  useEffect(() => {
-    if (actionData?.user) {
-      setUser(actionData.user as User);
-      navigate("/");
-    }
-  }, [actionData, setUser, navigate]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -63,6 +58,20 @@ export default function LoginPage() {
       [name]: value,
     }));
   };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    submit(form, { replace: true });
+  };
+
+  useEffect(() => {
+    if (actionData?.user) {
+      setUser(actionData.user as User);
+      setIsLoading(true);
+      navigate("/");
+    }
+  }, [actionData, setUser, navigate]);
 
   return (
     <div className="min-h-screen bg-gray-200 flex items-center justify-center p-4">
@@ -81,7 +90,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <Form method="post" className="space-y-6">
+          <Form method="post" onSubmit={handleSubmit} className="space-y-6" navigate>
             {actionData?.error && (
               <div className="text-red-500 text-sm text-center bg-red-50 p-2 rounded-lg">
                 {actionData.error}
@@ -132,8 +141,18 @@ export default function LoginPage() {
               type="submit"
               className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white rounded-xl font-medium 
                        transition-all shadow-lg shadow-gray-900/10"
+              disabled={isLoading}
             >
-              로그인
+              {isLoading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                    {/* ... loading svg ... */}
+                  </svg>
+                  로그인 중...
+                </div>
+              ) : (
+                "로그인"
+              )}
             </Button>
             <div className="flex items-center justify-end">
               <button
