@@ -16,8 +16,8 @@ export function DataTable<T extends Record<string, any>>({
   onSearch,
   enableSelection = false,
   enableSearch = false,
-  selectedRows = [], // 외부에서 받은 selectedRows 사용
-  onSelectedRowsChange, // 외부에서 받은 handler 사용
+  selectedRows = [],
+  onSelectedRowsChange,
   pagination,
   onRowSelect,
   toolbarButtons,

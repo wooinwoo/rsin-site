@@ -32,3 +32,11 @@ export async function getUserInfo(request: Request): Promise<SignInResponse | nu
   const cookieHeader = request.headers.get("Cookie");
   return await userCookie.parse(cookieHeader);
 }
+
+export async function destroyApiToken() {
+  return `api-token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`;
+}
+
+export async function destroyUserInfo() {
+  return `user-info=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`;
+}
