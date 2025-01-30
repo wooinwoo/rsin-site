@@ -19,6 +19,7 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
   const [isRangeMode, setIsRangeMode] = useState(false);
   const [singleDate, setSingleDate] = useState<Date | null>(null);
   const [leaveType, setLeaveType] = useState("full");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const approvers = initialData?.approverLines ?? [];
   const remainingLeave = initialData?.annual;
@@ -65,6 +66,8 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
     if (isRangeMode && (!startDate || !endDate)) {
       showToast("사용일을 선택해주세요.", "error");
       return;
@@ -74,18 +77,24 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
       return;
     }
 
+    setIsSubmitting(true);
+
+    // 날짜를 UTC 기준으로 조정
+    const formatDate = (date: Date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    };
+
     const data = {
       document: {
         type: "leave" as const,
       },
       documentLeave: {
         type: leaveType,
-        startedAt: isRangeMode
-          ? startDate!.toISOString().split("T")[0]
-          : singleDate!.toISOString().split("T")[0],
-        endedAt: isRangeMode
-          ? endDate!.toISOString().split("T")[0]
-          : singleDate!.toISOString().split("T")[0],
+        startedAt: isRangeMode ? formatDate(startDate!) : formatDate(singleDate!),
+        endedAt: isRangeMode ? formatDate(endDate!) : formatDate(singleDate!),
       },
     };
 
@@ -100,6 +109,7 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
 
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data) {
+      setIsSubmitting(false);
       if (fetcher.data.success) {
         showToast("휴가가 성공적으로 신청되었습니다.", "success");
         onClose();
@@ -117,10 +127,10 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
         type="submit"
         variant="red"
         size="md"
-        disabled={fetcher.state !== "idle" || hasNoLeave}
+        disabled={isSubmitting || fetcher.state !== "idle" || hasNoLeave}
         form={formId}
       >
-        {fetcher.state !== "idle" ? "처리 중..." : "신청"}
+        {isSubmitting || fetcher.state !== "idle" ? "처리 중..." : "신청"}
       </Button>
     </div>
   );
