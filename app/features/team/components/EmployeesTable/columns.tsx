@@ -44,6 +44,11 @@ export const employeeColumns: ColumnDef<Employee>[] = [
     id: "phone",
     header: "연락처",
     accessorKey: "phone",
+    cell: ({ row }) => {
+      const phone = row.phone;
+      if (!phone) return "-";
+      return phone.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+    },
   },
   {
     id: "birth",

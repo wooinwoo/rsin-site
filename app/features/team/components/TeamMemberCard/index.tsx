@@ -60,15 +60,17 @@ export function TeamMemberCard({ item, onClick }: TeamMemberCardProps) {
             </div>
             <div className="flex items-center justify-between">
               <span className="text-gray-500">연락처</span>
-              <span className="font-medium text-gray-900">{employee.phone}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-gray-500">MBTI</span>
-              <span className="font-medium text-gray-900">{employee.mbti}</span>
+              <span className="font-medium text-gray-900">
+                {employee.phone ? employee.phone.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3") : "-"}
+              </span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-gray-500">이메일</span>
               <span className="font-medium text-gray-900">{employee.email}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-gray-500">MBTI</span>
+              <span className="font-medium text-gray-900">{employee.mbti}</span>
             </div>
           </div>
         </div>
