@@ -44,8 +44,8 @@ export const annualColumns: ColumnDef<EmployeeAnnual>[] = [
   {
     id: "totalLeaves",
     header: "총연차",
-    accessorKey: "leave.total",
-    cell: ({ row }) => <span className="w-full text-center">{row.leave.total}</span>,
+    accessorKey: "leave.granted",
+    cell: ({ row }) => <span className="w-full text-center">{row.leave.granted}</span>,
     headerClassName: "text-center",
   },
   {

@@ -58,7 +58,7 @@ export function CalendarCell({ day, events = [], isWeekend }: CalendarCellProps)
 
           {/* 모바일용 이벤트 카운트 */}
           {dayEvents.length > 0 && (
-            <div className="flex lg:hidden justify-start">
+            <div className="flex lg:hidden justify-center">
               <div className="w-4 h-4 rounded-full bg-gray-600 text-white text-xs flex items-center justify-center">
                 {dayEvents.length}
               </div>

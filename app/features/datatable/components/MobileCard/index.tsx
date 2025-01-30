@@ -12,7 +12,7 @@ export function MobileCard<T>({
   renderFooter,
 }: MobileCardProps<T>) {
   return (
-    <div className="p-4 border-b border-gray-200 last:border-b-0">
+    <div className="w-full max-w-none p-4 border-b border-gray-200 last:border-b-0">
       {renderHeader && <div className="">{renderHeader(item)}</div>}
 
       {renderBody && <div className="">{renderBody(item)}</div>}

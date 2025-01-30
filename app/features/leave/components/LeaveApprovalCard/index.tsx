@@ -5,6 +5,7 @@ import type { LeaveApprovalCardProps } from "./types";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import { LEAVE_TYPE_OPTIONS } from "~/shared/constants/options";
+import { POSITION_OPTIONS } from "~/shared/constants/options";
 
 export function LeaveApprovalCard({
   item,
@@ -16,7 +17,7 @@ export function LeaveApprovalCard({
     <MobileCard
       item={item}
       renderHeader={(request) => (
-        <div className="relative p-3 bg-white rounded-lg shadow-sm border border-gray-200">
+        <div className="relative p-3 bg-white rounded-lg shadow-sm border border-gray-200 w-full max-w-none">
           {/* 체크박스 */}
           {onSelect && (
             <div className="absolute left-3 top-[27%] -translate-y-1/2">
@@ -56,11 +57,12 @@ export function LeaveApprovalCard({
           </div>
 
           {/* 결재 정보 */}
-          <div className="bg-gray-50 rounded p-2 border border-gray-200 text-xs">
+          <div className="bg-gray-50 rounded p-2 border border-gray-200">
             <div className="grid grid-cols-2 gap-3">
-              <div className="flex items-center gap-1.5">
+              {/* 신청일 */}
+              <div className="flex items-center gap-1.5 text-xs">
                 <svg
-                  className="w-3.5 h-3.5 text-gray-400"
+                  className="w-3.5 h-3.5 text-gray-400 shrink-0"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -79,9 +81,11 @@ export function LeaveApprovalCard({
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-1.5">
+
+              {/* 결재 현황 */}
+              <div className="flex items-center gap-1.5 text-xs">
                 <svg
-                  className="w-3.5 h-3.5 text-gray-400"
+                  className="w-3.5 h-3.5 text-gray-400 shrink-0"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -90,13 +94,29 @@ export function LeaveApprovalCard({
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
                 <div>
-                  <span className="text-gray-500">결재자</span>
-                  <div className="font-medium text-gray-900 mt-0.5">
-                    {request.approvals.find((a: any) => a.status === "pending")?.name || "-"}
+                  <span className="text-gray-500">결재현황</span>
+                  <div className="font-medium text-gray-900 mt-0.5 flex items-center gap-1">
+                    <span>
+                      {request.approvals.find((a: any) => a.status === "pending")?.name || "-"}
+                    </span>
+                    {request.approvals.length > 1 && (
+                      <span className="text-gray-400 text-[10px]">
+                        외 {request.approvals.length - 1}명
+                      </span>
+                    )}
+                    <div
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        request.approvals.some((a: any) => a.status === "rejected")
+                          ? "bg-red-500"
+                          : request.approvals.every((a: any) => a.status === "approved")
+                          ? "bg-blue-500"
+                          : "bg-gray-400"
+                      }`}
+                    />
                   </div>
                 </div>
               </div>

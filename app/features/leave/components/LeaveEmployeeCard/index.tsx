@@ -46,7 +46,7 @@ export function LeaveEmployeeCard({ item }: EmployeeCardProps) {
           <div className="grid grid-cols-3 gap-2 text-center bg-gray-50 rounded-md p-2">
             <div>
               <div className="text-xs text-gray-500">총연차</div>
-              <div className="text-sm font-medium text-gray-900">{employee.leave.total}</div>
+              <div className="text-sm font-medium text-gray-900">{employee.leave.granted}</div>
             </div>
             <div>
               <div className="text-xs text-gray-500">사용</div>
