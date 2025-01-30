@@ -1,9 +1,9 @@
 import { useSearchParams } from "@remix-run/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SearchField } from "../../types/datatable";
 import { DatePicker } from "~/shared/ui/components/DatePicker";
 import { Button } from "~/shared/ui/components/Button";
-import { useEffect } from "react";
+
 import { SearchIcon, ResetIcon } from "~/shared/ui/icons";
 interface DataTableSearchProps {
   fields: SearchField[];
@@ -24,6 +24,19 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
     });
     return initialValues;
   });
+
+  useEffect(() => {
+    const newValues: Record<string, string> = {};
+    fields.forEach((field) => {
+      const urlValue = searchParams.get(field.id);
+      if (urlValue) {
+        newValues[field.id] = urlValue;
+      } else if (field.defaultValue) {
+        newValues[field.id] = field.defaultValue;
+      }
+    });
+    setSearchValues(newValues);
+  }, [fields]);
 
   const handleValueChange = (fieldId: string, value: string) => {
     setSearchValues((prev) => ({
