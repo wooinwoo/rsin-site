@@ -9,8 +9,8 @@ export const DEPARTMENT_OPTIONS = [
 export const POSITION_OPTIONS = [
   { value: "manager", label: "매니저" },
   { value: "leader", label: "팀장" },
-  { value: "director", label: "경영진" },
-  { value: "ceo", label: "경영진" },
+  { value: "director", label: "이사" },
+  { value: "ceo", label: "대표이사" },
 ];
 
 export const MBTI_OPTIONS = [
