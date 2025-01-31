@@ -13,6 +13,7 @@ import {
 } from "~/shared/constants/options";
 import { useToastStore } from "~/shared/store/toast";
 import type { LeaveApprovalResponse } from "./types";
+import { getFullImageUrl } from "~/shared/utils/imges";
 
 export interface LeaveApprovalModalProps {
   isOpen: boolean;
@@ -160,7 +161,7 @@ export function LeaveApprovalModal({
           <div className="w-12 h-12 rounded-full bg-gray-200 overflow-hidden">
             {leaveDetail.requester.thumbnailPath && (
               <img
-                src={leaveDetail.requester.thumbnailPath}
+                src={getFullImageUrl(leaveDetail.requester.thumbnailPath)}
                 alt={leaveDetail.requester.name}
                 className="w-full h-full object-cover"
               />
