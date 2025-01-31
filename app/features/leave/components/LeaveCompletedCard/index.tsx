@@ -5,6 +5,7 @@ import { OptimizedImage } from "~/shared/ui/components/OptimizedImage";
 import { MobileCard } from "~/features/datatable/components/MobileCard";
 import { ApprovalStatusBadge } from "~/features/approval/components/ApprovalStatusBadge";
 import { LEAVE_TYPE_OPTIONS } from "~/shared/constants/options";
+import { getFullImageUrl } from "~/shared/utils/imges";
 
 export function LeaveCompletedCard({ item }: LeaveCompletedCardProps) {
   return (
@@ -15,7 +16,7 @@ export function LeaveCompletedCard({ item }: LeaveCompletedCardProps) {
           {/* 신청자 정보 */}
           <div className="flex items-center gap-2.5 mb-2.5">
             <OptimizedImage
-              src={request.requester.thumbnailPath || "/images/profile.jpg"}
+              src={getFullImageUrl(request.requester.thumbnailPath)}
               alt={request.requester.name}
               className="rounded-full ring-1 ring-gray-200"
               width={36}

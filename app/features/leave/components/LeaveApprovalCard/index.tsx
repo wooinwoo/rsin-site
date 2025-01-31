@@ -5,7 +5,7 @@ import type { LeaveApprovalCardProps } from "./types";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import { LEAVE_TYPE_OPTIONS } from "~/shared/constants/options";
-import { POSITION_OPTIONS } from "~/shared/constants/options";
+import { getFullImageUrl } from "~/shared/utils/imges";
 
 export function LeaveApprovalCard({
   item,
@@ -31,7 +31,7 @@ export function LeaveApprovalCard({
             onClick={() => onClick?.(request)}
           >
             <OptimizedImage
-              src={request.requester.thumbnailPath || "/images/profile.jpg"}
+              src={getFullImageUrl(request.requester.thumbnailPath)}
               alt={request.requester.name}
               className="rounded-full ring-1 ring-gray-200"
               width={36}
