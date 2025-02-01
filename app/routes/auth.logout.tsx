@@ -14,8 +14,12 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   const headers = new Headers();
-  headers.append("Set-Cookie", await destroyApiToken());
-  headers.append("Set-Cookie", await destroyUserInfo());
+  try {
+    headers.append("Set-Cookie", await destroyApiToken());
+    headers.append("Set-Cookie", await destroyUserInfo());
+  } catch (error) {
+    console.error("Logout Cookie Error:", error);
+  }
 
   return redirect("/auth/login", { headers });
 }
