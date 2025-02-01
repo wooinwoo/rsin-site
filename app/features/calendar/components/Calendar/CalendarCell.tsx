@@ -44,7 +44,7 @@ export function CalendarCell({ day, events = [], isWeekend }: CalendarCellProps)
               ${!day.isCurrentMonth ? "text-gray-400" : ""}
             `}
           >
-            <span className="pt-1">{day.formattedDate}</span>
+            <span>{day.formattedDate}</span>
           </span>
         </div>
 
@@ -60,7 +60,7 @@ export function CalendarCell({ day, events = [], isWeekend }: CalendarCellProps)
           {dayEvents.length > 0 && (
             <div className="flex lg:hidden justify-center">
               <div className="w-4 h-4 rounded-full bg-gray-600 text-white text-xs flex items-center justify-center">
-                <span className="pt-0.5">{dayEvents.length}</span>
+                <span>{dayEvents.length}</span>
               </div>
             </div>
           )}
