@@ -81,6 +81,8 @@ export default function LeaveApprovalPage() {
 
   const currentPage = Number(searchParams.get("page")) || 1;
   const pageSize = Number(searchParams.get("size")) || 25;
+  const currentScope = searchParams.get("scope") || "self";
+  const showBulkActions = user?.role === "admin" && currentScope === "self";
 
   const handleRowClick = (row: LeaveDocument) => {
     setSelectedLeave(row);
@@ -185,11 +187,11 @@ export default function LeaveApprovalPage() {
         }}
         onRowClick={handleRowClick}
         enableSearch
-        enableSelection={user?.role === "admin"}
+        enableSelection={showBulkActions}
         selectedRows={selectedRows}
         onSelectedRowsChange={setSelectedRows}
         toolbarButtons={
-          user?.role === "admin"
+          showBulkActions
             ? [
                 {
                   label: `일괄승인 ${selectedRows.length > 0 ? `(${selectedRows.length})` : "(0)"}`,
