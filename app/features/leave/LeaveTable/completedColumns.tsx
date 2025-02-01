@@ -49,11 +49,11 @@ export const completedColumns: ColumnDef<LeaveDocument>[] = [
     id: "period",
     header: "날짜",
     accessorKey: "leave.startedAt",
-    cell: ({ row }) => (
-      <span>
-        {row.leave.startedAt} ~ {row.leave.endedAt}
-      </span>
-    ),
+    cell: ({ row }) => {
+      const startDate = row.leave.startedAt;
+      const endDate = row.leave.endedAt;
+      return <span>{startDate === endDate ? startDate : `${startDate} ~ ${endDate}`}</span>;
+    },
   },
   {
     id: "status",
