@@ -89,21 +89,32 @@ export async function loader({ request }: LoaderFunctionArgs) {
         isBirthday: true,
       };
     }),
-    ...leaves.map((leave: DashboardLeave) => ({
-      id: leave.leave.id.toString(),
-      title: leave.requester.name,
-      date: new Date(leave.leave.startedAt),
-      profileUrl: leave.requester.thumbnailPath || "",
-      employeeId: leave.requester.id.toString(),
-      employeeName: leave.requester.name,
-      department: leave.requester.departmentId.toString(),
-      leaveType: leave.leave.type as LeaveType,
-      status: leave.document.status as LeaveStatus,
-      description: "",
-      requestDate: new Date(leave.leave.startedAt),
-    })),
+    ...leaves.flatMap((leave: DashboardLeave) => {
+      const startDate = new Date(leave.leave.startedAt);
+      const endDate = new Date(leave.leave.endedAt);
+      const dates: Date[] = [];
+
+      const currentDate = new Date(startDate);
+      while (currentDate <= endDate) {
+        dates.push(new Date(currentDate));
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+
+      return dates.map((date) => ({
+        id: `${leave.leave.id}-${date.toISOString()}`,
+        title: leave.requester.name,
+        date: date,
+        profileUrl: leave.requester.thumbnailPath || "",
+        employeeId: leave.requester.id.toString(),
+        employeeName: leave.requester.name,
+        department: leave.requester.departmentId.toString(),
+        leaveType: leave.leave.type as LeaveType,
+        status: leave.document.status as LeaveStatus,
+        description: "",
+        requestDate: new Date(leave.leave.startedAt),
+      }));
+    }),
   ];
-  console.log("leaves", leaves);
 
   const totalEmployees = 20;
 

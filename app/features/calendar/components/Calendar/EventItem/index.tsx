@@ -28,9 +28,9 @@ const STATUS_STYLES = {
 
 // 휴가 유형별 라벨
 const LEAVE_TYPE_LABELS = {
-  full: "연차",
-  morning: "오전",
-  afternoon: "오후",
+  annual: "연차",
+  annual_am: "오전",
+  annual_pm: "오후",
 } as const;
 
 // 기본 스타일 (fallback)

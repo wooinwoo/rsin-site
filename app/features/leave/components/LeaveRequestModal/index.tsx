@@ -18,7 +18,7 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
   const [startDate, endDate] = dateRange;
   const [isRangeMode, setIsRangeMode] = useState(false);
   const [singleDate, setSingleDate] = useState<Date | null>(null);
-  const [leaveType, setLeaveType] = useState("full");
+  const [leaveType, setLeaveType] = useState("annual");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const approvers = initialData?.approverLines ?? [];
