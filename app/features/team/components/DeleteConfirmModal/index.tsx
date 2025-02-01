@@ -5,7 +5,7 @@ import { Input } from "~/shared/ui/components/Input";
 import { DatePicker } from "~/shared/ui/components/DatePicker";
 import { TextArea } from "~/shared/ui/components/TextArea";
 import { OptimizedImage } from "~/shared/ui/components/OptimizedImage";
-
+import { getFullImageUrl } from "~/shared/utils/imges";
 interface DeleteConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -33,6 +33,7 @@ export function DeleteConfirmModal({
     }
   };
 
+  console.log("memberImage", memberImage);
   if (!isOpen) return null;
 
   const footer = (
@@ -62,7 +63,7 @@ export function DeleteConfirmModal({
         <div className="flex items-center gap-4 bg-neutral-50 p-4 rounded-lg">
           <div className="relative">
             <OptimizedImage
-              src={memberImage}
+              src={getFullImageUrl(memberImage)}
               alt={memberName}
               className="w-12 h-12 rounded-full object-cover"
             />

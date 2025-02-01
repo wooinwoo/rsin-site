@@ -17,6 +17,7 @@ export interface TeamMemberAddData {
   birth: string;
   mbti: string;
   role: "admin" | "employee";
+  thumbnailPath: string;
 }
 
 export interface FormField {

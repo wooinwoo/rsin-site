@@ -120,9 +120,6 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
 
   const formId = "leave-request-form";
 
-  console.log(isSubmitting, fetcher.state !== "idle", hasNoLeave);
-  console.log(remainingLeave);
-
   const footer = (
     <div className="flex justify-end">
       <Button

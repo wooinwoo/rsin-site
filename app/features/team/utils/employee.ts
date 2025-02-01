@@ -16,5 +16,6 @@ export function getInitialModalData(member: Employee | null): TeamMemberAddData 
     birth: member.birth,
     mbti: member.mbti || "",
     role: member.role,
+    thumbnailPath: member.thumbnailPath || "",
   };
 }
