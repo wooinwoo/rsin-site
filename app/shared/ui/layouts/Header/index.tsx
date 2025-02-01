@@ -56,7 +56,7 @@ export function Header() {
     >
       <Link to="/" className="flex items-center">
         <div className="flex items-center ml-1">
-          <div className="flex h-5">
+          <div className="inline-flex align-baseline text-base font-medium">
             <span className="text-red-500">RS</span>
             <span className="text-gray-800">IN</span>
           </div>

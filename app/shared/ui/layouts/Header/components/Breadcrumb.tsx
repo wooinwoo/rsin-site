@@ -29,15 +29,15 @@ export function Breadcrumb() {
 
   return (
     <nav aria-label="breadcrumb">
-      <ol className="flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5 text-gray-800 mt-[2px]">
+      <ol className="flex items-center gap-2.5 text-sm text-gray-800">
         {currentMenu.group && (
-          <li className="flex items-center gap-1.5">
+          <li className="flex items-center gap-2.5">
             <span>{currentMenu.group}</span>
-            <span className="text-muted-foreground/40">/</span>
+            <span className="text-gray-400">/</span>
           </li>
         )}
-        <li className="flex items-center gap-1.5">
-          <span className="transition-colors hover:text-foreground">{currentMenu.item.label}</span>
+        <li>
+          <span>{currentMenu.item.label}</span>
         </li>
       </ol>
     </nav>
