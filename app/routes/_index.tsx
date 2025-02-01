@@ -98,11 +98,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
       employeeName: leave.requester.name,
       department: leave.requester.departmentId.toString(),
       leaveType: leave.leave.type as LeaveType,
-      status: "scheduled" as LeaveStatus,
+      status: leave.document.status as LeaveStatus,
       description: "",
       requestDate: new Date(leave.leave.startedAt),
     })),
   ];
+  console.log("leaves", leaves);
 
   const totalEmployees = 20;
 

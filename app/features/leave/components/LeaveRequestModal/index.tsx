@@ -24,7 +24,7 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
   const approvers = initialData?.approverLines ?? [];
   const remainingLeave = initialData?.annual;
   const hasNoLeave = Boolean(
-    !remainingLeave || remainingLeave.remain <= remainingLeave.used + remainingLeave.pending
+    !remainingLeave || remainingLeave.granted <= remainingLeave.used + remainingLeave.pending
   );
 
   useEffect(() => {
@@ -60,7 +60,6 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
     setLeaveType(value);
     if (value === "annual_am" || value === "annual_pm") {
       setIsRangeMode(false);
-      setSingleDate(new Date());
     }
   };
 
@@ -120,6 +119,9 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
   }, [fetcher.state, fetcher.data]);
 
   const formId = "leave-request-form";
+
+  console.log(isSubmitting, fetcher.state !== "idle", hasNoLeave);
+  console.log(remainingLeave);
 
   const footer = (
     <div className="flex justify-end">

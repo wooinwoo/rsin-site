@@ -1,6 +1,5 @@
 import { ColumnDef } from "../../types/datatable";
 import { DataTableCheckbox } from "../DataTableCheckbox";
-import { get } from "lodash";
 interface DataTableRowProps<T> {
   item: T;
   index: number;
