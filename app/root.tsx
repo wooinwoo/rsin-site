@@ -17,7 +17,7 @@ import { Sidebar } from "./shared/ui/layouts/Sidebar";
 import { GlobalLoadingIndicator } from "./shared/ui/components/GlobalLoadingIndicator";
 import { useAuthStore } from "./shared/store/auth";
 import { useEffect } from "react";
-import "./tailwind.css";
+import "~/tailwind.css";
 import { User } from "./shared/store/auth/types";
 import { ShouldRevalidateFunction } from "@remix-run/react";
 import { GlobalToast } from "./shared/ui/components/GlobalToast";
