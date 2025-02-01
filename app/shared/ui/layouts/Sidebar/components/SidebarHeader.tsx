@@ -15,6 +15,7 @@ export function SidebarHeader({
   return (
     <button
       className="w-full flex items-center overflow-hidden p-2 text-left outline-none 
+      h-14
       border-b border-gray-800
     transition-all hover:bg-gray-800 
     disabled:pointer-events-none disabled:opacity-50"
@@ -24,8 +25,8 @@ export function SidebarHeader({
         setIsMobileOpen(!isMobileOpen);
       }}
     >
-      <div className={`p-2 flex w-full items-center gap-2`}>
-        <div className="flex aspect-square items-center justify-center rounded-lg bg-white/50 text-white">
+      <div className={`flex w-full items-center gap-2`}>
+        <div className="ml-1 mr-1 flex aspect-square items-center justify-center rounded-lg bg-gray-600 text-white">
           <LogoIcon className="min-w-[32px] w-[32px] h-[32px]" />
         </div>
         <div className="grid flex-1 text-left text-lg leading-tight">
