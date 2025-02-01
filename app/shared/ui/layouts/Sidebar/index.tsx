@@ -15,29 +15,32 @@ export function Sidebar() {
   useEffect(() => {
     isMobileOpen && setIsMobileOpen(false);
   }, [location?.pathname]);
+  const boundingBoxButton = (onClick: () => void, className: string) => (
+    <button
+      onClick={onClick}
+      className={`
+        flex items-center justify-center bg-white w-8 h-8 
+        border border-[#eaeaea] rounded-[6px] 
+        transition-all duration-300 ease-in-out
+        hover:bg-gray-100
+        fixed top-3
+        ${className}
+      `}
+    >
+      <BoundingBoxIcon className="w-5 h-5 text-gray-600" />
+    </button>
+  );
 
   return (
     <>
-      <button
-        onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className={`
-          md:hidden fixed top-4 z-[9993]
-          transition-[left] duration-300 ease-in-out
-          ${isMobileOpen ? "left-[200px]" : "left-4"}
-        `}
-      >
-        <BoundingBoxIcon className="w-6 h-6" />
-      </button>
-      <button
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        className={`
-          hidden md:flex fixed top-4 z-[9992]
-          transition-[left] duration-300 ease-in-out
-          ${isCollapsed ? "left-[84px]" : "left-[260px]"}
-        `}
-      >
-        <BoundingBoxIcon className="w-6 h-6" />
-      </button>
+      {boundingBoxButton(() => setIsMobileOpen(!isMobileOpen), `md:hidden z-[9991] left-4`)}
+
+      {boundingBoxButton(
+        () => setIsCollapsed(!isCollapsed),
+        `hidden md:flex z-[9992] transform ${
+          isCollapsed ? "left-[84px] translate-x-0" : "left-[260px] translate-x-0"
+        }`
+      )}
 
       <div
         className={`transition-[transform,width] duration-300 ease-in-out

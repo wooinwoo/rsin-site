@@ -42,22 +42,16 @@ export function ListView({ events, currentDate }: ListViewProps) {
           <div
             key={dateKey}
             className={`flex border-b border-gray-200 last:border-b-0 ${
-              isSunday ? "bg-red-50" : isWeekend ? "bg-gray-50" : "bg-white"
+              isSunday || isWeekend ? "bg-gray-50" : "bg-white"
             }`}
           >
             <div className="w-24 shrink-0 py-2 px-3 border-r border-gray-200">
               <div className="flex items-center gap-2">
-                <span
-                  className={`font-medium ${
-                    isSunday ? "text-red-500" : isWeekend ? "text-gray-500" : ""
-                  }`}
-                >
+                <span className={`font-medium ${isSunday || isWeekend ? "text-gray-500" : ""}`}>
                   {format(currentDay, "d일", { locale: ko })}
                 </span>
                 <span
-                  className={`text-xs ${
-                    isSunday ? "text-red-400" : isWeekend ? "text-gray-400" : "text-gray-500"
-                  }`}
+                  className={`text-xs ${isSunday || isWeekend ? "text-gray-400" : "text-gray-500"}`}
                 >
                   {format(currentDay, "EEEE", { locale: ko })}
                 </span>

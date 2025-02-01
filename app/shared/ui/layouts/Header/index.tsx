@@ -1,14 +1,15 @@
-import { useFetcher, useRouteLoaderData } from "@remix-run/react";
+import { Link, useFetcher, useRouteLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import { LeaveRequestModal } from "~/features/leave/components/LeaveRequestModal";
 import { LeaveModalResponse } from "~/features/leave/components/LeaveRequestModal/types";
 import type { LoaderData } from "~/root";
 import { Button } from "~/shared/ui/components/Button";
-import { ReplayIcon } from "~/shared/ui/icons";
+import { ReplayIcon, LogoIcon, HouseboatIcon } from "~/shared/ui/icons";
 import { BellActiveIcon } from "~/shared/ui/icons/BellActiveIcon";
 import { BellIcon } from "~/shared/ui/icons/BellIcon";
 import { Breadcrumb } from "~/shared/ui/layouts/Header/components/Breadcrumb";
 import { NotificationDropdown } from "~/shared/ui/layouts/Header/components/NotificationDropdown";
+
 export function Header() {
   const data = useRouteLoaderData("root") as LoaderData;
   const notifications = data?.notifications ?? [];
@@ -28,6 +29,7 @@ export function Header() {
 
   const annualFetcher = useFetcher<LeaveModalResponse>();
   const loadTime = `${year}.${month}.${day} (${weekday}) ${hours}:${minutes}`;
+
   const handleRefresh = () => {
     window.location.reload();
   };
@@ -42,18 +44,31 @@ export function Header() {
     e.stopPropagation();
     setIsNotificationOpen(!isNotificationOpen);
   };
+
   return (
-    <header className="bg-gray-200 bg-opacity-90 sticky top-0 z-[9990] flex pl-6 pr-4 h-14 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-      <div className="flex items-center gap-2 px-4">
-        <div
-          data-orientation="vertical"
-          role="none"
-          className="shrink-0 bg-border w-[1px] mr-2 h-4"
-        />
-        <Breadcrumb />
-      </div>
+    <header
+      className="bg-gray-200 opacity-90 sticky top-0 z-[9990] flex px-4 h-14 shrink-0 items-center gap-2 
+      transition-[padding] duration-300 ease-in-out
+      pl-14
+      group-has-[[data-collapsed=true]]/sidebar:md:pl-[100px]
+      border-b border-gray-300
+    "
+    >
+      <Link to="/" className="flex items-center">
+        <div className="flex items-center ml-1">
+          <div className="flex mt-1">
+            <span className="text-red-500">RS</span>
+            <span className="text-gray-800">IN</span>
+          </div>
+          <div className="flex items-center">
+            <div className="mx-3 h-4 w-[1px] bg-gray-300" role="separator" />
+            <Breadcrumb />
+          </div>
+        </div>
+      </Link>
+
       <div className="ml-auto flex items-center gap-2">
-        <span className="text-sm hidden sm:block">{loadTime}</span>
+        <span className="text-sm hidden sm:block text-gray-800 mt-[2px]">{loadTime}</span>
         <button
           onClick={handleRefresh}
           className="flex items-center justify-center bg-white w-8 h-8 border border-[#eaeaea] rounded-[6px] transition-colors hover:bg-gray-100"
@@ -82,10 +97,14 @@ export function Header() {
             />
           )}
         </div>
-        <Button variant="red" onClick={() => handleLeaveModalOpen()}>
-          휴가신청
-        </Button>
+        <button
+          onClick={handleLeaveModalOpen}
+          className="flex items-center justify-center bg-white w-8 h-8 border border-[#eaeaea] rounded-[6px] transition-colors hover:bg-gray-100"
+        >
+          <HouseboatIcon className="w-5 h-5 text-gray-600" />
+        </button>
       </div>
+
       <LeaveRequestModal
         isOpen={isLeaveModalOpen}
         onClose={() => setIsLeaveModalOpen(false)}

@@ -29,7 +29,7 @@ export function Breadcrumb() {
 
   return (
     <nav aria-label="breadcrumb">
-      <ol className="flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5">
+      <ol className="flex flex-wrap items-center gap-1.5 break-words text-sm text-muted-foreground sm:gap-2.5 text-gray-800 mt-[2px]">
         {currentMenu.group && (
           <li className="flex items-center gap-1.5">
             <span>{currentMenu.group}</span>

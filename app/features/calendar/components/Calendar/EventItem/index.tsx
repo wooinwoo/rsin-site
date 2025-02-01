@@ -73,14 +73,14 @@ export function EventItem({ event, variant = "calendar", isOtherMonth = false }:
   // 리스트 뷰용 이벤트 아이템
   return (
     <div className={`px-2 py-1 first:pt-1.5 last:pb-1.5 ${opacityClass}`}>
-      <div className="flex items-center gap-2 text-sm">
+      <div className="flex items-center gap-2 text-xs">
         <div className="flex items-center gap-1.5">
           <div className={`${style.background} w-1.5 h-1.5 rounded-full`} />
           <span className="text-gray-600">{leaveTypeLabel}</span>
         </div>
 
         <div className="flex items-center gap-1">
-          <span className="font-medium">{event.title}</span>
+          <span className="">{event.title}</span>
         </div>
 
         {event.description && (
