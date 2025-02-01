@@ -9,10 +9,13 @@ export const initWebViewFunctions = () => {
   window.checkAndCloseModal = function () {
     const modalElement = document.querySelector(".rs-modal-wrapper");
     if (modalElement) {
-      // 모달이 있으면 true 반환 (웹뷰에서 뒤로가기 막기)
+      // 모달 닫기 버튼 클릭
+      const closeButton = modalElement.querySelector("[data-modal-close]") as HTMLElement;
+      if (closeButton) {
+        closeButton.click();
+      }
       return true;
     }
-    // 모달이 없으면 false 반환 (웹뷰에서 뒤로가기 허용)
     return false;
   };
 };
