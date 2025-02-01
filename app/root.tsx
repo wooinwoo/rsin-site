@@ -23,6 +23,7 @@ import { ShouldRevalidateFunction } from "@remix-run/react";
 import { GlobalToast } from "./shared/ui/components/GlobalToast";
 import { getNotifications } from "~/features/notification/api/notification.server";
 import type { Notification } from "~/entities/notification/model";
+import { initWebViewFunctions } from "~/shared/utils/webview";
 
 export type LoaderData = {
   user: User | null;
@@ -148,6 +149,12 @@ export default function App() {
       clearUser();
     }
   }, [user, updateUser, clearUser]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      initWebViewFunctions();
+    }
+  }, []);
 
   return (
     <Document>

@@ -60,6 +60,7 @@ export function Modal({
         role="dialog"
         aria-modal="true"
         className={`
+          rs-modal-wrapper
           fixed left-1/2 top-1/2 
           ${isOverlay ? "z-[9999]" : "z-[9994]"}
           w-[calc(100%-2rem)] 
