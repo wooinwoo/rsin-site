@@ -61,14 +61,18 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     const form = e.currentTarget;
     submit(form, { replace: true });
   };
 
   useEffect(() => {
+    if (actionData?.error) {
+      setIsLoading(false);
+    }
+
     if (actionData?.user) {
       setUser(actionData.user as User);
-      setIsLoading(true);
       navigate("/");
     }
   }, [actionData, setUser, navigate]);
