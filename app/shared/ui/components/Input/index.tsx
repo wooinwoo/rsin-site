@@ -80,7 +80,7 @@ export function Input({
         onChange(e);
       }
     }
-  }, []);
+  }, [value, type]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let newValue = e.target.value;
