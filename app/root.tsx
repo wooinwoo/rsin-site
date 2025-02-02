@@ -8,6 +8,7 @@ import {
   isRouteErrorResponse,
   useLocation,
   useLoaderData,
+  useMatches,
 } from "@remix-run/react";
 import { json, redirect, type LoaderFunctionArgs } from "@remix-run/node";
 import { getApiToken } from "~/cookies.server";
@@ -24,11 +25,18 @@ import { GlobalToast } from "./shared/ui/components/GlobalToast";
 import { getNotifications } from "~/features/notification/api/notification.server";
 import type { Notification } from "~/entities/notification/model";
 import { initWebViewFunctions } from "~/shared/utils/webview";
+import { checkUserAgent } from "~/middleware/checkUserAgent.server";
 
 export type LoaderData = {
   user: User | null;
   notifications: Notification[];
 };
+
+export interface RouteHandle {
+  isPublic?: boolean;
+  standalone?: boolean;
+}
+
 export const shouldRevalidate: ShouldRevalidateFunction = ({
   currentUrl,
   nextUrl,
@@ -57,8 +65,27 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const isAuthPage = url.pathname.startsWith("/auth");
-
   try {
+    const isMobileAccessDenied = url.pathname === "/mobile-access-denied";
+
+    // mobile-access-denied 페이지는 모든 체크를 건너뜀
+    if (isMobileAccessDenied) {
+      return json<LoaderData>({ user: null, notifications: [] });
+    }
+
+    // 정적 자원이나 데이터 요청은 체크하지 않음
+    if (
+      url.pathname.startsWith("/build/") ||
+      url.pathname.startsWith("/assets/") ||
+      url.pathname.startsWith("/resources/") ||
+      url.pathname.includes(".")
+    ) {
+      return null;
+    }
+
+    const userAgentCheck = await checkUserAgent(request);
+    if (userAgentCheck) return userAgentCheck;
+
     const token = await getApiToken(request);
 
     if (!token && !isAuthPage) {
@@ -103,7 +130,32 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     return json<LoaderData>({ user: null, notifications: [] });
   }
 };
-function Document({ children }: { children: React.ReactNode }) {
+
+function Document({
+  children,
+  isStandalone = false,
+}: {
+  children: React.ReactNode;
+  isStandalone?: boolean;
+}) {
+  if (isStandalone) {
+    return (
+      <html lang="ko">
+        <head>
+          <meta charSet="utf-8" />
+          <meta name="viewport" content="width=device-width,initial-scale=1" />
+          <Meta />
+          <Links />
+        </head>
+        <body>
+          {children}
+          <ScrollRestoration />
+          <Scripts />
+        </body>
+      </html>
+    );
+  }
+
   return (
     <html lang="ko">
       <head>
@@ -139,9 +191,13 @@ function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   const location = useLocation();
+  const matches = useMatches();
+  const currentRoute = matches[matches.length - 1];
+  const isStandalone = (currentRoute?.handle as RouteHandle)?.standalone;
   const isAuthPage = location.pathname.startsWith("/auth");
   const { user } = useLoaderData<LoaderData>();
   const { updateUser, clearUser } = useAuthStore();
+
   useEffect(() => {
     if (user) {
       updateUser(user);
@@ -157,8 +213,10 @@ export default function App() {
   }, []);
 
   return (
-    <Document>
-      {isAuthPage ? (
+    <Document isStandalone={isStandalone}>
+      {isStandalone ? (
+        <Outlet />
+      ) : isAuthPage ? (
         <Outlet />
       ) : (
         <Layout>
@@ -243,5 +301,10 @@ function ErrorContent({ error }: { error: unknown }) {
 }
 
 export function links() {
-  return [{ rel: "stylesheet", href: "tailwind.css" }];
+  return [
+    {
+      rel: "stylesheet",
+      href: "/app/tailwind.css",
+    },
+  ];
 }
