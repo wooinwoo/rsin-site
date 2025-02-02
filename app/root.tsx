@@ -145,21 +145,6 @@ function Document({
           <meta name="viewport" content="width=device-width,initial-scale=1" />
           <Meta />
           <Links />
-          <style
-            dangerouslySetInnerHTML={{
-              __html: `
-              body { 
-                visibility: hidden;
-                opacity: 0;
-              }
-              .js-loaded body {
-                visibility: visible;
-                opacity: 1;
-                transition: opacity 0.1s ease;
-              }
-            `,
-            }}
-          />
         </head>
         <body>
           {children}
@@ -177,33 +162,11 @@ function Document({
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
         <Links />
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
-              body { 
-                visibility: hidden;
-                opacity: 0;
-              }
-              .js-loaded body {
-                visibility: visible;
-                opacity: 1;
-                transition: opacity 0.1s ease;
-              }
-            `,
-          }}
-        />
       </head>
       <body>
         {children}
         <ScrollRestoration />
         <Scripts />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              document.documentElement.classList.add('js-loaded');
-            `,
-          }}
-        />
       </body>
     </html>
   );
