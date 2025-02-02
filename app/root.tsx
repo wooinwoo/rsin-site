@@ -68,7 +68,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   try {
     const isMobileAccessDenied = url.pathname === "/mobile-access-denied";
 
-    // mobile-access-denied 페이지는 모든 체크를 건너뜀
     if (isMobileAccessDenied) {
       return json<LoaderData>({ user: null, notifications: [] });
     }
