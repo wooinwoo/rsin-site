@@ -56,12 +56,12 @@ export function Header() {
     >
       <Link to="/" className="flex items-center">
         <div className="flex items-center ml-1">
-          <div className="inline-flex align-baseline text-base font-medium">
+          <div className="inline-flex sm:hidden align-baseline text-base font-medium">
             <span className="text-red-500">RS</span>
             <span className="text-gray-800">IN</span>
           </div>
           <div className="flex items-center">
-            <div className="mx-3 h-4 w-[1px] bg-gray-300" role="separator" />
+            <div className="sm:hidden mx-3 h-4 w-[1px] bg-gray-300" role="separator" />
             <Breadcrumb />
           </div>
         </div>
