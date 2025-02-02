@@ -298,12 +298,3 @@ function ErrorContent({ error }: { error: unknown }) {
     </>
   );
 }
-
-export function links() {
-  return [
-    {
-      rel: "stylesheet",
-      href: "/app/tailwind.css",
-    },
-  ];
-}
