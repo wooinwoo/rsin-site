@@ -49,16 +49,24 @@ export function ProfileEditModal({ isOpen, onClose, initialData }: ProfileEditMo
   }, [initialData, isOpen]);
   const uploadImageToS3 = async (file: File): Promise<string | null> => {
     try {
+      console.log("Upload started:", {
+        fileName: file.name,
+        fileType: file.type,
+        fileSize: file.size,
+      });
+
       const urlFormData = new FormData();
       urlFormData.append("action", "getUploadUrl");
       urlFormData.append("path", `profile/thumbnail/${user?.sub}/${generateHash(file.name)}.jpg`);
+      console.log("Requesting upload URL with path:", urlFormData.get("path"));
 
-      // fetcher.submit 대신 fetch 직접 사용
       const response = await fetch("/resources/profile", {
         method: "POST",
         body: urlFormData,
       });
+      console.log("URL Response status:", response.status);
       const { url } = await response.json();
+      console.log("Received presigned URL:", url);
 
       if (url) {
         try {
@@ -69,20 +77,26 @@ export function ProfileEditModal({ isOpen, onClose, initialData }: ProfileEditMo
               "Content-Type": file.type,
             },
           });
+          console.log("Upload Response:", {
+            status: response.status,
+            headers: Object.fromEntries(response.headers),
+          });
 
           const text = await response.text();
+          console.log("Upload Response text:", text);
 
           if (response.headers.get("content-type")?.includes("application/json")) {
             const data = JSON.parse(text);
+            console.log("Upload Response JSON:", data);
           }
         } catch (error) {
-          console.error("Error details:", error);
+          console.error("S3 Upload error:", error);
         }
         return url;
       }
       return null;
     } catch (error) {
-      console.error("이미지 업로드 실패:", error);
+      console.error("Image upload failed:", error);
       showToast("이미지 업로드 중 오류가 발생했습니다.", "error");
       return null;
     }
