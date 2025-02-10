@@ -99,7 +99,7 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
         <select
           value={searchValues[field.id] || field.defaultValue || ""}
           onChange={(e) => handleValueChange(field.id, e.target.value)}
-          className="w-full h-9 rounded-md px-3 text-sm border-none focus:outline-none bg-white"
+          className="w-full h-[38px] rounded-md px-3 text-sm border-none focus:outline-none bg-white"
         >
           {field.showAllOption !== false && (
             <option value="">{field.allOptionLabel || "전체"}</option>
@@ -115,19 +115,21 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
 
     if (field.type === "daterange") {
       return (
-        <DatePicker
-          isRange
-          onChange={(dates) => handleDateRangeChange(dates as [Date | null, Date | null])}
-          value={
-            searchValues.startDate || searchValues.endDate
-              ? [
-                  searchValues.startDate ? new Date(searchValues.startDate) : null,
-                  searchValues.endDate ? new Date(searchValues.endDate) : null,
-                ]
-              : null
-          }
-          className="w-full border-none focus:outline-none bg-white"
-        />
+        <div className="h-[38px] pr-[2px]">
+          <DatePicker
+            isRange
+            onChange={(dates) => handleDateRangeChange(dates as [Date | null, Date | null])}
+            value={
+              searchValues.startDate || searchValues.endDate
+                ? [
+                    searchValues.startDate ? new Date(searchValues.startDate) : null,
+                    searchValues.endDate ? new Date(searchValues.endDate) : null,
+                  ]
+                : null
+            }
+            className="w-full border-none h-[38px] focus:outline-none bg-white"
+          />
+        </div>
       );
     }
 
@@ -137,7 +139,7 @@ export function DataTableSearch({ fields, onSearch }: DataTableSearchProps) {
         value={searchValues[field.id] || ""}
         onChange={(e) => handleValueChange(field.id, e.target.value)}
         placeholder={field.placeholder}
-        className="w-full h-9 rounded-md px-3 text-sm border-none focus:outline-none bg-white"
+        className="w-full h-[38px] rounded-md px-3 text-sm border-none focus:outline-none bg-white"
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             handleSearch();
