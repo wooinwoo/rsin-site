@@ -143,6 +143,8 @@ function Document({
         <head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width,initial-scale=1" />
+          <title>RSIN</title>
+          <link rel="icon" type="image/jpg" href="/images/favicon.png" />
           <Meta />
           <Links />
         </head>
@@ -160,6 +162,8 @@ function Document({
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>RSIN</title>
+        <link rel="icon" type="image/jpg" href="/images/favicon.png" />
         <Meta />
         <Links />
       </head>
