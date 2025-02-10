@@ -16,6 +16,9 @@ export function DataTableFooter({
   onPageChange,
   enableSelection,
 }: DataTableFooterProps) {
+  const buttonBaseClass =
+    "h-9 w-9 rounded-md border border-gray-300 flex items-center justify-center text-sm disabled:opacity-50 hover:bg-gray-50";
+
   return (
     <div
       className={`flex flex-col 2xs:flex-row items-start 2xs:items-center ${
@@ -31,7 +34,7 @@ export function DataTableFooter({
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="h-9 w-9 rounded-md border border-gray-300 flex items-center justify-center text-sm disabled:opacity-50 hover:bg-gray-50"
+          className={buttonBaseClass}
           aria-label="Previous page"
         >
           <ChevronLeftIcon />
@@ -44,7 +47,11 @@ export function DataTableFooter({
               onClick={() => onPageChange(page)}
               className={`
                 h-9 min-w-[36px] rounded-md px-3 text-sm
-                ${page === currentPage ? "bg-gray-800 text-white" : "border hover:bg-gray-50"}
+                ${
+                  page === currentPage
+                    ? "bg-gray-800 text-white"
+                    : "border border-gray-300 hover:bg-gray-50"
+                }
               `}
             >
               {page}
@@ -61,7 +68,7 @@ export function DataTableFooter({
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="h-9 w-9 rounded-md border flex items-center justify-center text-sm disabled:opacity-50 hover:bg-gray-50"
+          className={buttonBaseClass}
           aria-label="Next page"
         >
           <ChevronRightIcon />
