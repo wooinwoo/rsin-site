@@ -29,9 +29,9 @@ export function checkUserAgent(request: Request) {
 
   if (isPC) return null;
 
-  if (isMobile && !isRsinApp) {
-    return redirect("/mobile-access-denied");
-  }
+//  if (isMobile && !isRsinApp) {
+//    return redirect("/mobile-access-denied");
+//  }
 
   return null;
 }
