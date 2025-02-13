@@ -7,12 +7,15 @@ import { ApprovalStatusBadge } from "~/features/approval/components/ApprovalStat
 import { LEAVE_TYPE_OPTIONS } from "~/shared/constants/options";
 import { getFullImageUrl } from "~/shared/utils/imges";
 
-export function LeaveCompletedCard({ item }: LeaveCompletedCardProps) {
+export function LeaveCompletedCard({ item, onClick }: LeaveCompletedCardProps) {
   return (
     <MobileCard
       item={item}
       renderHeader={(request) => (
-        <div className="relative p-3 bg-white rounded-lg shadow-sm border border-gray-200">
+        <div
+          className="relative p-3 bg-white rounded-lg shadow-sm border border-gray-200"
+          onClick={() => onClick?.(request)}
+        >
           {/* 신청자 정보 */}
           <div className="flex items-center gap-2.5 mb-2.5">
             <OptimizedImage
