@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "build": "remix vite:build",
+    "deploy:dev": "sls deploy --stage dev --region ap-northeast-2",
     "dev": "remix vite:dev --port 8080",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve ./build/server/index.js",
-    "typecheck": "tsc",
-    "deploy:dev": "sls deploy --stage dev --region ap-northeast-2"
+    "typecheck": "tsc"
   },
   "dependencies": {
     "@remix-run/node": "^2.15.0",
@@ -22,6 +22,7 @@
     "react": "^18.2.0",
     "react-datepicker": "^7.5.0",
     "react-dom": "^18.2.0",
+    "sst": "3.9.2",
     "zustand": "^5.0.2"
   },
   "devDependencies": {
