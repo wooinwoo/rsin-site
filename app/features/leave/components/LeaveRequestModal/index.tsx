@@ -18,13 +18,13 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
   const [startDate, endDate] = dateRange;
   const [isRangeMode, setIsRangeMode] = useState(false);
   const [singleDate, setSingleDate] = useState<Date | null>(null);
-  const [leaveType, setLeaveType] = useState("full");
+  const [leaveType, setLeaveType] = useState("annual");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const approvers = initialData?.approverLines ?? [];
   const remainingLeave = initialData?.annual;
   const hasNoLeave = Boolean(
-    !remainingLeave || remainingLeave.remain <= remainingLeave.used + remainingLeave.pending
+    !remainingLeave || remainingLeave.granted <= remainingLeave.used + remainingLeave.pending
   );
 
   useEffect(() => {
@@ -60,7 +60,6 @@ export function LeaveRequestModal({ isOpen, onClose, initialData }: LeaveRequest
     setLeaveType(value);
     if (value === "annual_am" || value === "annual_pm") {
       setIsRangeMode(false);
-      setSingleDate(new Date());
     }
   };
 

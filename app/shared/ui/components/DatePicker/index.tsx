@@ -66,7 +66,7 @@ export function DatePicker({
   };
 
   const baseClassName =
-    "w-full min-w-[200px] z-10 px-3 py-2 w-full rounded-lg bg-white disabled:bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-sm";
+    "w-full min-w-[200px] z-10 px-3 py-2 w-full rounded-lg bg-white h-11 disabled:bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-sm";
   const wrapperClassName = "w-full h-9 inline-block bg-white";
   const calendarClassNames = ["custom-calendar", excludeWeekends ? "exclude-weekends" : ""]
     .filter(Boolean)
@@ -95,7 +95,7 @@ export function DatePicker({
             locale={ko}
             dateFormat="yyyy.MM.dd"
             placeholderText="날짜 선택"
-            className={`${baseClassName} ${className}`.trim()}
+            className={`${baseClassName} text-sm pr-8 ${className}`.trim()}
             minDate={minDate || undefined}
             filterDate={filterDate}
           />
@@ -108,7 +108,7 @@ export function DatePicker({
       <ClientOnly
         fallback={
           <input
-            className={`${baseClassName} text-sm pr-8 ${className}`.trim()}
+            className={`${baseClassName} ${className}`.trim()}
             placeholder="시작일 - 종료일"
             disabled
           />

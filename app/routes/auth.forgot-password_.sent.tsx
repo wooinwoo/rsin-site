@@ -1,30 +1,12 @@
-import { useState } from "react";
-import { Link } from "@remix-run/react";
+import { Link, useNavigate } from "@remix-run/react";
 import { Button } from "~/shared/ui/components/Button";
 import { CheckCircleIcon } from "~/shared/ui/icons/CheckCircleIcon";
 
 export default function EmailSent() {
-  const [isResending, setIsResending] = useState(false);
-  const [cooldown, setCooldown] = useState(0);
+  const navigate = useNavigate();
 
   const handleResend = async () => {
-    setIsResending(true);
-    try {
-      // API 호출
-      // await resendResetPasswordEmail();
-      setCooldown(60); // 1분 쿨타임
-      const timer = setInterval(() => {
-        setCooldown((prev) => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    } finally {
-      setIsResending(false);
-    }
+    navigate("/auth/forgot-password");
   };
 
   return (
@@ -51,13 +33,8 @@ export default function EmailSent() {
               className="w-full h-12 border-gray-300 hover:bg-gray-100 text-gray-900 
                        rounded-xl font-medium transition-all"
               onClick={handleResend}
-              disabled={isResending || cooldown > 0}
             >
-              {cooldown > 0
-                ? `${cooldown}초 후 재전송 가능`
-                : isResending
-                ? "전송 중..."
-                : "이메일 다시 보내기"}
+              이메일 다시 보내기
             </Button>
           </div>
 

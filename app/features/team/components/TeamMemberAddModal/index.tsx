@@ -28,6 +28,7 @@ export function TeamMemberAddModal({
     birth: "",
     mbti: MBTI_OPTIONS[0].value,
     role: "employee",
+    thumbnailPath: "",
   };
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -230,7 +231,7 @@ export function TeamMemberAddModal({
         }}
         memberName={initialData?.name || ""}
         memberPosition={initialData?.position || ""}
-        memberImage="/default-profile.png"
+        memberImage={initialData?.thumbnailPath || ""}
       />
     </>
   );

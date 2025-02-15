@@ -1,4 +1,5 @@
 export interface DashboardLeave {
+  document: { status: string };
   leave: {
     id: number;
     type: string;

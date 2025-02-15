@@ -4,6 +4,7 @@ import { getApiToken, destroyApiToken, destroyUserInfo } from "~/cookies.server"
 
 export async function action({ request }: ActionFunctionArgs) {
   const token = await getApiToken(request);
+  const headers = new Headers();
 
   try {
     if (token) {
@@ -11,11 +12,11 @@ export async function action({ request }: ActionFunctionArgs) {
     }
   } catch (error) {
     console.error("Logout API Error:", error);
+  } finally {
+    // API 성공, 실패와 관계없이 항상 쿠키 삭제
+    headers.append("Set-Cookie", await destroyApiToken());
+    headers.append("Set-Cookie", await destroyUserInfo());
   }
-
-  const headers = new Headers();
-  headers.append("Set-Cookie", await destroyApiToken());
-  headers.append("Set-Cookie", await destroyUserInfo());
 
   return redirect("/auth/login", { headers });
 }

@@ -56,19 +56,19 @@ export function Header() {
     >
       <Link to="/" className="flex items-center">
         <div className="flex items-center ml-1">
-          <div className="flex mt-1">
+          <div className="inline-flex sm:hidden align-baseline text-base font-medium">
             <span className="text-red-500">RS</span>
             <span className="text-gray-800">IN</span>
           </div>
           <div className="flex items-center">
-            <div className="mx-3 h-4 w-[1px] bg-gray-300" role="separator" />
+            <div className="sm:hidden mx-3 h-4 w-[1px] bg-gray-300" role="separator" />
             <Breadcrumb />
           </div>
         </div>
       </Link>
 
       <div className="ml-auto flex items-center gap-2">
-        <span className="text-sm hidden sm:block text-gray-800 mt-[2px]">{loadTime}</span>
+        <span className="text-sm hidden sm:block text-gray-800">{loadTime}</span>
         <button
           onClick={handleRefresh}
           className="flex items-center justify-center bg-white w-8 h-8 border border-[#eaeaea] rounded-[6px] transition-colors hover:bg-gray-100"

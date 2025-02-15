@@ -6,6 +6,7 @@ import { Modal } from "~/shared/ui/components/Modal";
 import { Button } from "~/shared/ui/components/Button";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
+import { OptimizedImage } from "~/shared/ui/components/OptimizedImage";
 import {
   DEPARTMENT_OPTIONS,
   POSITION_OPTIONS,
@@ -160,10 +161,12 @@ export function LeaveApprovalModal({
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-full bg-gray-200 overflow-hidden">
             {leaveDetail.requester.thumbnailPath && (
-              <img
+              <OptimizedImage
                 src={getFullImageUrl(leaveDetail.requester.thumbnailPath)}
                 alt={leaveDetail.requester.name}
-                className="w-full h-full object-cover"
+                className="rounded-full ring-1 ring-gray-200"
+                width={48}
+                height={48}
               />
             )}
           </div>

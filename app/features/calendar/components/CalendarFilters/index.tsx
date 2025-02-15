@@ -1,4 +1,3 @@
-import { Toggle } from "~/shared/ui/components/Toggle";
 import type { CalendarFilters } from "../../types/filters";
 
 interface CalendarFiltersProps {
@@ -95,11 +94,7 @@ export function CalendarFilters({ filters, onFilterChange }: CalendarFiltersProp
           <div className="space-y-2.5">
             <div className="flex items-center gap-2 px-2">
               <div className="w-2.5 h-2.5 rounded-full bg-blue-400" />
-              <span className="text-sm text-gray-600">사용</span>
-            </div>
-            <div className="flex items-center gap-2 px-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-teal-400" />
-              <span className="text-sm text-gray-600">사용예정</span>
+              <span className="text-sm text-gray-600">승인</span>
             </div>
             <div className="flex items-center gap-2 px-2">
               <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
@@ -112,15 +107,11 @@ export function CalendarFilters({ filters, onFilterChange }: CalendarFiltersProp
         <div className="xl:hidden flex gap-2 min-[350px]:gap-3 text-[10px] min-[350px]:text-xs text-gray-500">
           <div className="flex items-center gap-1">
             <div className="w-1.5 min-[350px]:w-2 h-1.5 min-[350px]:h-2 rounded-full bg-blue-400" />
-            <span>사용</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-1.5 min-[350px]:w-2 h-1.5 min-[350px]:h-2 rounded-full bg-teal-400" />
-            <span className="whitespace-nowrap">예정</span>
+            <span>승인</span>
           </div>
           <div className="flex items-center gap-1">
             <div className="w-1.5 min-[350px]:w-2 h-1.5 min-[350px]:h-2 rounded-full bg-red-400" />
-            <span>대기</span>
+            <span>승인대기</span>
           </div>
         </div>
       </div>

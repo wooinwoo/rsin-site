@@ -73,12 +73,18 @@ export function NotificationDropdown({ notifications, onClose }: NotificationDro
               key={notification.id}
               onClick={() => handleNotificationClick(notification)}
               className={`p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer ${
-                !notification.isRead ? "bg-blue-50" : ""
+                !notification.isRead ? "bg-blue-50/100" : ""
               }`}
             >
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="text-sm text-gray-600">{notification.message}</p>
+                  <p
+                    className={`text-sm ${
+                      !notification.isRead ? "text-gray-900 font-medium" : "text-gray-600"
+                    }`}
+                  >
+                    {notification.message}
+                  </p>
                 </div>
                 {!notification.isRead && <span className="w-2 h-2 bg-blue-500 rounded-full" />}
               </div>
