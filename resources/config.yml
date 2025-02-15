@@ -1,9 +1,0 @@
-dev:
-  PORT: "8080"
-  API_URL: "https://d-api-rsin.rsteam.co.kr"
-  CDN_HOST: "https://d-cdn-rsin.rsteam.co.kr"
-
-prod:
-  PORT: "8080"
-  API_URL: "https://api-rsin.rs-team.com"
-  CDN_HOST: "https://cdn-rsin.rs-team.com"
