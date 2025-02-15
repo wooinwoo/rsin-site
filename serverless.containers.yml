@@ -4,12 +4,9 @@ deployment:
 containers:
   site:
     src: ./
-    environment:
-      PORT: "8080"
-      API_URL: "https://d-api-rsin.rsteam.co.kr"
-      CDN_HOST: "https://d-cdn-rsin.rsteam.co.kr"
+    environment: ${file(./resources/config.yml):${sls:stage}}
     routing:
-      domain: d-site-rsin.rsteam.co.kr
+      domain: ${file(./resources/domain.yml):${sls:stage}}
       pathPattern: /*
       pathHealthCheck: /aws/health
     compute:
