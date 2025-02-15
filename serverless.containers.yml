@@ -1,0 +1,16 @@
+name: rsin-site
+deployment:
+  type: awsApi@1.0
+containers:
+  site:
+    src: ./
+    environment:
+      PORT: "8080"
+      API_URL: "https://d-api-rsin.rsteam.co.kr"
+      CDN_HOST: "https://d-cdn-rsin.rsteam.co.kr"
+    routing:
+      domain: d-site-rsin.rsteam.co.kr
+      pathPattern: /*
+      pathHealthCheck: /aws/health
+    compute:
+      type: awsFargateEcs
