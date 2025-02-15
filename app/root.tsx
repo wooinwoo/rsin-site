@@ -234,7 +234,7 @@ export function ErrorBoundary() {
   const error = useRouteError();
   const location = useLocation();
   const isAuthPage = location.pathname.startsWith("/auth");
-
+  //1
   return (
     <Document>
       <div className={isAuthPage ? "min-h-screen" : ""}>
