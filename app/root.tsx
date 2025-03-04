@@ -10,6 +10,7 @@ import {
   useLoaderData,
   useMatches,
 } from "@remix-run/react";
+import { useNavigate } from "@remix-run/react";
 import { json, redirect, type LoaderFunctionArgs } from "@remix-run/node";
 import { getApiToken } from "~/cookies.server";
 import { authApi } from "./entities/auth/api";
@@ -194,6 +195,7 @@ function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   const location = useLocation();
+  const navigate = useNavigate();
   const matches = useMatches();
   const currentRoute = matches[matches.length - 1];
   const isStandalone = (currentRoute?.handle as RouteHandle)?.standalone;
@@ -211,6 +213,7 @@ export default function App() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
+      window.navigate = (url: string) => navigate(url);
       initWebViewFunctions();
     }
   }, []);
